@@ -1,0 +1,106 @@
+.sidebar {
+  max-width: 20rem;
+  height: 100vh;
+  background-color: red;
+}
+
+.paen-chat-logo-section {
+  height: 4.5rem;
+  border: black solid 2px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-name {
+  font-size: 1rem;
+  color: white;
+}
+
+.chat-logo-text {
+  margin-top: 0.7rem;
+  margin-left: 0.8rem;
+}
+
+.chat-log-out-btn {
+  margin-top: 1rem;
+  margin-right: 0.8rem;
+}
+
+.chat-log-out-btn:hover {
+  color: green;
+}
+
+/* search bar csss */
+
+.search-bar-section {
+  height: 3.5rem;
+  border: solid black 2px;
+  display: flex;
+  padding: 0.5rem 0.4rem 0.5rem 1rem;
+}
+
+.search-input {
+  width: 15.7rem;
+}
+
+/* Contact section */
+
+.contact-border-bottom {
+  border-bottom: solid black 2px;
+  cursor: pointer;
+}
+
+.contact-border-bottom:hover {
+  background-color: black;
+  border-right: 3.7px solid green;
+  color: white;
+}
+
+.main-contacts-section {
+  display: grid;
+  grid-template-columns: 3.4rem 12.5rem 2.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+  margin-left: 0.8rem;
+}
+
+.contact-img {
+}
+
+.contact-img img {
+  margin-top: 4px;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+}
+
+.contact-name-and-messages {
+}
+
+.date-connection-on {
+  font-size: 0.8rem;
+}
+
+.logout-btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.logout-btn .logout-icon {
+  font-size: 19px;
+}
+
+.search-btn {
+  background: none;
+  color: green;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  background-color: yellow;
+}
