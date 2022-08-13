@@ -16,6 +16,7 @@ import {
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -195,17 +196,44 @@ const Sidebar = () => {
         {/* react active link here */}
         <ul className={sidebarCss["chat-menu"]}>
           <li>
-          <FontAwesomeIcon icon={faComment} />
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? sidebarCss.active : sidebarCss.inactive
+              }
+              to={"/"}
+            >
+              <FontAwesomeIcon icon={faComment} />{" "}
+            </NavLink>
           </li>
           <li>
-          <FontAwesomeIcon icon={faPen} />
-
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? sidebarCss.active : sidebarCss.inactive
+              }
+              to={"/rdgh"}
+            >
+              <FontAwesomeIcon icon={faPen} />
+            </NavLink>
           </li>
           <li>
-          <FontAwesomeIcon icon={faUser} />
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? sidebarCss.active : sidebarCss.inactive
+              }
+              to={"/dfg"}
+            >
+              <FontAwesomeIcon icon={faUser} />
+            </NavLink>
           </li>
           <li>
-           <FontAwesomeIcon icon={faGear} />
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? sidebarCss.active : sidebarCss.inactive
+              }
+              to={"/fgdh"}
+            >
+              <FontAwesomeIcon icon={faGear} />
+            </NavLink>
           </li>
         </ul>
       </div>
