@@ -1,0 +1,30 @@
+/* chat message right */
+
+.chat-right-message-text {
+  background-color: #19a299;
+  margin: 0;
+  color: white;
+  display: inline-block;
+  padding: 5px 10px;
+  position: relative;
+  margin-left: 80rem;
+}
+
+.chat-right-message-text ::after {
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: auto;
+  right: -10px;
+  top: auto;
+  bottom: 0;
+  border: 6px solid #19a299;
+  border-color: transparent transparent #19a299 #19a299;
+}
+
+.chat-right-message-meta {
+  color: #8a98ac;
+  text-align: right;
+  padding-bottom: 10px;
+}

@@ -16,7 +16,8 @@ import {
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, NavLink } from "react-router-dom";
+import UserChat from "./user-chat/user-chat";
+import Menu from "./menu/menu";
 
 const Sidebar = () => {
   return (
@@ -59,183 +60,13 @@ const Sidebar = () => {
         </div>
 
         {/* Contact section */}
+
         <div className={sidebarCss["contact-section"]}>
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={sidebarCss["contact-border-bottom"]}>
-            <div className={sidebarCss["main-contacts-section"]}>
-              <div className={sidebarCss["contact-img"]}>
-                <img
-                  src={require("../../assest/chat-logo/favicon.ico")}
-                  alt=""
-                />
-              </div>
-
-              <div className={sidebarCss["contact-name-and-messages"]}>
-                <span>
-                  <strong>Abobakar Sadeeq</strong>
-                </span>
-                <p>hi how are you sadeeq</p>
-              </div>
-
-              <div className={sidebarCss["date-connection-on"]}>
-                <span>Mar 25</span>
-              </div>
-            </div>
-          </div>
+          <UserChat />
         </div>
 
-        <div></div>
-        {/* react active link here */}
-        <ul className={sidebarCss["chat-menu"]}>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? sidebarCss.active : sidebarCss.inactive
-              }
-              to={"/"}
-            >
-              <FontAwesomeIcon icon={faComment} />{" "}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? sidebarCss.active : sidebarCss.inactive
-              }
-              to={"/rdgh"}
-            >
-              <FontAwesomeIcon icon={faPen} />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? sidebarCss.active : sidebarCss.inactive
-              }
-              to={"/dfg"}
-            >
-              <FontAwesomeIcon icon={faUser} />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? sidebarCss.active : sidebarCss.inactive
-              }
-              to={"/fgdh"}
-            >
-              <FontAwesomeIcon icon={faGear} />
-            </NavLink>
-          </li>
-        </ul>
+        {/* sidebar menu */}
+        <Menu />
       </div>
     </>
   );
