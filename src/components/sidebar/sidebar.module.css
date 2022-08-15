@@ -11,7 +11,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.contact-section {
+.contact-section-and-show-view-by-selected-menu {
   height: 83vh;
   overflow: auto;
   border-bottom: #2c3638 solid 1px;
@@ -74,8 +74,6 @@ input:focus {
   outline: none;
 }
 
-
-
 .logout-btn {
   background: none;
   color: inherit;
@@ -89,5 +87,3 @@ input:focus {
 .logout-btn .logout-icon {
   font-size: 19px;
 }
-
-

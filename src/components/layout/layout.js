@@ -1,6 +1,5 @@
 import React from "react";
 import Chat from "../chat-section/chat-section";
-import Home from "../home/home";
 import Sidebar from "../sidebar/sidebar";
 import layoutCss from "./layout.module.css";
 
@@ -9,12 +8,10 @@ const Layout = () => {
     <>
       <div className={layoutCss["main-layout"]}>
         <Sidebar />
-
         {/* <Home /> */}
-        
-      <Chat />
-      </div>
 
+        <Chat />
+      </div>
     </>
   );
 };

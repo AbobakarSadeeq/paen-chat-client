@@ -38,3 +38,13 @@
 .inactive {
   color: #fff;
 }
+
+.btn {
+  color: inherit;
+  border: none;
+  outline: inherit;
+  background-color:  rgb(38, 43, 46);
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}

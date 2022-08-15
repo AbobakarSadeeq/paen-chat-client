@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import sidebarCss from "./sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,7 +19,15 @@ import {
 import UserChat from "./user-chat/user-chat";
 import Menu from "./menu/menu";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
+  const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
+    return "Chats";
+  });
+
+  useEffect(() => {
+    console.log(menuSelectedVal);
+  }, [menuSelectedVal]);
+
   return (
     <>
       <div className={sidebarCss["sidebar"]}>
@@ -61,12 +69,19 @@ const Sidebar = () => {
 
         {/* Contact section */}
 
-        <div className={sidebarCss["contact-section"]}>
-          <UserChat />
+        <div
+          className={
+            sidebarCss["contact-section-and-show-view-by-selected-menu"]
+          }
+        >
+          {menuSelectedVal == "Chats" ? <UserChat /> : null}
+          {menuSelectedVal == "AddContact" ? <h1>Hello brother</h1> : null}
+          {menuSelectedVal == "UserProfile" ? <h1>Hello profile</h1> : null}
+          {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>
 
         {/* sidebar menu */}
-        <Menu />
+        <Menu changeSidebarViewByMenuClicked={setMenuSelectedVal} />
       </div>
     </>
   );

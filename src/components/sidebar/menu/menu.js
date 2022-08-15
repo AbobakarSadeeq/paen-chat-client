@@ -8,49 +8,70 @@ import {
   faUser,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
-const Menu = () => {
+const Menu = (props) => {
+  function clickMenu(selectedLinkName) {
+    props.changeSidebarViewByMenuClicked(selectedLinkName);
+  }
+
   return (
     <>
       <ul className={MenuCss["chat-menu"]}>
         <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? MenuCss.active : MenuCss.inactive
-            }
-            to={"/"}
-          >
-            <FontAwesomeIcon icon={faComment} />{" "}
-          </NavLink>
+          <button onClick={() => clickMenu("Chats")} className={MenuCss["btn"]}>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? MenuCss.active : MenuCss.inactive
+              }
+              to={"/Chats"}
+            >
+              <FontAwesomeIcon icon={faComment} />{" "}
+            </NavLink>
+          </button>
         </li>
         <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? MenuCss.active : MenuCss.inactive
-            }
-            to={"/rdgh"}
+          <button
+            onClick={() => clickMenu("AddContact")}
+            className={MenuCss["btn"]}
           >
-            <FontAwesomeIcon icon={faPen} />
-          </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? MenuCss.active : MenuCss.inactive
+              }
+              to={"/AddContact"}
+            >
+              <FontAwesomeIcon icon={faPen} />
+            </NavLink>
+          </button>
         </li>
         <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? MenuCss.active : MenuCss.inactive
-            }
-            to={"/dfg"}
+          <button
+            onClick={() => clickMenu("UserProfile")}
+            className={MenuCss["btn"]}
           >
-            <FontAwesomeIcon icon={faUser} />
-          </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? MenuCss.active : MenuCss.inactive
+              }
+              to={"UserProfile"}
+            >
+              <FontAwesomeIcon icon={faUser} />
+            </NavLink>
+          </button>
         </li>
         <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? MenuCss.active : MenuCss.inactive
-            }
-            to={"/fgdh"}
+          <button
+            onClick={() => clickMenu("Setting")}
+            className={MenuCss["btn"]}
           >
-            <FontAwesomeIcon icon={faGear} />
-          </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? MenuCss.active : MenuCss.inactive
+              }
+              to={"/Setting"}
+            >
+              <FontAwesomeIcon icon={faGear} />
+            </NavLink>
+          </button>
         </li>
       </ul>
     </>
