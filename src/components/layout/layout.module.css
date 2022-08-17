@@ -1,4 +1,5 @@
 .main-layout {
   display: grid;
   grid-template-columns: 22rem auto;
+  
 }

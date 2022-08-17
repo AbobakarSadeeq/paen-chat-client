@@ -15,14 +15,18 @@ import {
   faPen,
   faSearch,
   faUser,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import UserChat from "./user-chat/user-chat";
 import Menu from "./menu/menu";
+import AddContact from "./add-contact/add-contact";
 
 const Sidebar = (props) => {
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
     return "Chats";
   });
+
+
 
   useEffect(() => {
     console.log(menuSelectedVal);
@@ -67,6 +71,10 @@ const Sidebar = (props) => {
           </button>
         </div>
 
+        {/* Add Contact */}
+
+
+
         {/* Contact section */}
 
         <div
@@ -75,7 +83,7 @@ const Sidebar = (props) => {
           }
         >
           {menuSelectedVal == "Chats" ? <UserChat /> : null}
-          {menuSelectedVal == "AddContact" ? <h1>Hello brother</h1> : null}
+          {menuSelectedVal == "AddContact" ? <AddContact openAddContactDialog={props.addContactOpen} /> : null}
           {menuSelectedVal == "UserProfile" ? <h1>Hello profile</h1> : null}
           {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>
