@@ -39,26 +39,6 @@ const AddContactModel = (props) => {
     },
   });
 
-  const employeeFormik = useFormik({
-    initialValues: {
-      inputNames: "",
-      inputNames2: "",
-      inputNames3: "",
-    },
-    validationSchema: Yup.object({
-      inputNames: Yup.string(),
-      inputNames2: Yup.string(),
-      inputNames3: Yup.string(),
-    }),
-    onSubmit: (formInputValuesObj, { resetForm }) => {
-      console.log(formInputValuesObj.inputNames); // also give the validation to you of the inputs
-      console.log(formInputValuesObj.inputNames2);
-      console.log(formInputValuesObj.inputNames3);
-
-      resetForm();
-    },
-  });
-
   return (
     <>
       <Dialog
@@ -129,68 +109,7 @@ const AddContactModel = (props) => {
             </button>
           </div>
         </form>
-
-        {/* <form onSubmit={employeeFormik.handleSubmit}>
-          <input
-            type="text"
-            onBlur={employeeFormik.handleBlur}
-            value={employeeFormik.values.inputNames}
-            onChange={employeeFormik.handleChange}
-            className={AddContactCss["input"]}
-            placeholder="inputNames"
-            name="inputNames"
-          />
-          {employeeFormik.touched.inputNames &&
-          employeeFormik.errors.inputNames ? (
-            <div className={AddContactCss["validation-error"]}>
-              {employeeFormik.errors.firstName}
-            </div>
-          ) : null}
-          <input
-            type="text"
-            onBlur={employeeFormik.handleBlur}
-            value={employeeFormik.values.inputNames2}
-            onChange={employeeFormik.handleChange}
-            className={AddContactCss["input"]}
-            placeholder="inputNames2"
-            name="inputNames2"
-          />
-          {employeeFormik.touched.lastName && employeeFormik.errors.lastName ? (
-            <div className={AddContactCss["validation-error"]}>
-              {employeeFormik.errors.lastName}
-            </div>
-          ) : null}
-          <input
-            type="number"
-            onBlur={employeeFormik.values.inputNames3.handleBlur}
-            value={employeeFormik.values.phoneNumber}
-            onChange={employeeFormik.handleChange}
-            className={AddContactCss["search-input"]}
-            placeholder="PhoneNumber"
-            name="phoneNumber"
-          />
-          {employeeFormik.touched.inputNames3 &&
-          employeeFormik.errors.inputNames3 ? (
-            <div className={AddContactCss["validation-error"]}>
-              {formik.errors.inputNames3}
-            </div>
-          ) : null}
-
-          <div style={{ backgroundColor: "#2c3638", float: "right" }}>
-            <button
-              disabled={!(employeeFormik.isValid && employeeFormik.dirty)} // it will be enable when all inputs is valid
-              type="submit"
-              className={
-                !(employeeFormik.isValid && employeeFormik.dirty)
-                  ? AddContactCss["add-contact-btn-disable"]
-                  : AddContactCss["add-contact-btn"]
-              }
-            >
-              Add &nbsp;&nbsp;
-              <FontAwesomeIcon icon={faUserPlus} />
-            </button>
-          </div>
-        </form> */}
+ 
       </Dialog>
     </>
   );
