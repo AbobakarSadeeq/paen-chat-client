@@ -1,10 +1,14 @@
 import React from "react";
 import UserChatCss from "./user-chat.module.css";
 
-const UserChat = () => {
+const UserChat = (props) => {
+  function onClickContact() {
+    props.showUserChat(true);
+  }
+
   return (
     <>
-      <div className={UserChatCss["contact-border-bottom"]}>
+      <div className={UserChatCss["contact-border-bottom"]} onClick={onClickContact}>
         <div className={UserChatCss["main-contacts-section"]}>
           <div className={UserChatCss["contact-img"]}>
             <img

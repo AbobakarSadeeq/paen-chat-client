@@ -24,7 +24,7 @@ const AddContact = (props) => {
       </div>
 
       <div className={addContactCss["users-section"]}>
-        <UserChat />
+       <UserChat showUserChat={props.showChatOnAddContactSection} />
       </div>
     </>
   );
