@@ -17,6 +17,8 @@ const Layout = (props) => {
     setContactModel(!openContactModel);
   }
 
+
+
   return (
     <>
       {/* Models */}

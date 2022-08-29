@@ -1,0 +1,56 @@
+.logInBtn {
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+.search-input {
+}
+
+.logInBtn {
+  width: 80%;
+  background: none;
+  color: white;
+  border: 1px solid #8a98ac;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  background-color: #3fd38b;
+  padding: 6px 12px;
+}
+
+.logInBtndisabled {
+  width: 80%;
+  background: none;
+
+  color: white;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+  padding: 6px 12px;
+}
+
+.logInBtn:hover {
+}
+
+.validation-error {
+  color: red;
+}
+
+input {
+  width: 80%;
+  background-color: rgba(129, 167, 205, 0.1);
+  color: #8a98ac;
+  font-size: 16px;
+  padding-left: 20px;
+  border: none;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 3px 0 0 3px;
+}
+
+p {
+  color: #19a299 !important;
+}

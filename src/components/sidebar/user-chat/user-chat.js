@@ -8,7 +8,10 @@ const UserChat = (props) => {
 
   return (
     <>
-      <div className={UserChatCss["contact-border-bottom"]} onClick={onClickContact}>
+      <div
+        className={UserChatCss["contact-border-bottom"]}
+        onClick={onClickContact}
+      >
         <div className={UserChatCss["main-contacts-section"]}>
           <div className={UserChatCss["contact-img"]}>
             <img
@@ -34,3 +37,4 @@ const UserChat = (props) => {
 };
 
 export default UserChat;
+ 
