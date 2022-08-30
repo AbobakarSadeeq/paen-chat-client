@@ -9,12 +9,16 @@ import { useEffect, useState } from "react";
 import LoggedInContext from "./context/loggedIn/loggedIn";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(() => {
-    if (localStorage.getItem("Token")) {
-      return true;
-    }
+  // const [loggedIn, setLoggedIn] = useState(() => {
+  //   if (localStorage.getItem("Token")) {
+  //     return true;
+  //   }
+  //   return false;
+  // });
+
+  const [loggedIn, setLoggedIn] = useState(()=>{
     return false;
-  });
+  })
 
   useEffect(() => {
     console.log("Called " + loggedIn);

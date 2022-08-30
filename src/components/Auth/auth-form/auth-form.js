@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import AuthFormCss from "./auth-form.module.css";
-const AuthForm = () => {
+const AuthForm = (props) => {
   const loggedInContextApi = useContext(LoggedInContext);
 
   const [verificationCode, setVerificationCode] = useState(() => {
@@ -83,7 +83,10 @@ const AuthForm = () => {
             console.log("token generated done");
             resetForm();
             setEnteredCodeNotValid(false);
-            loggedInContextApi.isLoggedIn(true);
+
+            props.AuthenticatedUser(true);
+
+            // loggedInContextApi.isLoggedIn(true);
           },
           (errors) => {
             if (errors.response.data) {
