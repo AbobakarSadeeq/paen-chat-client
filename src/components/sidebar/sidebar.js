@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import sidebarCss from "./sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,22 +21,19 @@ import UserChat from "./user-chat/user-chat";
 import Menu from "./menu/menu";
 import AddContact from "./add-contact/add-contact";
 import axios from "axios";
+import LoggedInContext from "../../context/loggedIn/loggedIn";
 
 const Sidebar = (props) => {
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
     return "Chats";
   });
 
+  const loggedInContextApi = useContext(LoggedInContext);
 
-
-  useEffect(() => {
-    debugger
-    axios.post("https://localhost:44389/api/Test", {name:'Abobakar'}).then((dataResponse)=>{
-      console.log("yes");
-    }, ((error)=>{
-      console.log(error);
-    }))
-  }, [menuSelectedVal]);
+  function logOut() {
+    localStorage.removeItem("Token");
+    loggedInContextApi.isLoggedIn(false);
+  }
 
   return (
     <>
@@ -55,7 +52,11 @@ const Sidebar = (props) => {
           </div>
 
           <div className={sidebarCss["chat-log-out-btn"]}>
-            <button className={sidebarCss["logout-btn"]}>
+            <button
+              className={sidebarCss["logout-btn"]}
+              title="Sign out"
+              onClick={logOut}
+            >
               <FontAwesomeIcon
                 className={sidebarCss["logout-icon"]}
                 icon={faArrowRightFromBracket}
@@ -79,8 +80,6 @@ const Sidebar = (props) => {
 
         {/* Add Contact */}
 
-
-
         {/* Contact section */}
 
         <div
@@ -88,8 +87,15 @@ const Sidebar = (props) => {
             sidebarCss["contact-section-and-show-view-by-selected-menu"]
           }
         >
-          {menuSelectedVal == "Chats" ? <UserChat showUserChat={props.userChatShows}/> : null}
-          {menuSelectedVal == "AddContact" ? <AddContact showChatOnAddContactSection={props.userChatShows} openAddContactDialog={props.addContactOpen} /> : null}
+          {menuSelectedVal == "Chats" ? (
+            <UserChat showUserChat={props.userChatShows} />
+          ) : null}
+          {menuSelectedVal == "AddContact" ? (
+            <AddContact
+              showChatOnAddContactSection={props.userChatShows}
+              openAddContactDialog={props.addContactOpen}
+            />
+          ) : null}
           {menuSelectedVal == "UserProfile" ? <h1>Hello profile</h1> : null}
           {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>

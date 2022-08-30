@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useFormik } from "formik";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
+import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import AuthFormCss from "./auth-form.module.css";
 const AuthForm = () => {
+  const loggedInContextApi = useContext(LoggedInContext);
+
   const [verificationCode, setVerificationCode] = useState(() => {
     return false;
   });
@@ -22,6 +25,14 @@ const AuthForm = () => {
     return 2;
   });
 
+  const [showResetBtn, setShowResetBtn] = useState(() => {
+    return false;
+  });
+
+  const [enteredCodeNotValid, setEnteredCodeNotValid] = useState(() => {
+    return false;
+  });
+
   let countDownInterval = useRef(null);
 
   useEffect(() => {
@@ -30,6 +41,7 @@ const AuthForm = () => {
       resetVerficationCodeCountDownSec == 0
     ) {
       clearInterval(countDownInterval.current);
+      setShowResetBtn(true);
     }
 
     if (resetVerficationCodeCountDownSec == 59) {
@@ -65,10 +77,20 @@ const AuthForm = () => {
           email: value.email,
           enteredVerificationPassword: value.verificationCode,
         })
-        .then((responseData) => {
-          localStorage.setItem("Token", responseData.data);
-        });
-      resetForm();
+        .then(
+          (responseData) => {
+            localStorage.setItem("Token", responseData.data);
+            console.log("token generated done");
+            resetForm();
+            setEnteredCodeNotValid(false);
+            loggedInContextApi.isLoggedIn(true);
+          },
+          (errors) => {
+            if (errors.response.data) {
+              setEnteredCodeNotValid(true);
+            }
+          }
+        );
     },
   });
 
@@ -80,7 +102,10 @@ const AuthForm = () => {
         .post("https://localhost:44389/api/Account", {
           email: formik.values.email,
         })
-        .then((responseData) => {});
+        .then(
+          (responseData) => {},
+          (errors) => {}
+        );
     }
 
     countDownInterval.current = setInterval(() => {
@@ -93,21 +118,53 @@ const AuthForm = () => {
     }, 1000);
   };
 
+  function resetApplyForCode() {
+    setShowResetBtn(false);
+
+    countDownInterval.current = setInterval(() => {
+      setResetVerficationCodeCountDownSec((pervsValue) => {
+        if (pervsValue == 0) {
+          return 59;
+        }
+        return pervsValue - 1;
+      });
+    }, 1000);
+
+    // again send the request to backend for to send the email
+    axios
+      .post("https://localhost:44389/api/Account", {
+        email: formik.values.email,
+      })
+      .then((responseData) => {});
+  }
+
   return (
     <>
       {verificationCode ? (
         <>
-          <p>Please verify the code which sended to your gmail</p>
-          <p>
-            {"0" + resetVerficationCodeCountDownMint}:
+          <p className={AuthFormCss["messages-of-auth"]}>
+            Please verify the code which sended to your gmail
+          </p>
+          <p className={AuthFormCss["messages-of-auth"]}>
+            {" "}
+            Code will be reset within
+            {" 0" + resetVerficationCodeCountDownMint}:
             {resetVerficationCodeCountDownSec < 10
               ? "0" + resetVerficationCodeCountDownSec
               : resetVerficationCodeCountDownSec}
           </p>
         </>
       ) : (
-        <p>Log In !</p>
+        <>
+          <p className={AuthFormCss["messages-of-auth"]}>Log In !</p>
+        </>
       )}
+
+      {enteredCodeNotValid ? (
+        <div className={AuthFormCss["validation-error"]}>
+          Sorry code is incorrect, please try again
+        </div>
+      ) : null}
 
       <form onSubmit={formik.handleSubmit}>
         {verificationCode == true ? (
@@ -150,7 +207,8 @@ const AuthForm = () => {
         <div style={{ backgroundColor: "#2c3638" }}>
           <br />
 
-          {verificationCode ? (
+          {/* when is not time expired then show the verfication  */}
+          {verificationCode && showResetBtn == false ? (
             <button
               disabled={!(formik.isValid && formik.dirty)} // it will be enable when all inputs is valid
               type="submit"
@@ -162,7 +220,11 @@ const AuthForm = () => {
             >
               Check code
             </button>
-          ) : (
+          ) : null}
+
+          {/* Send code when email is entered */}
+
+          {!verificationCode ? (
             <button
               type="button"
               onClick={() =>
@@ -174,7 +236,17 @@ const AuthForm = () => {
             >
               Send code
             </button>
-          )}
+          ) : null}
+
+          {/* When time is expired then show the reset code button */}
+          {showResetBtn ? (
+            <button
+              className={AuthFormCss.logInBtn}
+              onClick={resetApplyForCode}
+            >
+              Reset code!
+            </button>
+          ) : null}
         </div>
       </form>
     </>

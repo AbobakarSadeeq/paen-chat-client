@@ -5,16 +5,33 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import Layout from "../src/components/layout/layout";
 import Auth from "./components/Auth/auth";
+import { useEffect, useState } from "react";
+import LoggedInContext from "./context/loggedIn/loggedIn";
 
 function App() {
-  let userLoggedIn = localStorage.getItem("token") ? (
+  const [loggedIn, setLoggedIn] = useState(() => {
+    if (localStorage.getItem("Token")) {
+      return true;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    console.log("Called " + loggedIn);
+  }, [loggedIn]);
+
+  let userLoggedIn = loggedIn ? (
     <Layout />
   ) : (
     <>
       <Auth />
     </>
   );
-  return <>{userLoggedIn}</>;
+  return (
+    <LoggedInContext.Provider value={{ isLoggedIn: setLoggedIn }}>
+      {userLoggedIn}
+    </LoggedInContext.Provider>
+  );
 }
 
 export default App;

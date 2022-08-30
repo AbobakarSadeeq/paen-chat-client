@@ -51,6 +51,6 @@ input {
   border-radius: 3px 0 0 3px;
 }
 
-p {
-  color: #19a299 !important;
+.messages-of-auth {
+  color: #19a299;
 }
