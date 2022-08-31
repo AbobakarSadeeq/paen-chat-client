@@ -16,24 +16,29 @@ function App() {
   //   return false;
   // });
 
-  const [loggedIn, setLoggedIn] = useState(()=>{
+  const [loggedIn, setLoggedIn] = useState(() => {
     return false;
-  })
+  });
 
+  const [profileValid, setProfileValid] = useState(false);
+
+  let renderView = null;
   useEffect(() => {
-    console.log("Called " + loggedIn);
+    if (localStorage.getItem("Token")) {
+      if (JSON.parse(localStorage.getItem("Token")).ProfileAddValid) {
+        setLoggedIn(true);
+      }
+    }
   }, [loggedIn]);
 
-  let userLoggedIn = loggedIn ? (
-    <Layout />
-  ) : (
-    <>
-      <Auth />
-    </>
-  );
   return (
     <LoggedInContext.Provider value={{ isLoggedIn: setLoggedIn }}>
-      {userLoggedIn}
+      {loggedIn && localStorage.getItem("Token") != null ? (
+        <Layout />
+      ) : (
+        <Auth />
+      )}
+      {/* {renderView} */}
     </LoggedInContext.Provider>
   );
 }

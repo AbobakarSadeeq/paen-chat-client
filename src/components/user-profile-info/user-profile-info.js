@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserProfileInfoForm from "./user-profile-info-form/user-profile-info-form";
-import ProfileCss from "./user-profile.info.module.css";
 
 const UserProfileInfo = () => {
   const [userFormDetail, setUserFormDetail] = useState(() => {
@@ -26,9 +25,15 @@ const UserProfileInfo = () => {
       .then((responseData) => {
         setUserFormDetail(() => {
           return {
-            userName: responseData.data.userName == null && "",
-            aboutStatus: responseData.data.aboutStatus == null && "",
-            profilePhotoUrl: responseData.data.profilePhotoUrl == null && "",
+            userName: responseData.data.userName
+              ? responseData.data.userName
+              : "",
+            aboutStatus: responseData.data.aboutStatus
+              ? responseData.data.aboutStatus
+              : "",
+            profilePhotoUrl: responseData.data.profilePhotoUrl
+              ? responseData.data.profilePhotoUrl
+              : "",
           };
         });
       });
@@ -36,7 +41,7 @@ const UserProfileInfo = () => {
 
   return (
     <>
-      {userFormDetail.userName == "" ? (
+      {userFormDetail.userName != null ? (
         <UserProfileInfoForm userFormDataObj={userFormDetail} />
       ) : null}
     </>

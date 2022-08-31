@@ -79,7 +79,13 @@ const AuthForm = (props) => {
         })
         .then(
           (responseData) => {
-            localStorage.setItem("Token", responseData.data);
+            localStorage.setItem(
+              "Token",
+              JSON.stringify({
+                Token: responseData.data,
+                ProfileAddValid: false,
+              })
+            );
             console.log("token generated done");
             resetForm();
             setEnteredCodeNotValid(false);
