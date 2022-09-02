@@ -28,16 +28,18 @@ function App() {
       if (JSON.parse(localStorage.getItem("Token")).ProfileAddValid) {
         setLoggedIn(true);
       }
+
+      console.log(loggedIn);
     }
   }, [loggedIn]);
 
   return (
     <LoggedInContext.Provider value={{ isLoggedIn: setLoggedIn }}>
-      {loggedIn && localStorage.getItem("Token") != null ? (
-        <Layout />
-      ) : (
-        <Auth />
-      )}
+        {loggedIn && localStorage.getItem("Token") != null ? (
+          <Layout />
+        ) : (
+          <Auth />
+        )}
       {/* {renderView} */}
     </LoggedInContext.Provider>
   );
