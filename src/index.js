@@ -22,19 +22,13 @@ axios.interceptors.request.use(
   (requestConfig) => {
     let token = JSON.parse(localStorage.getItem("Token"));
     if (token != null) {
-      // adding attribute or meta-data to headers
       requestConfig.headers["Authorization"] = "Bearer " + token.Token;
     }
-    // if null then it means does not apply for authentication and authorization and show simple view
-
-    return requestConfig; // means true and send the request
+    return requestConfig;
   },
   (error) => {
     // when we sendding something wrong
-    debugger;
   }
-
-  // response
 );
 
 axios.interceptors.response.use(
@@ -44,13 +38,19 @@ axios.interceptors.response.use(
   },
   (responseError) => {
     // response is  having a error
+    if (
+      responseError.response.status === 401 ||
+      responseError.response.status === 403
+    ) {
+      localStorage.removeItem("Token");
+      root.render(
+        <BrowserRouter basename="/">
+          <ResponseErrorHandling statusCode={responseError.response.status} />
+        </BrowserRouter>
+      );
+    }
 
-    localStorage.removeItem("Token");
-    root.render(
-      <BrowserRouter basename="/">
-        <ResponseErrorHandling statusCode={responseError.response.status} />
-      </BrowserRouter>
-    );
+    return Promise.reject(responseError);
   }
 );
 

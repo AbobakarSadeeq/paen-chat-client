@@ -22,17 +22,21 @@ import Menu from "./menu/menu";
 import AddContact from "./add-contact/add-contact";
 import axios from "axios";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
+import { useLocation, useNavigate } from "react-router";
+import UserEditProfile from "./user-edit-profile/user-edit-profile";
 
 const Sidebar = (props) => {
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
     return "Chats";
   });
 
-  const loggedInContextApi = useContext(LoggedInContext);
+  const navigate = useNavigate();
 
+  const loggedInContextApi = useContext(LoggedInContext);
   function logOut() {
     localStorage.removeItem("Token");
     loggedInContextApi.isLoggedIn(false);
+    navigate("/");
   }
 
   return (
@@ -48,7 +52,7 @@ const Sidebar = (props) => {
               alt=""
             />{" "}
             &nbsp;
-            <span className={sidebarCss["chat-name"]}>Paen-Chat</span>
+            <span className={sidebarCss["chat-name"]}>{menuSelectedVal}</span>
           </div>
 
           <div className={sidebarCss["chat-log-out-btn"]}>
@@ -66,17 +70,21 @@ const Sidebar = (props) => {
         </div>
 
         {/* search bar section */}
-        <div className={sidebarCss["search-bar-section"]}>
-          <input
-            type="text"
-            placeholder="Search"
-            className={sidebarCss["search-input"]}
-          />
+        {menuSelectedVal == "Chats" || menuSelectedVal == "Add Contact" ? (
+          <div className={sidebarCss["search-bar-section"]}>
+            <input
+              type="text"
+              placeholder="Search"
+              className={sidebarCss["search-input"]}
+            />
 
-          <button className={sidebarCss["search-btn-contact"]}>
-            <FontAwesomeIcon icon={faSearch} />
-          </button>
-        </div>
+            <button className={sidebarCss["search-btn-contact"]}>
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
+          </div>
+        ) : (
+          <div className={sidebarCss["not-search-bar-show"]}></div>
+        )}
 
         {/* Add Contact */}
 
@@ -90,13 +98,13 @@ const Sidebar = (props) => {
           {menuSelectedVal == "Chats" ? (
             <UserChat showUserChat={props.userChatShows} />
           ) : null}
-          {menuSelectedVal == "AddContact" ? (
+          {menuSelectedVal == "Add Contact" ? (
             <AddContact
               showChatOnAddContactSection={props.userChatShows}
               openAddContactDialog={props.addContactOpen}
             />
           ) : null}
-          {menuSelectedVal == "UserProfile" ? <h1>Hello profile</h1> : null}
+          {menuSelectedVal == "User Profile" ? <UserEditProfile /> : null}
           {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>
 

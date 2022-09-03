@@ -39,19 +39,6 @@ const ResponseErrorHandling = (props) => {
             </>
           ) : null}
 
-          {props.statusCode == 404 ? (
-            <>
-              <h1 className={ResponseErrorHandlingCss["main-header"]}>
-                {props.statusCode} - Not Found
-              </h1>
-              <p className={ResponseErrorHandlingCss["error-msg-p"]}>
-                Your data is failed.
-              </p>
-              <p className={ResponseErrorHandlingCss["error-msg-p"]}>
-                Sorry we cannot find your search data.
-              </p>
-            </>
-          ) : null}
           <a href="/" className={ResponseErrorHandlingCss["abc"]}>
             home page
           </a>

@@ -1,0 +1,84 @@
+.user-main-profile-picture {
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+}
+
+.user-main-profile-picture img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+.user-main-profile-picture p {
+  padding-top: 1rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 130px;
+}
+
+.camera-icon {
+  padding-left: 5px;
+}
+
+.user-main-profile-picture button {
+  background-color: #8a98ac;
+  padding: 1rem;
+  border: none;
+}
+
+.user-main-profile-picture button:hover {
+  background-color: #19a299;
+  color: white;
+}
+
+.list-unstyled {
+  list-style: none;
+  margin-bottom: 0px;
+  margin: 0;
+  padding: 0;
+}
+
+.list-unstyled li:hover {
+   background-color: #2c3638;
+}
+
+.media {
+  padding: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  display: flex;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.media p {
+  margin: 0;
+  padding: 0;
+}
+
+.user-icon {
+  font-size: 20px;
+  color: #8a98ac;
+  margin-right: 15px;
+  font-family: "feather" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 22px;
+  padding-top: 13px;
+}
+
+.header {
+   color: white;
+   font-weight: bold;
+}
+
+.media-body-p {
+   color: #8a98ac;
+
+}

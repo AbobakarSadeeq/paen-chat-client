@@ -30,7 +30,7 @@ const Menu = (props) => {
         </li>
         <li>
           <button
-            onClick={() => clickMenu("AddContact")}
+            onClick={() => clickMenu("Add Contact")}
             className={MenuCss["btn"]}
           >
             <NavLink
@@ -45,7 +45,7 @@ const Menu = (props) => {
         </li>
         <li>
           <button
-            onClick={() => clickMenu("UserProfile")}
+            onClick={() => clickMenu("User Profile")}
             className={MenuCss["btn"]}
           >
             <NavLink

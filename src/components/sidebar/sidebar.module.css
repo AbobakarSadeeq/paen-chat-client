@@ -15,6 +15,7 @@
   height: 83vh;
   overflow: auto;
   border-bottom: #2c3638 solid 1px;
+   
 }
 
 .chat-name {
@@ -86,4 +87,9 @@ input:focus {
 
 .logout-btn .logout-icon {
   font-size: 19px;
+}
+
+.not-search-bar-show {
+  height: 3.5rem;
+
 }

@@ -1,17 +1,14 @@
-import { useFormik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
-
-import UserProfileFormCss from "./user-profile-info-form.module.css";
+import { Dialog } from "primereact/dialog";
+import React from "react";
+import ProfileEditCss from "./profile-edit.module.css";
+import ByDefaultUserImage from "../../../../assest/No Image.jpg";
 import * as Yup from "yup";
-import ByDefaultUserImage from "../../../assest/No Image.jpg";
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-import LoggedInContext from "../../../context/loggedIn/loggedIn";
-import { useNavigate } from "react-router";
 
-const UserProfileInfoForm = ({ userFormDataObj }) => {
-  const authContextApi = useContext(LoggedInContext);
-  const navigate = useNavigate();
-
+const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
   const [selectedFile, setSelectedFile] = useState(() => {
     return null;
   });
@@ -27,6 +24,10 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
+
+  function hideDialogOfModel() {
+    hideDialog(false);
+  }
 
   function fileChange(event) {
     setSelectedFile(() => {
@@ -66,33 +67,23 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
           formFrom
         )
         .then((responseData) => {
-          console.log("done adding");
-
-          // next step here
-          let updateView = JSON.parse(localStorage.getItem("Token"));
-          if (updateView.ProfileAddValid == false) {
-            localStorage.setItem(
-              "Token",
-              JSON.stringify({
-                Token: updateView.Token,
-                ProfileAddValid: true,
-              })
-            );
-          }
-          authContextApi.isLoggedIn(true);
-          navigate('/Chats')
+         hideDialog(false);
         });
     },
   });
- 
+
   return (
     <>
-      <h3 className={UserProfileFormCss["main-form-header"]}>
-        Your Profile Detail
-      </h3>
-
-      <div className={UserProfileFormCss["profile-form"]}>
-        <form onSubmit={userProfileFormik.handleSubmit}>
+      <Dialog
+        header="Edit Profile"
+        visible={true}
+        style={{ width: "20vw" }}
+        onHide={hideDialogOfModel}
+        className={ProfileEditCss["profile-edit-model"]}
+        contentStyle={{ backgroundColor: "#2c3638", cursor:'auto' }}
+        headerStyle={{ backgroundColor: "#2c3638", color: "#8a98ac", cursor:'auto' }}
+      >
+        <form onSubmit={userProfileFormik.handleSubmit} className={ProfileEditCss['editForm']}>
           {
             <>
               <img
@@ -106,14 +97,14 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
                 width="100px"
                 height="100px"
                 alt=""
-                className={UserProfileFormCss["adding-profile-img"]}
+                className={ProfileEditCss["adding-profile-img"]}
               />{" "}
               <br />
               <br />
               <input
                 type="file"
                 onChange={fileChange}
-                className={UserProfileFormCss["file-input"]}
+                className={ProfileEditCss["file-input"]}
                 name="File"
                 id="upload"
                 hidden
@@ -130,13 +121,13 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
             onBlur={userProfileFormik.handleBlur}
             value={userProfileFormik.values.userName}
             onChange={userProfileFormik.handleChange}
-            className={UserProfileFormCss["input"]}
+            className={ProfileEditCss["input"]}
             placeholder="Your Full Name "
             name="userName"
           />
           {userProfileFormik.touched.userName &&
           userProfileFormik.errors.userName ? (
-            <div className={UserProfileFormCss["validation-error"]}>
+            <div className={ProfileEditCss["validation-error"]}>
               {userProfileFormik.errors.userName}
             </div>
           ) : null}
@@ -147,13 +138,13 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
             onBlur={userProfileFormik.handleBlur}
             value={userProfileFormik.values.aboutStatus}
             onChange={userProfileFormik.handleChange}
-            className={UserProfileFormCss["input"]}
+            className={ProfileEditCss["input"]}
             placeholder="About "
             name="aboutStatus"
           />
           {userProfileFormik.touched.aboutStatus &&
           userProfileFormik.errors.aboutStatus ? (
-            <div className={UserProfileFormCss["validation-error"]}>
+            <div className={ProfileEditCss["validation-error"]}>
               {userProfileFormik.errors.aboutStatus}
             </div>
           ) : null}
@@ -170,16 +161,16 @@ const UserProfileInfoForm = ({ userFormDataObj }) => {
               (!(userProfileFormik.isValid && userProfileFormik.dirty) &&
                 userProfileFormik.values.userName.length == 0) ||
               userProfileFormik.values.aboutStatus.length == 0
-                ? UserProfileFormCss.changeProfileDisabled
-                : UserProfileFormCss.changeProfile
+                ? ProfileEditCss.changeProfileDisabled
+                : ProfileEditCss.changeProfile
             }
           >
             Change profile
           </button>
         </form>
-      </div>
+      </Dialog>
     </>
   );
 };
 
-export default UserProfileInfoForm;
+export default ProfileEdit;
