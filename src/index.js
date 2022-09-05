@@ -9,6 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import LoggedInContext from "./context/loggedIn/loggedIn";
 import ResponseErrorHandling from "./components/response-error-handling/response-error-handling";
+import 'font-awesome/css/font-awesome.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

@@ -9,6 +9,7 @@ import {
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 const Menu = (props) => {
+  
   function clickMenu(selectedLinkName) {
     props.changeSidebarViewByMenuClicked(selectedLinkName);
   }

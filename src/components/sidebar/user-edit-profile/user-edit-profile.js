@@ -16,6 +16,7 @@ import ByDefaultUserImage from "../../../assest/No Image.jpg";
 import ProfileEdit from "./profile-edit/profile-edit";
 
 const UserEditProfile = () => {
+  
   const [userDetail, setUserDetail] = useState(() => {
     return null;
   });
@@ -23,6 +24,7 @@ const UserEditProfile = () => {
   const [openEditProfileDialog, setOpenEditProfileDialog] = useState(() => {
     return false;
   });
+
   useEffect(() => {
     if (openEditProfileDialog == false) {
       axios

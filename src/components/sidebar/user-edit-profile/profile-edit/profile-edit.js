@@ -9,10 +9,11 @@ import { useState } from "react";
 import axios from "axios";
 
 const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
+  const [preview, setPreview] = useState(null);
+
   const [selectedFile, setSelectedFile] = useState(() => {
     return null;
   });
-  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     let objectUrl = null;

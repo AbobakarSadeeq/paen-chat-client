@@ -26,17 +26,56 @@ import { useLocation, useNavigate } from "react-router";
 import UserEditProfile from "./user-edit-profile/user-edit-profile";
 
 const Sidebar = (props) => {
+  const navigate = useNavigate();
+  const loggedInContextApi = useContext(LoggedInContext);
+
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
     return "Chats";
   });
 
-  const navigate = useNavigate();
+  const [connectedContactList, setConnectedContactList] = useState(() => {
+    return [];
+  });
 
-  const loggedInContextApi = useContext(LoggedInContext);
+  const [selectedIndex, setSelectedIndex] = useState(() => {
+    return 0;
+  });
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://localhost:44389/api/Contact/ListOfChatConnectedWithSingleUser/" +
+          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
+            .UserId
+      )
+      .then((responseData) => {
+        let customArr = [...responseData.data];
+        customArr = customArr.map((obj) => ({
+          ...obj,
+          selectedContectStyle: false,
+        }));
+        setConnectedContactList(customArr);
+      });
+  }, []);
+
+  function changeSelectedContactEffect(i) {
+    let fetchArrData = [...connectedContactList];
+    setSelectedIndex(i);
+    fetchArrData[selectedIndex].selectedContectStyle = false;
+    fetchArrData[i].selectedContectStyle = true;
+    setConnectedContactList(() => {
+      return fetchArrData;
+    });
+  }
+
   function logOut() {
     localStorage.removeItem("Token");
     loggedInContextApi.isLoggedIn(false);
     navigate("/");
+  }
+
+  function changeView() {
+    props.showChatSectionn();
   }
 
   return (
@@ -95,13 +134,27 @@ const Sidebar = (props) => {
             sidebarCss["contact-section-and-show-view-by-selected-menu"]
           }
         >
-          {menuSelectedVal == "Chats" ? (
-            <UserChat showUserChat={props.userChatShows} />
-          ) : null}
+          {menuSelectedVal == "Chats"
+            ? connectedContactList.length > 0 &&
+              connectedContactList.map((singleContact, index) => {
+                return (
+                  <div key={index}>
+                    <UserChat
+                      index={index}
+                      AddContactData={singleContact}
+                      changeSelectedContactEffect={changeSelectedContactEffect}
+                      showChatSection={changeView}
+                    />
+                  </div>
+                );
+              })
+            : null}
           {menuSelectedVal == "Add Contact" ? (
             <AddContact
-              showChatOnAddContactSection={props.userChatShows}
+              showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}
+              showAddContactPanelDataObj={props.selectedNewContactObj}
+              showChatSection={changeView}
             />
           ) : null}
           {menuSelectedVal == "User Profile" ? <UserEditProfile /> : null}

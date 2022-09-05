@@ -8,11 +8,50 @@ import {
 } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import UserChat from "../user-chat/user-chat";
+import { useEffect } from "react";
+import axios from "axios";
 
 const AddContact = (props) => {
+  const [contactList, setContactList] = useState(() => {
+    return [];
+  });
+
+  const [selectedIndex, setSelectedIndex] = useState(() => {
+    return 0;
+  });
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://localhost:44389/api/Contact/" +
+          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
+            .UserId
+      )
+      .then((responseData) => {
+        let customArr = [...responseData.data];
+        customArr = customArr.map((obj) => ({
+          ...obj,
+          selectedContectStyle: false,
+        }));
+        setContactList(customArr);
+      });
+  }, []);
+
   function openModelHandler() {
     props.openAddContactDialog(true);
   }
+
+  function changeSelectedContactEffect(i) {
+    let fetchArrData = [...contactList];
+    setSelectedIndex(i);
+    fetchArrData[selectedIndex].selectedContectStyle = false;
+    fetchArrData[i].selectedContectStyle = true;
+    setContactList(() => {
+      return fetchArrData;
+    });
+  }
+
+  function xyz(val) {}
 
   return (
     <>
@@ -24,7 +63,20 @@ const AddContact = (props) => {
       </div>
 
       <div className={addContactCss["users-section"]}>
-       <UserChat showUserChat={props.showChatOnAddContactSection} />
+        {contactList.length > 0 &&
+          contactList.map((singleContact, index) => {
+            return (
+              <div key={index}>
+                <UserChat
+                  showChatSection={props.showChatSection}
+                  index={index}
+                  showAddContactPanel={props.showAddContactPanelDataObj}
+                  AddContactData={singleContact}
+                  changeSelectedContactEffect={changeSelectedContactEffect}
+                />
+              </div>
+            );
+          })}
       </div>
     </>
   );

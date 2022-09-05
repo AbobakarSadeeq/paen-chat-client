@@ -6,22 +6,17 @@ import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import AuthFormCss from "./auth-form.module.css";
 const AuthForm = (props) => {
   const loggedInContextApi = useContext(LoggedInContext);
+  let countDownInterval = useRef(null);
 
   const [verificationCode, setVerificationCode] = useState(() => {
     return false;
   });
 
-  const [
-    resetVerficationCodeCountDownSec,
-    setResetVerficationCodeCountDownSec,
-  ] = useState(() => {
+  const [ resetVerficationCodeCountDownSec, setResetVerficationCodeCountDownSec] = useState(() => {
     return 59;
   });
 
-  const [
-    resetVerficationCodeCountDownMint,
-    setResetVerficationCodeCountDownMint,
-  ] = useState(() => {
+  const [resetVerficationCodeCountDownMint, setResetVerficationCodeCountDownMint] = useState(() => {
     return 2;
   });
 
@@ -33,7 +28,6 @@ const AuthForm = (props) => {
     return false;
   });
 
-  let countDownInterval = useRef(null);
 
   useEffect(() => {
     if (

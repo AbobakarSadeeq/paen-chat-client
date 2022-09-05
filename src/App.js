@@ -10,40 +10,33 @@ import LoggedInContext from "./context/loggedIn/loggedIn";
 import { useNavigate } from "react-router";
 
 function App() {
-  // const [loggedIn, setLoggedIn] = useState(() => {
-  //   if (localStorage.getItem("Token")) {
-  //     return true;
-  //   }
-  //   return false;
-  // });
+
+  const navigate = useNavigate();
 
   const [loggedIn, setLoggedIn] = useState(() => {
     return false;
   });
 
-  const [profileValid, setProfileValid] = useState(false);
-  const navigate = useNavigate();
-  let renderView = null;
+
+
   useEffect(() => {
     if (localStorage.getItem("Token")) {
       if (JSON.parse(localStorage.getItem("Token")).ProfileAddValid) {
         setLoggedIn(true);
         navigate("/Chats");
-
       }
-
-     
     }
+
+   
   }, [loggedIn]);
 
   return (
-    <LoggedInContext.Provider value={{ isLoggedIn: setLoggedIn }}>
+    <LoggedInContext.Provider value={{ isLoggedIn: setLoggedIn  }}>
       {loggedIn && localStorage.getItem("Token") != null ? (
-        <Layout />
+        <Layout  />
       ) : (
         <Auth />
       )}
-      {/* {renderView} */}
     </LoggedInContext.Provider>
   );
 }

@@ -8,9 +8,7 @@ import useInput from "../../hooks/form-control";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 const AddContactModel = (props) => {
-  function hideDialogOfModel() {
-    props.hideDialog();
-  }
+
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +36,10 @@ const AddContactModel = (props) => {
       resetForm();
     },
   });
+
+  function hideDialogOfModel() {
+    props.hideDialog();
+  }
 
   return (
     <>
