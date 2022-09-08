@@ -10,8 +10,11 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import UserChat from "../user-chat/user-chat";
 import { useEffect } from "react";
 import axios from "axios";
+import { useContext } from "react";
+import LoggedInContext from "../../../context/loggedIn/loggedIn";
 
 const AddContact = (props) => {
+  const contextApi = useContext(LoggedInContext);
   const [contactList, setContactList] = useState(() => {
     return [];
   });
@@ -19,6 +22,23 @@ const AddContact = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(() => {
     return 0;
   });
+
+  if (props.refreshContectProp) {
+    axios
+      .get(
+        "https://localhost:44389/api/Contact/" +
+          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
+            .UserId
+      )
+      .then((responseData) => {
+        let customArr = [...responseData.data];
+        customArr = customArr.map((obj) => ({
+          ...obj,
+          selectedContectStyle: false,
+        }));
+        setContactList(customArr);
+      });
+  }
 
   useEffect(() => {
     axios

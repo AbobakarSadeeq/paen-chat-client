@@ -26,6 +26,7 @@ import { useLocation, useNavigate } from "react-router";
 import UserEditProfile from "./user-edit-profile/user-edit-profile";
 
 const Sidebar = (props) => {
+  const location = useLocation();
   const navigate = useNavigate();
   const loggedInContextApi = useContext(LoggedInContext);
 
@@ -42,6 +43,7 @@ const Sidebar = (props) => {
   });
 
   useEffect(() => {
+  
     axios
       .get(
         "https://localhost:44389/api/Contact/ListOfChatConnectedWithSingleUser/" +
@@ -144,6 +146,7 @@ const Sidebar = (props) => {
                       AddContactData={singleContact}
                       changeSelectedContactEffect={changeSelectedContactEffect}
                       showChatSection={changeView}
+                      selectedChatUperProfileData={props.profileUperData}
                     />
                   </div>
                 );
@@ -151,6 +154,7 @@ const Sidebar = (props) => {
             : null}
           {menuSelectedVal == "Add Contact" ? (
             <AddContact
+              refreshContectProp={props.refreshingContect}
               showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}
               showAddContactPanelDataObj={props.selectedNewContactObj}

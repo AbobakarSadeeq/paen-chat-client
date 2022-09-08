@@ -4,13 +4,23 @@ import LeftMessageSection from "./left-message-section/left-message-section";
 import RightMessageSection from "./right-message-section/right-message-section";
 import MessageSend from "./message-send-section/message-send-section";
 import MessageSenderProfile from "./message-sender-profile/message-sender-profile";
+import { useEffect } from "react";
+import { useContext } from "react";
+import LoggedInContext from "../../context/loggedIn/loggedIn";
 
-const Chat = () => {
+const Chat = (props) => {
+  const contextApi = useContext(LoggedInContext);
+  useEffect(()=>{
+    contextApi.showChatSectionThroughUserDetailProfileSection({});
+    
+  },[])
+  
   return (
     <>
+    
       <div>
         {/* profile section */}
-        <MessageSenderProfile />
+        <MessageSenderProfile profile={props.profileData} />
 
         {/* chat read section */}
 

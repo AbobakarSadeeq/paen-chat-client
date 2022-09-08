@@ -1,7 +1,12 @@
 import React from "react";
+import { useContext } from "react";
+import { useEffect } from "react";
+import LoggedInContext from "../../context/loggedIn/loggedIn";
 import homeCss from "./home.module.css";
 
 const Home = () => {
+
+
   return (
     <>
       <div className={homeCss["main-home"]}>

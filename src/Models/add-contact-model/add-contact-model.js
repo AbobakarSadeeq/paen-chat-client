@@ -7,14 +7,13 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import useInput from "../../hooks/form-control";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 const AddContactModel = (props) => {
-
-
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
-      phoneNumber: "",
+      contactNo: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -25,15 +24,32 @@ const AddContactModel = (props) => {
         .max(15, "Must be 15 characters or less") // if max then show this error
         .required("Please write the lastName"), // if only clicked or invalid then this message will be shown
 
-      phoneNumber: Yup.string()
+      contactNo: Yup.string()
         .matches(/^[0-9]+$/, "Must be only digits") // used for pattern like angular
         .min(10, "Must be exactly 10 digits")
         .max(11, "Must be exactly 11 digits")
         .required("Please write the phone number"),
     }),
     onSubmit: (value, { resetForm }) => {
-      console.log(value);
       resetForm();
+      props.refreshMyContect();
+      props.hideDialog();
+      axios
+        .post("https://localhost:44389/api/Contact", {
+          ...value,
+          userId: JSON.parse(
+            window.atob(localStorage.getItem("Token").split(".")[1])
+          ).UserId,
+        })
+        .then(
+          (response) => {
+            console.log("CONTECT ADDED");
+            
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     },
   });
 
@@ -84,15 +100,15 @@ const AddContactModel = (props) => {
           <input
             type="number"
             onBlur={formik.handleBlur}
-            value={formik.values.phoneNumber}
+            value={formik.values.contactNo}
             onChange={formik.handleChange}
             className={AddContactCss["search-input"]}
-            placeholder="PhoneNumber"
-            name="phoneNumber"
+            placeholder="contactNo"
+            name="contactNo"
           />
-          {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+          {formik.touched.contactNo && formik.errors.contactNo ? (
             <div className={AddContactCss["validation-error"]}>
-              {formik.errors.phoneNumber}
+              {formik.errors.contactNo}
             </div>
           ) : null}
 
@@ -111,7 +127,6 @@ const AddContactModel = (props) => {
             </button>
           </div>
         </form>
- 
       </Dialog>
     </>
   );

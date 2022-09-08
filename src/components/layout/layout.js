@@ -9,8 +9,13 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import LoggedInContext from "../../context/loggedIn/loggedIn";
 const Layout = (props) => {
+  console.log(props.viewChangeToChatSectionFromUserDetail);
   const location = useLocation();
+  const contextApi = useContext(LoggedInContext);
+
   const [openContactModel, setContactModel] = useState(() => {
     return false;
   });
@@ -29,6 +34,20 @@ const Layout = (props) => {
     return false;
   });
 
+  const [uperProfileData, setUperProfileData] = useState(() => {
+    return {};
+  });
+
+  const [contectAddRefresh, setContectAddRefresh] = useState(() => {
+    return false;
+  });
+
+  function refreshMyContect() {
+    setContectAddRefresh(() => {
+      return true;
+    });
+  }
+
   function contactAddModel() {
     setContactModel(!openContactModel);
   }
@@ -43,32 +62,57 @@ const Layout = (props) => {
     }
   }
 
-  useEffect(() => {}, [showContectRightSidePane]);
+  useEffect(() => {
+    if (
+      props.viewChangeToChatSectionFromUserDetail != null &&
+      !props.newUserMessagedOpen
+    ) {
+      contextApi.showChatSectionThroughUserDetailProfileSection(null);
+      //setShowContactDetail(true);
+    } else if (
+      props.viewChangeToChatSectionFromUserDetail &&
+      props.newUserMessagedOpen
+    ) {
+      setShowContactDetail(false);
+    }
+  }, [props.newUserMessagedOpen]);
 
   return (
     <>
       {/* Models */}
       {openContactModel ? (
-        <AddContactModel hideDialog={contactAddModel} />
+        <AddContactModel
+          hideDialog={contactAddModel}
+          refreshMyContect={refreshMyContect}
+        />
       ) : null}
 
       <div className={layoutCss["main-layout"]}>
         <Sidebar
+          refreshingContect={contectAddRefresh}
+          addingContactDone={openContactModel}
           addContactOpen={setContactModel}
           showChatSectionn={changeViewww}
           selectedNewContactObj={(data) => {
             setShowContectRightSidePane(data);
+          }}
+          profileUperData={(data) => {
+            setUperProfileData(data);
           }}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
         {showChat || showContectRightSidePane ? "" : <Home />}
 
-        {showContactDetail ? (
+        {showContactDetail && !props.newUserMessagedOpen ? (
           <ContectDetail detail={showContectRightSidePane} />
         ) : null}
 
-        {showChat ? <Chat /> : null}
+        {showChat ? <Chat profileData={uperProfileData} /> : null}
+        {props.viewChangeToChatSectionFromUserDetail &&
+        props.newUserMessagedOpen ? (
+          <div>sdgksdlfgmksdfk</div>
+        ) : null}
       </div>
     </>
   );

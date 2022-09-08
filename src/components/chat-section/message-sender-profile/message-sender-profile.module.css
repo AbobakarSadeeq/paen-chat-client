@@ -24,3 +24,9 @@
 .user-name-and-status p {
   color: #8a98ac;
 }
+
+.edit-btn {
+  color: #8a98ac;
+  font-size: 2rem;
+  cursor: pointer;
+}

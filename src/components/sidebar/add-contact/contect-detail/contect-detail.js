@@ -3,16 +3,39 @@ import ContectDetailCss from "./contect-detail.module.css";
 import NoUserImg from "../../../../assest/No Image.jpg";
 import { HiBadgeCheck } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faMessage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCircleXmark,
+  faMessage,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router";
+import { useContext } from "react";
+import LoggedInContext from "../../../../context/loggedIn/loggedIn";
+import { useEffect } from "react";
+import { useState } from "react";
 const ContectDetail = (props) => {
   console.log(props);
+  const navigate = useNavigate();
+
+  const contextApi = useContext(LoggedInContext);
+
+
+  function OpenSelectedUserChat() {
+    contextApi.showChatSectionThroughUserDetailProfileSection({
+      ...props.detail,
+    });
+    contextApi.messageSectionOpenend(true);
+  }
+
   return (
     <div className={ContectDetailCss["contect-main-div"]}>
       <div className={ContectDetailCss["Contect-detail"]}>
         <div className={ContectDetailCss["ContectImage"]}>
           <img
             src={
-              props.detail.userImage != "" ? props.detail.userImage : NoUserImg
+              props.detail.userImage != null && props.detail.userImage != ""
+                ? props.detail.userImage
+                : NoUserImg
             }
             alt=""
           />
@@ -24,10 +47,17 @@ const ContectDetail = (props) => {
             <strong>Verified: </strong>
           </span>
           <span className={ContectDetailCss["val"]}>
-            <FontAwesomeIcon
-              icon={faCheck}
-              className={ContectDetailCss["icons"]}
-            />
+            {props.detail.verifiedContactUser ? (
+              <FontAwesomeIcon
+                icon={faCheck}
+                className={ContectDetailCss["icons"]}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className={ContectDetailCss["icons"]}
+              />
+            )}
           </span>
           <br />
           <span>
@@ -53,14 +83,13 @@ const ContectDetail = (props) => {
         </div>
 
         <div className={ContectDetailCss["contect-options"]}>
-          <FontAwesomeIcon
-            icon={faMessage}
-            className={ContectDetailCss["icons"]}
-          />
-          <FontAwesomeIcon
-            icon={faMessage}
-            className={ContectDetailCss["icons"]}
-          />
+          {props.detail.verifiedContactUser ? (
+            <FontAwesomeIcon
+              icon={faMessage}
+              className={ContectDetailCss["icons"]}
+              onClick={OpenSelectedUserChat}
+            /> // send default message and store it in the last_message of contact
+          ) : null}
         </div>
       </div>
     </div>
