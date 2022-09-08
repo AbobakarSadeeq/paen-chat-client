@@ -9,9 +9,8 @@ import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 
 const Chat = (props) => {
-  const contextApi = useContext(LoggedInContext);
   useEffect(()=>{
-    contextApi.showChatSectionThroughUserDetailProfileSection({});
+    
     
   },[])
   

@@ -30,6 +30,10 @@ function App() {
       return false;
     }, []);
 
+  const [updatedContactName, setUpdatedContactName] = useState(() => {
+    return "";
+  });
+
   useEffect(() => {
     if (localStorage.getItem("Token")) {
       if (JSON.parse(localStorage.getItem("Token")).ProfileAddValid) {
@@ -52,6 +56,7 @@ function App() {
         showChatSectionThroughUserDetailProfileSection:
           setChangeUserProfileViewToItsChatSection,
         messageSectionOpenend: setNewUserMessageSectionOpened,
+        updatedContactNameVal: setUpdatedContactName,
       }}
     >
       {loggedIn && localStorage.getItem("Token") != null ? (
@@ -61,6 +66,7 @@ function App() {
               changeUserProfileViewToItsChatSection
             }
             newUserMessagedOpen={newUserMessageSectionOpened}
+            ContactNameEdited={updatedContactName}
           />
         </>
       ) : (

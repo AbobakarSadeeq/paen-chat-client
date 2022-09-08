@@ -55,7 +55,7 @@ const AddContact = (props) => {
         }));
         setContactList(customArr);
       });
-  }, []);
+  }, [props.contactEdited]);
 
   function openModelHandler() {
     props.openAddContactDialog(true);
@@ -70,8 +70,6 @@ const AddContact = (props) => {
       return fetchArrData;
     });
   }
-
-  function xyz(val) {}
 
   return (
     <>

@@ -8,14 +8,7 @@ import {
 } from "@fortawesome/fontawesome-svg-core/import.macro";
 import {
   faArrowRightFromBracket,
-  faCoffee,
-  faComment,
-  faGear,
-  faMessage,
-  faPen,
   faSearch,
-  faUser,
-  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import UserChat from "./user-chat/user-chat";
 import Menu from "./menu/menu";
@@ -43,6 +36,7 @@ const Sidebar = (props) => {
   });
 
   useEffect(() => {
+    debugger;
   
     axios
       .get(
@@ -58,7 +52,7 @@ const Sidebar = (props) => {
         }));
         setConnectedContactList(customArr);
       });
-  }, []);
+  }, [props.EditContactName]);
 
   function changeSelectedContactEffect(i) {
     let fetchArrData = [...connectedContactList];
@@ -154,6 +148,7 @@ const Sidebar = (props) => {
             : null}
           {menuSelectedVal == "Add Contact" ? (
             <AddContact
+              contactEdited={props.EditContactName}
               refreshContectProp={props.refreshingContect}
               showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}

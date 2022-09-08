@@ -12,7 +12,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 const Layout = (props) => {
-  console.log(props.viewChangeToChatSectionFromUserDetail);
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
 
@@ -89,6 +88,7 @@ const Layout = (props) => {
 
       <div className={layoutCss["main-layout"]}>
         <Sidebar
+          EditContactName={props.ContactNameEdited}
           refreshingContect={contectAddRefresh}
           addingContactDone={openContactModel}
           addContactOpen={setContactModel}
@@ -111,7 +111,7 @@ const Layout = (props) => {
         {showChat ? <Chat profileData={uperProfileData} /> : null}
         {props.viewChangeToChatSectionFromUserDetail &&
         props.newUserMessagedOpen ? (
-          <div>sdgksdlfgmksdfk</div>
+          <Chat profileData={props.viewChangeToChatSectionFromUserDetail} />
         ) : null}
       </div>
     </>

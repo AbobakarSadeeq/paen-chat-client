@@ -4,6 +4,7 @@ import NoUserImg from "../../../assest/No Image.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 const MessageSenderProfile = (prop) => {
+ 
   return (
     <>
       <div className={MessageSenderCss["user-profile"]}>
@@ -22,7 +23,7 @@ const MessageSenderProfile = (prop) => {
               prop.profile.contactName != " " &&
               prop.profile.contactName != null
                 ? prop.profile.contactName
-                : "Not saved contact"}
+                : prop.profile.phoneNumber}
             </strong>
           </span>
           <p>Online</p>

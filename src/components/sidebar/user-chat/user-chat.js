@@ -8,6 +8,7 @@ import { useLocation } from "react-router";
 import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 const UserChat = (props) => {
+  console.log(props);
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
   function onClickContact() {
@@ -21,6 +22,7 @@ const UserChat = (props) => {
       props.showAddContactPanel(props.AddContactData);
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
+      
       contextApi.messageSectionOpenend(false);
       contextApi.showChatSectionThroughUserDetailProfileSection(null);
     }
@@ -54,7 +56,11 @@ const UserChat = (props) => {
 
           <div className={UserChatCss["contact-name-and-messages"]}>
             <span>
-              <strong>{props.AddContactData.contactName}</strong>
+              <strong>
+                {props.AddContactData.contactName == " "
+                  ? props.AddContactData.phoneNumber
+                  : props.AddContactData.contactName}
+              </strong>
             </span>
             <p>
               {location.pathname == "/Chats"
