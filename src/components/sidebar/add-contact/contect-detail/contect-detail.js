@@ -4,10 +4,12 @@ import NoUserImg from "../../../../assest/No Image.jpg";
 import { HiBadgeCheck } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBan,
   faCheck,
   faCircleXmark,
   faEdit,
   faMessage,
+  faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import { useContext } from "react";
@@ -15,6 +17,8 @@ import LoggedInContext from "../../../../context/loggedIn/loggedIn";
 import { useEffect } from "react";
 import { useState } from "react";
 import EditContectModel from "./edit-contect-detail/edit-contect-detail";
+import BlockContact from "./block-contact/block-contect";
+import UnlockContact from "./unlock-contact/unlock-contact";
 
 const ContectDetail = (props) => {
   const [editContactModel, setEditContactModel] = useState(() => {
@@ -33,8 +37,26 @@ const ContectDetail = (props) => {
     return "";
   });
 
+  const [blockUserModel, setBlockUserModel] = useState(() => {
+    return false;
+  });
+
+  const [contactBlocked, setContactBlocked] = useState(() => {
+    return false;
+  });
+
+  const [unlockingContactModel, setUnlockingContactModel] = useState(() => {
+    return false;
+  });
+
   useEffect(() => {
+    debugger;
     setEditedContactName("");
+    if (props.detail.blockContact == true) {
+      setContactBlocked(true);
+    } else {
+      setContactBlocked(false);
+    }
   }, [props.detail]);
 
   const contextApi = useContext(LoggedInContext);
@@ -55,6 +77,30 @@ const ContectDetail = (props) => {
 
   function editedContactNameHandler(val) {
     setEditedContactName(val);
+  }
+
+  function BlockUserModelHandler() {
+    setBlockUserModel(!blockUserModel);
+  }
+
+  function blockContactViewChangeHandler() {
+    setContactBlocked(true);
+    let changingViewOfConnectedContact = Math.random();
+    contextApi.updatedContactNameVal(
+      "blocked" + changingViewOfConnectedContact
+    );
+  }
+
+  function unlockingBlockContactHandler() {
+    setUnlockingContactModel(!unlockingContactModel);
+  }
+
+  function unlockingBlockContacViewChangeHandler() {
+    setContactBlocked(false);
+    let changingViewOfConnectedContact = Math.random();
+    contextApi.updatedContactNameVal(
+      "unlocked" + changingViewOfConnectedContact
+    );
   }
 
   return (
@@ -125,16 +171,40 @@ const ContectDetail = (props) => {
         <div className={ContectDetailCss["contect-options"]}>
           {props.detail.verifiedContactUser ? (
             <>
-              <FontAwesomeIcon
-                icon={faMessage}
-                className={ContectDetailCss["icons"]}
-                onClick={OpenSelectedUserChat}
-              />
-              <FontAwesomeIcon
-                icon={faEdit}
-                className={ContectDetailCss["icons"]}
-                onClick={OpenEditContactModel}
-              />
+              {contactBlocked ? (
+                <>
+                  <FontAwesomeIcon
+                    icon={faUnlock}
+                    className={ContectDetailCss["icons"]}
+                    onClick={unlockingBlockContactHandler}
+                    title="Unlock contact"
+                  />
+                  <h3 style={{ color: "red" }}>
+                    This contact is blocked.
+                  </h3>
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon
+                    icon={faMessage}
+                    className={ContectDetailCss["icons"]}
+                    onClick={OpenSelectedUserChat}
+                    title="Open contact chat"
+                  />
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    className={ContectDetailCss["icons"]}
+                    onClick={OpenEditContactModel}
+                    title="Edit Contact"
+                  />
+                  <FontAwesomeIcon
+                    icon={faBan}
+                    className={ContectDetailCss["icons"]}
+                    onClick={BlockUserModelHandler}
+                    title="Blocking contact"
+                  />
+                </>
+              )}
             </>
           ) : (
             <h3 style={{ color: "red" }}>
@@ -152,6 +222,22 @@ const ContectDetail = (props) => {
           }}
           editContactName={editedContactNameHandler}
           hideDialog={OpenEditContactModel}
+        />
+      ) : null}
+
+      {blockUserModel ? (
+        <BlockContact
+          hideDialog={BlockUserModelHandler}
+          contactId={props.detail.contactId}
+          blockedDone={blockContactViewChangeHandler}
+        />
+      ) : null}
+
+      {unlockingContactModel ? (
+        <UnlockContact
+          hideDialog={unlockingBlockContactHandler}
+          contactId={props.detail.contactId}
+          unlockingDone={unlockingBlockContacViewChangeHandler}
         />
       ) : null}
     </div>
