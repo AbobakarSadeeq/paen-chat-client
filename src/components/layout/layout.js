@@ -99,6 +99,7 @@ const Layout = (props) => {
           profileUperData={(data) => {
             setUperProfileData(data);
           }}
+          // senderMessageVal={props.sendMessageVal}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
@@ -108,10 +109,12 @@ const Layout = (props) => {
           <ContectDetail detail={showContectRightSidePane} />
         ) : null}
 
-        {showChat ? <Chat profileData={uperProfileData} /> : null}
+        {showChat ? <Chat singleUserChatAllInfo={uperProfileData} senderMessageObj={props.sendMessageVal} /> : null}
         {props.viewChangeToChatSectionFromUserDetail &&
         props.newUserMessagedOpen ? (
-          <Chat profileData={props.viewChangeToChatSectionFromUserDetail} />
+          <Chat
+            singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetail} senderMessageObj={props.sendMessageVal}
+          />
         ) : null}
       </div>
     </>

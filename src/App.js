@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import LoggedInContext from "./context/loggedIn/loggedIn";
 import { useLocation, useNavigate } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import MessageContextApi from "./context/message-context/message-context-api";
 
 function App() {
   const navigate = useNavigate();
@@ -49,6 +50,14 @@ function App() {
     // }
   }
 
+  const [messageVal, setMessageVal] = useState(() => {
+    return null;
+  });
+
+  function messageSendedHandler(val) {
+    setMessageVal(val);
+  }
+
   return (
     <LoggedInContext.Provider
       value={{
@@ -61,13 +70,18 @@ function App() {
     >
       {loggedIn && localStorage.getItem("Token") != null ? (
         <>
-          <Layout
-            viewChangeToChatSectionFromUserDetail={
-              changeUserProfileViewToItsChatSection
-            }
-            newUserMessagedOpen={newUserMessageSectionOpened}
-            ContactNameEdited={updatedContactName}
-          />
+          <MessageContextApi.Provider
+            value={{ sendMessageFunc: messageSendedHandler }}
+          >
+            <Layout
+              viewChangeToChatSectionFromUserDetail={
+                changeUserProfileViewToItsChatSection
+              }
+              newUserMessagedOpen={newUserMessageSectionOpened}
+              ContactNameEdited={updatedContactName}
+              sendMessageVal={messageVal}
+            />
+          </MessageContextApi.Provider>
         </>
       ) : (
         <Auth />

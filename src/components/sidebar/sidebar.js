@@ -36,7 +36,6 @@ const Sidebar = (props) => {
   });
 
   useEffect(() => {
-    debugger;
   
     axios
       .get(
