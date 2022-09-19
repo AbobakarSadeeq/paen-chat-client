@@ -61,6 +61,10 @@ const Layout = (props) => {
     }
   }
 
+  const [gettingUserMessage, setGettingUserMessage] = useState(() => {
+    return null;
+  });
+
   useEffect(() => {
     if (
       props.viewChangeToChatSectionFromUserDetail != null &&
@@ -99,7 +103,8 @@ const Layout = (props) => {
           profileUperData={(data) => {
             setUperProfileData(data);
           }}
-          // senderMessageVal={props.sendMessageVal}
+          senderMessageVal={props.sendMessageVal}
+          getSenderMessageHandler={setGettingUserMessage}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
@@ -109,11 +114,20 @@ const Layout = (props) => {
           <ContectDetail detail={showContectRightSidePane} />
         ) : null}
 
-        {showChat ? <Chat singleUserChatAllInfo={uperProfileData} senderMessageObj={props.sendMessageVal} /> : null}
+        {showChat ? (
+          <Chat
+            singleUserChatAllInfo={uperProfileData}
+            senderMessageObj={props.sendMessageVal}
+            senderMessageData={gettingUserMessage}
+          />
+        ) : null}
+
+        {/* User detail messeage section. */}
         {props.viewChangeToChatSectionFromUserDetail &&
         props.newUserMessagedOpen ? (
           <Chat
-            singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetail} senderMessageObj={props.sendMessageVal}
+            singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetail}
+            senderMessageObj={props.sendMessageVal}
           />
         ) : null}
       </div>

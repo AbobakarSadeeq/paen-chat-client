@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import MessageContextApi from "../../../context/message-context/message-context-api";
 
-const MessageSend = () => {
+const MessageSend = (props) => {
   const contextApi = useContext(MessageContextApi);
 
   const [sendDummyMessageErrorCorrection, setsendDummyMessageErrorCorrection] =
@@ -28,19 +28,16 @@ const MessageSend = () => {
 
   function sendMessageHandlerOnKey(event) {
     if (event.key == "Enter") {
-      contextApi.sendMessageFunc({
-        messageVal: fetchMessageData.current.value,
-        senderId: JSON.parse(
-          window.atob(localStorage.getItem("Token").split(".")[1])
-        ).UserId,
-      });
+      props.userMessageHandler(fetchMessageData.current.value)
+
+      fetchMessageData.current.value = "";
     }
   }
 
   function ReceiveMessage() {}
 
   function sendMessageHandlerOnClick() {
-    contextApi.sendMessageFunc(fetchMessageData.current.value);
+    contextApi.sendMessageFunc(props.messageSendObj);
   }
 
   return (

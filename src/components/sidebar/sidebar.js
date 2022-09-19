@@ -17,6 +17,7 @@ import axios from "axios";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 import { useLocation, useNavigate } from "react-router";
 import UserEditProfile from "./user-edit-profile/user-edit-profile";
+import { useRef } from "react";
 
 const Sidebar = (props) => {
   const location = useLocation();
@@ -51,6 +52,7 @@ const Sidebar = (props) => {
         }));
         setConnectedContactList(customArr);
       });
+
   }, [props.EditContactName]);
 
   function changeSelectedContactEffect(i) {
@@ -140,6 +142,8 @@ const Sidebar = (props) => {
                       changeSelectedContactEffect={changeSelectedContactEffect}
                       showChatSection={changeView}
                       selectedChatUperProfileData={props.profileUperData}
+                      sendMessageToServer={props.senderMessageVal}
+                      getSenderMessage={props.gettingSenderMessage}
                     />
                   </div>
                 );
