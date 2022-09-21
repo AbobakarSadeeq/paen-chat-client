@@ -82,6 +82,7 @@ const UserChat = (props) => {
       mySignalRconnection.on(
         "SendMessage",
         (message, userId) => {
+          console.log("Hello");
           props.getSenderMessage(message);
         },
         (error) => {}

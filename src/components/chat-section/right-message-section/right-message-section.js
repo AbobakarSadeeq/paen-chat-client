@@ -1,9 +1,12 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 import RightMessageCss from "./right-message-section.module.css";
 
 const RightMessageSection = (props) => {
+
   return (
     <>
       <div className={RightMessageCss["chat-message-right-main"]}>

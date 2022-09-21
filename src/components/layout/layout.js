@@ -65,6 +65,10 @@ const Layout = (props) => {
     return null;
   });
 
+ function senderMessageHandler(value){
+    setGettingUserMessage(value);
+  }
+
   useEffect(() => {
     if (
       props.viewChangeToChatSectionFromUserDetail != null &&
@@ -104,7 +108,7 @@ const Layout = (props) => {
             setUperProfileData(data);
           }}
           senderMessageVal={props.sendMessageVal}
-          getSenderMessageHandler={setGettingUserMessage}
+          gettingSenderMessage={senderMessageHandler}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}

@@ -10,9 +10,8 @@ import LoggedInContext from "../../context/loggedIn/loggedIn";
 import { useState } from "react";
 import MessageContextApi from "../../context/message-context/message-context-api";
 import { mySignalRconnection } from "../sidebar/user-chat/user-chat";
-
+import { useRef } from "react";
 const Chat = (props) => {
-  console.log(props);
   const contextApi = useContext(MessageContextApi);
   const [chatMessage, setChatMessage] = useState(() => {
     return [...props.singleUserChatAllInfo.singleConnectedUserMessagesList];
@@ -42,30 +41,44 @@ const Chat = (props) => {
         () => {
           // if the data request is sended correctly to the server side and also respsonse correct then block execute otherwise error block.
           console.log("Sended message");
+          scrollToBottom();
         },
         (errors) => {
           console.log(errors);
         }
       );
   }
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
 
   useEffect(() => {
-    if (props.senderMessageObj) {
-      let selectedChatAllMessages = chatMessage;
-      selectedChatAllMessages.push(props.senderMessageObj);
-      console.log(selectedChatAllMessages);
-      setChatMessage((pervsVal) => {
-        return selectedChatAllMessages;
-      });
+    if (props.senderMessageData) {
+      if (
+        props.senderMessageData.senderId !=
+        JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1]))
+          .UserId
+      ) {
+        let selectedChatAllMessages = chatMessage;
+        console.log("Reciver data onlyyyyyyyy");
+        selectedChatAllMessages.push(props.senderMessageData);
+        setChatMessage((pervsVal) => {
+          return [...selectedChatAllMessages];
+        });
+      }
     }
-  }, [props.senderMessageObj]);
+
+      scrollToBottom();
+  }, [props.senderMessageData]);
 
   return (
     <>
       <div>
         {/* profile section */}
         <MessageSenderProfile profile={props.singleUserChatAllInfo} />
-
         {/* chat read section */}
 
         <div className={ChatCss["chat-read-section"]}>
@@ -86,11 +99,18 @@ const Chat = (props) => {
                 return <RightMessageSection key={index} message={customObj} />;
               }
               // you have sended message to the connected user
-              return <LeftMessageSection key={index} message={customObj} />;
+              if (
+                props.singleUserChatAllInfo.usersConnectedId ==
+                singleMessage.senderId
+              ) {
+                return <LeftMessageSection key={index} message={customObj} />;
+              }
             })
           ) : (
             <>No message with this chat</>
           )}
+
+          <div ref={messagesEndRef}></div>
         </div>
 
         {/* message send section */}
@@ -99,5 +119,4 @@ const Chat = (props) => {
     </>
   );
 };
-
 export default Chat;
