@@ -2,10 +2,24 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useEffect } from "react";
+import { useState } from "react";
 import { useRef } from "react";
 import RightMessageCss from "./right-message-section.module.css";
 
 const RightMessageSection = (props) => {
+  const [messageSendTime, setMessageSendTime] = useState(() => {
+    return "";
+  });
+  useEffect(() => {
+    const dateTime = new Date();
+    setMessageSendTime(
+      dateTime.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -18,7 +32,7 @@ const RightMessageSection = (props) => {
       </div>
       <div className={RightMessageCss["chat-right-message-meta"]}>
         <div>
-          4:18 pm &nbsp;&nbsp;
+          {messageSendTime} &nbsp;&nbsp;
           <FontAwesomeIcon icon={faCheck} />
         </div>
       </div>

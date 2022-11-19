@@ -144,6 +144,7 @@ const Sidebar = (props) => {
                       selectedChatUperProfileData={props.profileUperData}
                       sendMessageToServer={props.senderMessageVal}
                       getSenderMessage={props.gettingSenderMessage}
+                      messageSendFromUser={props.messageDataSendedFromUser}
                     />
                   </div>
                 );

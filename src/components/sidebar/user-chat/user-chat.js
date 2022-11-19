@@ -9,12 +9,13 @@ import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import * as signalR from "@microsoft/signalr";
 
-export var mySignalRconnection = (mySignalRconnection = new signalR.HubConnectionBuilder()
-  .withUrl("https://localhost:44389/chathub", {
-    skipNegotiation: true,
-    transport: signalR.HttpTransportType.WebSockets,
-  })
-  .build());
+export var mySignalRconnection = (mySignalRconnection =
+  new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:44389/chathub", {
+      skipNegotiation: true,
+      transport: signalR.HttpTransportType.WebSockets,
+    })
+    .build());
 
 // connection must be start only once when you want to do the connect the user in list otherwise it will give u error
 mySignalRconnection.start().then(
@@ -26,8 +27,8 @@ mySignalRconnection.start().then(
   }
 );
 
-
 const UserChat = (props) => {
+  console.log(props);
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
   function onClickContact() {
@@ -95,7 +96,7 @@ const UserChat = (props) => {
   function sendMessageHandlerOnKey(sendMessageText) {
     //  console.log(props?.AddContactData?.singleContactGroupConnectionId);
     //  console.log(sendMessageText);
-     return;
+    return;
     // calling the hub method without any kind of http request in the server side which is in inside the server-side hub-class
     // first parameter is use name of the method which is method in the sever-side hub and then parameters that you want to send it to that method..
     // if the method or different problems occurs then it uses the promises or async functionality so you can also handle the errors.
@@ -150,12 +151,25 @@ const UserChat = (props) => {
               </strong>
             </span>
             <p>
+              {/* whose sender and reciver both id is equal to array and connectedAddContactData are same */}
               {location.pathname == "/Chats"
-                ? props.AddContactData.lastMessage.length > 28
-                  ? props?.AddContactData?.lastMessage?.substring(0, 25) +
-                    "...."
-                  : props.AddContactData.lastMessage
-                : props?.AddContactData?.aboutStatus?.length > 28
+                ? props?.messageSendFromUser?.userMessage?.length > 28
+                  ? // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well and also here if string chars is greater then 28 then it will be shown only in dots else it wont in else state
+                  props?.messageSendFromUser?.senderId ==
+                      props?.AddContactData?.usersConnectedId ||
+                    props?.AddContactData?.usersConnectedId ==
+                      props?.messageSendFromUser?.reciverId
+                  ? props?.messageSendFromUser?.userMessage?.substring(0, 25) +
+                    "...."// sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well
+                  : "last messsage will shown here"
+                  : props?.messageSendFromUser?.senderId ==
+                      props?.AddContactData?.usersConnectedId ||
+                    props?.AddContactData?.usersConnectedId ==
+                      props?.messageSendFromUser?.reciverId
+                  ? props?.messageSendFromUser?.userMessage
+                  : "" // last messsage will shown here and also apply the condition as well because it show one last message on all connectedContact
+                : // contact page data
+                props?.AddContactData?.aboutStatus?.length > 28 // if length is greater then 28 show below 173 line code else show 174 code
                 ? props?.AddContactData?.aboutStatus?.substring(0, 25) + "...."
                 : props?.AddContactData?.contactName}
             </p>

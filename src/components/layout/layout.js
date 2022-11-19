@@ -109,6 +109,7 @@ const Layout = (props) => {
           }}
           senderMessageVal={props.sendMessageVal}
           gettingSenderMessage={senderMessageHandler}
+          messageDataSendedFromUser={gettingUserMessage}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
