@@ -11,6 +11,7 @@ import { useState } from "react";
 import MessageContextApi from "../../context/message-context/message-context-api";
 import { mySignalRconnection } from "../sidebar/user-chat/user-chat";
 import { useRef } from "react";
+import axios from "axios";
 const Chat = (props) => {
   const messagesEndRef = useRef(null);
   const contextApi = useContext(MessageContextApi);
@@ -125,13 +126,45 @@ const Chat = (props) => {
       }
     }
 
-    window.addEventListener("beforeunload", (ev) => {
-      ev.preventDefault();
-      return (ev.returnValue = "Are you sure you want to close?");
-    });
-
     scrollToBottom();
+    ClosingOrRefreshingChatSession();
+    // whenever user send a message and the user want to go offline or closing browser then before closing browsing send data to db...
   }, [props.senderMessageData]);
+
+  function ClosingOrRefreshingChatSession() {
+    window.onbeforeunload = function (event) {
+      var message =
+        "Important: Please click on 'Save' button to leave this page.";
+      if (typeof event == "undefined") {
+        event = window.event;
+      }
+      if (event) {
+        event.returnValue = message;
+      }
+      
+      if (newMessagesAdded.length > 0) {
+        axios
+          .post("https://localhost:44389/api/Message", newMessagesAdded)
+          .then((response) => {
+            console.log("data has been send to db.....");
+          });
+
+        setNewMessagesAdded(() => {
+          return [];
+        });
+      }
+      return message;
+    };
+
+    // window.addEventListener("beforeunload", (ev) => {
+    //   ev.preventDefault();
+    //   setTimeout(()=>{
+    //     console.log(newMessagesAdded);
+    //   },2500)
+
+    //   ev.returnValue = "";
+    // });
+  }
 
   return (
     <>
