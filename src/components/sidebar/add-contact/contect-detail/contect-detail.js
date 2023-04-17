@@ -50,7 +50,6 @@ const ContectDetail = (props) => {
   });
 
   useEffect(() => {
-    debugger;
     setEditedContactName("");
     if (props.detail.blockContact == true) {
       setContactBlocked(true);

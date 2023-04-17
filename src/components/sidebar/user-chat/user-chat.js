@@ -27,6 +27,13 @@ mySignalRconnection.start().then(
   }
 );
 
+// mySignalRconnection.onclose(() => {
+//   mySignalRconnection
+//     .invoke("CustomOnDisconnectedAsync", "arg1 data")
+//     .then(() => {
+//     });
+// });
+
 const UserChat = (props) => {
   console.log(props);
   const location = useLocation();
@@ -155,13 +162,15 @@ const UserChat = (props) => {
               {location.pathname == "/Chats"
                 ? props?.messageSendFromUser?.userMessage?.length > 28
                   ? // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well and also here if string chars is greater then 28 then it will be shown only in dots else it wont in else state
-                  props?.messageSendFromUser?.senderId ==
+                    props?.messageSendFromUser?.senderId ==
                       props?.AddContactData?.usersConnectedId ||
                     props?.AddContactData?.usersConnectedId ==
                       props?.messageSendFromUser?.reciverId
-                  ? props?.messageSendFromUser?.userMessage?.substring(0, 25) +
-                    "...."// sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well
-                  : "last messsage will shown here"
+                    ? props?.messageSendFromUser?.userMessage?.substring(
+                        0,
+                        25
+                      ) + "...." // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well
+                    : "last messsage will shown here"
                   : props?.messageSendFromUser?.senderId ==
                       props?.AddContactData?.usersConnectedId ||
                     props?.AddContactData?.usersConnectedId ==

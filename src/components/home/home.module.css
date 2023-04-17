@@ -25,3 +25,12 @@
 .home-info p {
   margin: 0;
 }
+
+@media (max-width:1240px) {
+  
+
+  .main-home {
+    min-width: 600px;
+    background-color: red;
+  }
+}

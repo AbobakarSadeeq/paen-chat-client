@@ -37,7 +37,7 @@ const Sidebar = (props) => {
   });
 
   useEffect(() => {
-  
+
     axios
       .get(
         "https://localhost:44389/api/Contact/ListOfChatConnectedWithSingleUser/" +

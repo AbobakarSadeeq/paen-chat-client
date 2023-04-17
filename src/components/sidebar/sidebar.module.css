@@ -12,10 +12,9 @@
 }
 
 .contact-section-and-show-view-by-selected-menu {
-  height: 83vh;
   overflow: auto;
   border-bottom: #2c3638 solid 1px;
-   
+
 }
 
 .chat-name {
@@ -92,4 +91,9 @@ input:focus {
 .not-search-bar-show {
   height: 3.5rem;
 
+}
+
+@media (max-width:1240px) {
+  .sidebar {
+  }
 }
