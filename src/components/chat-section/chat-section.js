@@ -23,19 +23,19 @@ const Chat = (props) => {
 
   // states of chat components
 
-  // 1. all pervious messages 
+  // 1. all pervious messages
   const [chatMessage, setChatMessage] = useState(() => {
     return [props.singleUserChatAllInfo.singleConnectedUserMessagesList];
   });
 
-  // 2. new messages added 
+  // 2. new messages added
 
   const [newMessagesAdded, setNewMessagesAdded] = useState(() => {
     return [];
   });
 
   // 3. groups name that single user connected with it
-  
+
   const [userConnectedWithUserGroupsName, setUserConnectedWithUserGroupName] =
     useState(() => {
       return [];
@@ -51,7 +51,7 @@ const Chat = (props) => {
   // use effects
 
   useEffect(() => {
-    
+
     // if user sended message to the receiver then if condition will be true
       if (props.senderMessageData && props.senderMessageData.senderId != JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId) {
         let selectedChatAllMessages = chatMessage;
@@ -139,8 +139,8 @@ const Chat = (props) => {
 
 
 
-              
-    
+
+
 
 
      // calling scrollToBottom method for execute when data is changed inside the component
@@ -153,7 +153,7 @@ const Chat = (props) => {
 
 
   }, [props.senderMessageData]);
- 
+
   // **********************************************************
 
 
@@ -161,7 +161,7 @@ const Chat = (props) => {
 
   // EVENT HANDLERS
 
-  // 1. Sending Message To User Handler 
+  // 1. Sending Message To User Handler
 
   function userMessageHandler(val) {
     let myArr = [...chatMessage];
@@ -185,7 +185,7 @@ const Chat = (props) => {
       .invoke(
         "SendMessageToGroup",
         myArrObj,
-        props?.singleUserChatAllInfo?.singleContactGroupConnectionId 
+        props?.singleUserChatAllInfo?.singleContactGroupConnectionId
       )
       .then(
         () => {
@@ -283,8 +283,8 @@ const Chat = (props) => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }; 
- 
+  };
+
   // **********************************************************
 
   // react-component-template-page-or-code-of-component

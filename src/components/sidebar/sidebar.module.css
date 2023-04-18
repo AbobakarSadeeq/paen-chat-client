@@ -1,6 +1,6 @@
 .sidebar {
-  max-width: 22rem;
-  height: 100vh;
+  min-width: 20rem;
+  min-height: 100vh;
   background-color: #262b2e;
 }
 
@@ -14,7 +14,6 @@
 .contact-section-and-show-view-by-selected-menu {
   overflow: auto;
   border-bottom: #2c3638 solid 1px;
-
 }
 
 .chat-name {
@@ -90,10 +89,11 @@ input:focus {
 
 .not-search-bar-show {
   height: 3.5rem;
-
 }
 
-@media (max-width:1240px) {
+
+@media (max-width: 1240px) {
   .sidebar {
+    height: 97vh;
   }
 }

@@ -1,7 +1,14 @@
 .chat-read-section {
   background-image: url("../../assest/chat-back.jpg");
-  padding: 30px 30px 41px;
-  height: calc(92.9vh - 70px);
-  overflow: auto;
-  
+  padding: 30px 80px;
+  /* min-height: 51.6rem; */
+  height: 97vh;
+  min-width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  width: 1px;
+  overflow-y: auto;
+
 }
+

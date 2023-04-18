@@ -53,14 +53,13 @@ const MessageSend = (props) => {
           </div>
 
           {/* send message section */}
-          <div className={MessageSendCss["send-message-div"]}>
             <input
               ref={fetchMessageData}
               type="text"
               placeholder="Type a message..."
               onKeyDown={sendMessageHandlerOnKey}
+              className={MessageSendCss["message-send-input"]}
             />
-          </div>
 
           {/* send message and files icons */}
           <div className={MessageSendCss["send-and-file-open-icon"]}>
@@ -68,7 +67,8 @@ const MessageSend = (props) => {
               className={MessageSendCss["icon-color-hover"]}
               icon={faPaperclip}
             />{" "}
-            &nbsp; &nbsp;
+          </div>
+          <div className={MessageSendCss["send-and-file-open-icon"]}>
             <FontAwesomeIcon
               className={MessageSendCss["icon-color-hover"]}
               icon={faPaperPlane}

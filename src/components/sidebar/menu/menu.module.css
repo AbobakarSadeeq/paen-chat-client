@@ -6,16 +6,16 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  position: fixed;
+  position: absolute;
   bottom: 0;
   gap: 1rem;
 }
 
 .chat-menu li a {
   font-size: 1.2rem;
-  padding-top: 1.5rem;
+  padding-top: 1.8rem;
   display: block;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1.8rem;
   padding-left: 1.8rem;
   padding-right: 1.8rem;
 }
@@ -45,7 +45,7 @@
   color: inherit;
   border: none;
   outline: inherit;
-  background-color:  rgb(38, 43, 46);
+  background-color: rgb(38, 43, 46);
   padding: 0;
   margin: 0;
   cursor: pointer;
