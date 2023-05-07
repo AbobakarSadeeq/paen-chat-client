@@ -2,6 +2,9 @@
   min-width: 20rem;
   min-height: 100vh;
   background-color: #262b2e;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 80px;
 }
 
 .paen-chat-logo-section {
@@ -97,3 +100,10 @@ input:focus {
     height: 97vh;
   }
 }
+
+
+/* @media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+} */

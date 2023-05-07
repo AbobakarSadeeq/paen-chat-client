@@ -2,13 +2,30 @@
   background-image: url("../../assest/chat-back.jpg");
   padding: 30px 80px;
   /* min-height: 51.6rem; */
-  height: 97vh;
+
+  min-height: 96vh;
+  max-height: 1px;
   min-width: 100%;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
   width: 1px;
   overflow-y: auto;
-
+  overflow-x: auto;
 }
 
+
+ @media (max-height: 800px) {
+  .chat-read-section {
+    min-height: 90.6%;
+    max-height: 1px;
+    width: 100%;
+
+  }
+}
+
+
+
+.text {
+  min-width: 20%;
+}
