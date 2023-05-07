@@ -6,7 +6,7 @@
   max-width: 100%;
   border-top: 1px solid rgba(255, 255, 255, 0.03);
   border-left: 1px solid rgba(255, 255, 255, 0.03);
-  position: absolute;
+  position: fixed;
   bottom: 0;
   overflow: hidden;
   min-width: 50%;

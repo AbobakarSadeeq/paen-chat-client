@@ -8,8 +8,14 @@
   margin: 0;
   position: fixed;
   bottom: 0;
-  gap: 0.52rem;
-  background-color: #262B2E;
+  gap: 0.7rem;
+  background-color: #262b2e;
+}
+
+@media (max-width: 1200px) {
+  .chat-menu {
+    gap: 0.54rem;
+  }
 }
 
 .chat-menu li a {

@@ -27,7 +27,7 @@ const BlockContact = (props) => {
         acceptClassName="p-button-danger"
         contentStyle={{ backgroundColor: "#2c3638", color: "#8a98ac" }}
         headerStyle={{ backgroundColor: "#2c3638", color: "#8a98ac" }}
-      />
+        />
     </>
   );
 };

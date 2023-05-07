@@ -27,10 +27,10 @@
 }
 
 @media (max-width:1240px) {
-  
+
 
   .main-home {
     min-width: 600px;
-    background-color: red;
+    background-color: rgb(69, 31, 67);
   }
 }
