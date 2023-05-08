@@ -13,22 +13,30 @@
   width: 1px;
   overflow-y: auto;
   overflow-x: auto;
+  padding-bottom: 100px;
 }
 
-
- @media (max-height: 800px) {
-  .chat-read-section {
-    min-height: 90.6%;
-    max-height: 1px;
-    width: 100%;
-  }
-
+@media (max-height: 900px) {
   body {
     overflow: hidden;
   }
 }
 
+@media (max-height: 800px) {
+  .chat-read-section {
+    min-height: 90.6%;
+    max-height: 1px;
+    padding-bottom: 150px;
+  }
 
+
+}
+
+@media (max-height: 600px) {
+  .chat-read-section {
+    padding-bottom: 80px;
+  }
+}
 
 .text {
   min-width: 20%;

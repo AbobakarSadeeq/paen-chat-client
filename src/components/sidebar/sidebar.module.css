@@ -94,13 +94,11 @@ input:focus {
   height: 3.5rem;
 }
 
-
-@media (max-width: 1240px) {
+@media (max-width: 1540px) {
   .sidebar {
     height: 97vh;
   }
 }
-
 
 /* @media (max-width: 768px) {
   .sidebar {
