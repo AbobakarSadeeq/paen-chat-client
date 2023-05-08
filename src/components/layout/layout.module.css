@@ -1,5 +1,11 @@
 .main-layout {
   display: grid;
   grid-template-columns: 22rem auto;
-  
+
+}
+
+@media (max-width:768px) {
+  .main-layout {
+    display: block;
+  }
 }

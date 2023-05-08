@@ -1,13 +1,16 @@
 .user-profile {
-  height: 5rem;
-  width: 100%;
   background-color: rgb(38, 43, 46);
   border-bottom: #8a98ac;
-  display: grid;
-  grid-template-columns: 4.5rem 127rem 5rem;
+  display: flex;
   padding-top: 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.03);
   padding-bottom: 1rem;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  min-width: -webkit-fill-available;
+  padding-bottom:1rem ;
 }
 
 .profile-img img {
@@ -29,4 +32,11 @@
   color: #8a98ac;
   font-size: 2rem;
   cursor: pointer;
+  margin-left: auto;
+}
+
+.isUserOnline {
+  color: #8a98ac;
+  margin: 0;
+  padding: 0;
 }

@@ -39,3 +39,11 @@
   padding-bottom: 10px;
   display: block;
 }
+
+/* Mobile responsiveness */
+
+@media (max-width: 768px) {
+  .chat-right-message-text {
+    margin-left: 0rem;
+  }
+}

@@ -4,13 +4,12 @@ import NoUserImg from "../../../assest/No Image.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 const MessageSenderProfile = (prop) => {
- 
   return (
     <>
       <div className={MessageSenderCss["user-profile"]}>
         <div className={MessageSenderCss["profile-img"]}>
           <img
-            src={prop.profile.userImage ? prop.profile.userImage : NoUserImg}
+            src={prop.profile?.userImage ? prop.profile.userImage : NoUserImg}
             alt=""
           />{" "}
           &nbsp;&nbsp;
@@ -19,14 +18,16 @@ const MessageSenderProfile = (prop) => {
         <div className={MessageSenderCss["user-name-and-status"]}>
           <span>
             <strong>
-              {prop.profile.contactName != "" &&
-              prop.profile.contactName != " " &&
-              prop.profile.contactName != null
-                ? prop.profile.contactName
-                : prop.profile.phoneNumber}
+              {prop?.profile?.contactName != "" &&
+              prop?.profile?.contactName != " " &&
+              prop?.profile?.contactName != null
+                ? prop?.profile?.contactName
+                : prop?.profile?.phoneNumber}{" "}
+              Abobakar Sadeeq
             </strong>
           </span>
-          <p>Online</p>
+          <p className={MessageSenderCss["isUserOnline"]}>online</p>
+
         </div>
 
         <div className={MessageSenderCss["edit-btn"]}>

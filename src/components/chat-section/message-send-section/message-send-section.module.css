@@ -32,7 +32,6 @@
   border-radius: 0;
   padding: 10px 12px;
   width: 100%;
-
 }
 
 .send-and-file-open-icon {
@@ -47,4 +46,12 @@
 .icon-color-hover:hover {
   color: #19a299;
   cursor: pointer;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 768px) {
+  .chat-bottom {
+    left: 0;
+  }
 }

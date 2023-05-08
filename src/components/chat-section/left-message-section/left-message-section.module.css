@@ -10,7 +10,6 @@
   margin-right: 50rem;
 }
 
-
 @media (max-width: 2000px) {
   .chat-left-message-text {
     margin-left: 5rem;
@@ -33,4 +32,12 @@
 .chat-left-message-meta {
   color: #8a98ac;
   padding-bottom: 10px;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 768px) {
+  .chat-left-message-text {
+    margin-left: 0rem;
+  }
 }

@@ -14,12 +14,10 @@ import { useRef } from "react";
 import axios from "axios";
 
 const Chat = (props) => {
-
   // context api's
   const contextApi = useContext(MessageContextApi);
 
   // **********************************************************
-
 
   // states of chat components
 
@@ -51,113 +49,107 @@ const Chat = (props) => {
   // use effects
 
   useEffect(() => {
-
     // if user sended message to the receiver then if condition will be true
-      if (props.senderMessageData && props.senderMessageData.senderId != JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId) {
-        let selectedChatAllMessages = chatMessage;
-        console.log("Reciver data onlyyyyyyyy");
-        selectedChatAllMessages.push(props.senderMessageData);
+    if (
+      props.senderMessageData &&
+      props.senderMessageData.senderId !=
+        JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1]))
+          .UserId
+    ) {
+      let selectedChatAllMessages = chatMessage;
+      console.log("Reciver data onlyyyyyyyy");
+      selectedChatAllMessages.push(props.senderMessageData);
 
-        // this array is used for to show the real time message on the chat and also show the pervious message as well
-        setChatMessage((pervsVal) => {
-          return [...selectedChatAllMessages];
+      // this array is used for to show the real time message on the chat and also show the pervious message as well
+      setChatMessage((pervsVal) => {
+        return [...selectedChatAllMessages];
+      });
+
+      // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
+      // group will be used for to find the connection
+      console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
+      let fetchingDataFromSate = userConnectedWithUserGroupsName;
+      let findingUserGroup = fetchingDataFromSate.indexOf(
+        props.singleUserChatAllInfo.singleContactGroupConnectionId
+      );
+      if (findingUserGroup == -1) {
+        setUserConnectedWithUserGroupName((prevData) => {
+          return [
+            ...prevData,
+            props.singleUserChatAllInfo.singleContactGroupConnectionId,
+          ];
         });
+      }
 
-        // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
-        // group will be used for to find the connection
-        console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
-        let fetchingDataFromSate = userConnectedWithUserGroupsName;
-        let findingUserGroup = fetchingDataFromSate.indexOf(
-          props.singleUserChatAllInfo.singleContactGroupConnectionId
-        );
-        if (findingUserGroup == -1) {
-          setUserConnectedWithUserGroupName((prevData) => {
-            return [
-              ...prevData,
-              props.singleUserChatAllInfo.singleContactGroupConnectionId,
-            ];
-          });
+      // ******** List database data on session expire *********
+      // this array will add new message to array only and it will be only used for to send that list when session is over
+      // if last data is not stored then the problem is here. solution is found when data is sending to the backend then the state will be having update data.
+      let storingMessageCustomizeObj = {
+        userMessage: props.senderMessageData.userMessage,
+        senderId: props.senderMessageData.senderId,
+        reciverId: props.senderMessageData.reciverId,
+        message_Type: "text",
+        messageSeen: true,
+        messageTimeStamp: new Date().toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }),
+        messageDateStamp: new Date().toLocaleString("en-US", {
+          month: "numeric",
+          day: "numeric",
+          year: "numeric",
+        }),
+      };
+
+      setNewMessagesAdded(() => {
+        console.log(storingMessageCustomizeObj);
+        return [...newMessagesAdded, storingMessageCustomizeObj];
+      });
+
+      // make custom array and do everything inside changes and fully apply update and apply the logic on it.
+      mySignalRconnection.on(
+        "RemoveDisconnectedUserDataFromArray",
+        (disconnectedUserId) => {
+          let updatingMessagesState = [...newMessagesAdded];
+          if (
+            updatingMessagesState.find(
+              (a) =>
+                a.senderId == disconnectedUserId ||
+                a.reciverId == disconnectedUserId
+            )
+          ) {
+            for (var index in updatingMessagesState) {
+              if (
+                updatingMessagesState[index].senderId == disconnectedUserId ||
+                updatingMessagesState[index].reciverId == disconnectedUserId
+              ) {
+                updatingMessagesState.splice(index, 1);
+              }
+              if (updatingMessagesState.length - 1 == index) {
+                setNewMessagesAdded(() => {
+                  return [...updatingMessagesState];
+                });
+              }
+            }
+            console.log(
+              "that user is has been disconnected" + disconnectedUserId
+            );
+          }
         }
+      );
+    }
 
-        // ******** List database data on session expire *********
-        // this array will add new message to array only and it will be only used for to send that list when session is over
-        // if last data is not stored then the problem is here. solution is found when data is sending to the backend then the state will be having update data.
-        let storingMessageCustomizeObj = {
-          userMessage: props.senderMessageData.userMessage,
-          senderId: props.senderMessageData.senderId,
-          reciverId: props.senderMessageData.reciverId,
-          message_Type: "text",
-          messageSeen: true,
-          messageTimeStamp: new Date().toLocaleString("en-US", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          }),
-          messageDateStamp: new Date().toLocaleString("en-US", {
-            month: "numeric",
-            day: "numeric",
-            year: "numeric",
-          }),
-        };
+    // ************************************************
 
-
-        setNewMessagesAdded(()=>{
-          console.log(storingMessageCustomizeObj)
-          return [...newMessagesAdded, storingMessageCustomizeObj];
-        })
-
-                     // make custom array and do everything inside changes and fully apply update and apply the logic on it.
-                     mySignalRconnection.on(
-                      "RemoveDisconnectedUserDataFromArray",
-                      (disconnectedUserId) => {
-                          let updatingMessagesState = [...newMessagesAdded];
-                          console.log(updatingMessagesState);
-                          if (updatingMessagesState.find((a) => a.senderId == disconnectedUserId || a.reciverId == disconnectedUserId)) {
-                            for (var index in updatingMessagesState) {
-                              if (updatingMessagesState[index].senderId == disconnectedUserId || updatingMessagesState[index].reciverId == disconnectedUserId) {
-                                updatingMessagesState.splice(index, 1);
-                              }
-                              if (updatingMessagesState.length - 1 == index){
-                                setNewMessagesAdded(()=>{
-                                  return [...updatingMessagesState];
-                                })
-                              }
-                            }
-                            console.log(
-                              "that user is has been disconnected" + disconnectedUserId
-                            );
-                          }
-                      }
-                    );
-
-
-       }
-
-
-       // ************************************************
-
-
-
-
-
-
-
-
-     // calling scrollToBottom method for execute when data is changed inside the component
+    // calling scrollToBottom method for execute when data is changed inside the component
     scrollToBottom();
 
-
-     // whenever user send a message and the user want to go offline or closing browser then before closing browsing send data to db...
-     ClosingOrRefreshingChatSession();
-
-
-
+    // whenever user send a message and the user want to go offline or closing browser then before closing browsing send data to db...
+    // ClosingOrRefreshingChatSession();
   }, [props.senderMessageData]);
 
   // **********************************************************
-
-
-
 
   // EVENT HANDLERS
 
@@ -178,7 +170,6 @@ const Chat = (props) => {
       return myArr;
     });
 
-
     // send message to other user to see instant or in real time
 
     mySignalRconnection
@@ -189,8 +180,7 @@ const Chat = (props) => {
       )
       .then(
         () => {
-
-    // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
+          // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
           console.log("Sended message");
           scrollToBottom();
         },
@@ -219,7 +209,7 @@ const Chat = (props) => {
       }),
     };
 
-   // updating state of adding new message to state.
+    // updating state of adding new message to state.
     setNewMessagesAdded(() => {
       return [...newMessagesAdded, sendMessageObj];
     });
@@ -243,41 +233,39 @@ const Chat = (props) => {
 
   // 2. Event execute when closing browser or tab happens on that user browser who's she/he closed it only
 
-  function ClosingOrRefreshingChatSession() {
-    window.onbeforeunload = function (event) {
-      if (newMessagesAdded.length > 0) {
-        axios
-          .post("https://localhost:44389/api/Message", newMessagesAdded)
-          .then((response) => {
-            console.log("data has been send to db.....");
-          });
+  // function ClosingOrRefreshingChatSession() {
+  //   window.onbeforeunload = function (event) {
+  //     if (newMessagesAdded.length > 0) {
+  //       axios
+  //         .post("https://localhost:44389/api/Message", newMessagesAdded)
+  //         .then((response) => {
+  //           console.log("data has been send to db.....");
+  //         });
 
-        mySignalRconnection
-          .invoke(
-            "UserTryingToDisconnecting",
-            userConnectedWithUserGroupsName,
-            JSON.parse(
-              window.atob(localStorage.getItem("Token")?.split(".")[1])
-            ).UserId
-          )
-          .then(() => {
-            console.log(
-              newMessagesAdded
-            );
-          });
+  //       mySignalRconnection
+  //         .invoke(
+  //           "UserTryingToDisconnecting",
+  //           userConnectedWithUserGroupsName,
+  //           JSON.parse(
+  //             window.atob(localStorage.getItem("Token")?.split(".")[1])
+  //           ).UserId
+  //         )
+  //         .then(() => {
+  //           console.log(newMessagesAdded);
+  //         });
 
-        setNewMessagesAdded(() => {
-          return [];
-        });
+  //       setNewMessagesAdded(() => {
+  //         return [];
+  //       });
 
-        setUserConnectedWithUserGroupName(() => {
-          return [];
-        });
-      }
+  //       setUserConnectedWithUserGroupName(() => {
+  //         return [];
+  //       });
+  //     }
 
-      return "";
-    };
-  }
+  //     return "";
+  //   };
+  // }
 
   // 3. Scroll to bottom when message sended or received handler
 
@@ -293,9 +281,9 @@ const Chat = (props) => {
     <>
       <div>
         {/* profile section */}
+        <MessageSenderProfile />
 
         {/* chat read section */}
-
         <div className={ChatCss["chat-read-section"]}>
           {chatMessage ? (
             chatMessage?.map((singleMessage, index) => {
@@ -324,9 +312,8 @@ const Chat = (props) => {
           ) : (
             <>No message with this chat</>
           )}
-
-          <div ref={messagesEndRef}></div>
         </div>
+        <div ref={messagesEndRef}></div>
 
         {/* message send section */}
         <MessageSend userMessageHandler={userMessageHandler} />
