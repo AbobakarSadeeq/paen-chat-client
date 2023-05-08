@@ -37,7 +37,6 @@ const Sidebar = (props) => {
   });
 
   useEffect(() => {
-
     axios
       .get(
         "https://localhost:44389/api/Contact/ListOfChatConnectedWithSingleUser/" +
@@ -52,7 +51,6 @@ const Sidebar = (props) => {
         }));
         setConnectedContactList(customArr);
       });
-
   }, [props.EditContactName]);
 
   function changeSelectedContactEffect(i) {
@@ -123,7 +121,6 @@ const Sidebar = (props) => {
         )}
 
         {/* Add Contact */}
-
         {/* Contact section */}
 
         <div

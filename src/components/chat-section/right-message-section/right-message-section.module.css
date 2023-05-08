@@ -9,8 +9,14 @@
   display: block;
   padding: 5px 10px;
   position: relative;
-  margin-left: 86rem;
+  margin-left: 50rem;
   height: fit-content;
+}
+
+@media (max-width: 2000px) {
+  .chat-right-message-text {
+    margin-left: 5rem;
+  }
 }
 
 .chat-right-message-text ::before {

@@ -30,6 +30,7 @@ const LeftMessageSection = (props) => {
     <div className={leftMessageCss["chat-message-left-main"]}>
       <div className={leftMessageCss["chat-left-message-text"]}>
         <span>{props.message.userMessage}</span>
+     
       </div>
       <br />
       <div className={leftMessageCss["chat-left-message-meta"]}>
