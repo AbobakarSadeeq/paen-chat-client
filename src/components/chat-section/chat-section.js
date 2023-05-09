@@ -229,6 +229,8 @@ const Chat = (props) => {
         ];
       });
     }
+
+    scrollToBottom();
   }
 
   // 2. Event execute when closing browser or tab happens on that user browser who's she/he closed it only
@@ -284,7 +286,7 @@ const Chat = (props) => {
         <MessageSenderProfile />
 
         {/* chat read section */}
-        <div className={ChatCss["chat-read-section"]}>
+        <div className={ChatCss["chat-read-section"]} ref={messagesEndRef}>
           {chatMessage ? (
             chatMessage?.map((singleMessage, index) => {
               let customObj = {
@@ -313,7 +315,7 @@ const Chat = (props) => {
             <>No message with this chat</>
           )}
         </div>
-        <div ref={messagesEndRef}></div>
+        <div ></div>
 
         {/* message send section */}
         <MessageSend userMessageHandler={userMessageHandler} />

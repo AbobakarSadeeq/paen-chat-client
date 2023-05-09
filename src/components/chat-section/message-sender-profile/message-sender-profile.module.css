@@ -10,7 +10,7 @@
   top: 0;
   z-index: 999;
   min-width: -webkit-fill-available;
-  padding-bottom:1rem ;
+  padding-bottom: 1rem;
 }
 
 .profile-img img {
@@ -39,4 +39,14 @@
   color: #8a98ac;
   margin: 0;
   padding: 0;
+}
+
+@media (max-width: 768px) {
+  .back-btn-to-Contact {
+    padding-left: 1rem;
+    color: #8a98ac;
+    cursor: pointer;
+    font-size: 1.8rem;
+    padding-top: 1.2rem;
+  }
 }

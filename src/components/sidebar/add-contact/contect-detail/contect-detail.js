@@ -4,6 +4,7 @@ import NoUserImg from "../../../../assest/No Image.jpg";
 import { HiBadgeCheck } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowLeft,
   faBan,
   faCheck,
   faCircleXmark,
@@ -49,6 +50,18 @@ const ContectDetail = (props) => {
     return false;
   });
 
+  const contextApi = useContext(LoggedInContext);
+
+  const [hideContactDetail, setHideContactDetail] = useState(() => {
+    return false;
+  });
+
+  function closeContactDetail() {
+    contextApi.showContactDetailHandler();
+    console.log(props.isShowContactDetail);
+    setHideContactDetail(props.isShowContactDetail);
+  }
+
   useEffect(() => {
     setEditedContactName("");
     if (props.detail.blockContact == true) {
@@ -57,8 +70,6 @@ const ContectDetail = (props) => {
       setContactBlocked(false);
     }
   }, [props.detail]);
-
-  const contextApi = useContext(LoggedInContext);
 
   function OpenSelectedUserChat() {
     contextApi.showChatSectionThroughUserDetailProfileSection({
@@ -102,8 +113,22 @@ const ContectDetail = (props) => {
     );
   }
 
+  console.log(props.isShowContactDetail);
+
   return (
-    <div className={ContectDetailCss["contect-main-div"]}>
+    <div
+      className={`${ContectDetailCss["contect-main-div"]} ${
+        props.isShowContactDetail == true
+          ? ContectDetailCss["show-contact"]
+          : "remove-contact-detail-and-open-sidebar"
+      }`}
+    >
+      <FontAwesomeIcon
+        icon={faArrowLeft}
+        className={ContectDetailCss["back-btn-to-Contact"]}
+        onClick={closeContactDetail}
+      />
+
       <div className={ContectDetailCss["Contect-detail"]}>
         <div className={ContectDetailCss["ContectImage"]}>
           <img
@@ -178,9 +203,7 @@ const ContectDetail = (props) => {
                     onClick={unlockingBlockContactHandler}
                     title="Unlock contact"
                   />
-                  <h3 style={{ color: "red" }}>
-                    This contact is blocked.
-                  </h3>
+                  <h3 style={{ color: "red" }}>This contact is blocked.</h3>
                 </>
               ) : (
                 <>

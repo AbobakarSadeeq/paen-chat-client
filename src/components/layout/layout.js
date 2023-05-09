@@ -12,6 +12,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 const Layout = (props) => {
+
+
+
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
 
@@ -32,6 +35,7 @@ const Layout = (props) => {
   const [showContactDetail, setShowContactDetail] = useState(() => {
     return false;
   });
+
 
   const [uperProfileData, setUperProfileData] = useState(() => {
     return {};
@@ -65,7 +69,7 @@ const Layout = (props) => {
     return null;
   });
 
- function senderMessageHandler(value){
+  function senderMessageHandler(value) {
     setGettingUserMessage(value);
   }
 
@@ -110,13 +114,14 @@ const Layout = (props) => {
           senderMessageVal={props.sendMessageVal}
           gettingSenderMessage={senderMessageHandler}
           messageDataSendedFromUser={gettingUserMessage}
+          closeContactDetailInResponsiveMobile={props.closeContactDetailForMobileResponsive}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
         {showChat || showContectRightSidePane ? "" : <Home />}
 
         {showContactDetail && !props.newUserMessagedOpen ? (
-          <ContectDetail detail={showContectRightSidePane} />
+          <ContectDetail detail={showContectRightSidePane} isShowContactDetail={props.closeContactDetailForMobileResponsive} />
         ) : null}
 
         {showChat ? (

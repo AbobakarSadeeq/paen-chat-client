@@ -14,6 +14,7 @@ import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 
 const AddContact = (props) => {
+
   const contextApi = useContext(LoggedInContext);
   const [contactList, setContactList] = useState(() => {
     return [];
@@ -41,12 +42,10 @@ const AddContact = (props) => {
   }
 
   useEffect(() => {
-    axios
-      .get(
+    axios.get(
         "https://localhost:44389/api/Contact/" +
           JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
-            .UserId
-      )
+            .UserId)
       .then((responseData) => {
         let customArr = [...responseData.data];
         customArr = customArr.map((obj) => ({
@@ -55,6 +54,8 @@ const AddContact = (props) => {
         }));
         setContactList(customArr);
       });
+
+
   }, [props.contactEdited]);
 
   function openModelHandler() {

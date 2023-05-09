@@ -49,9 +49,9 @@ const UserChat = (props) => {
       props.showAddContactPanel(props.AddContactData);
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
-
       contextApi.messageSectionOpenend(false);
       contextApi.showChatSectionThroughUserDetailProfileSection(null);
+      contextApi.showContactDetailHandler();
     }
   }
 
@@ -62,6 +62,8 @@ const UserChat = (props) => {
 
     // for connect the user in group and it will be execute only one time and send empty message message without it host message does not shown to the connected users.
     // user joinned group
+  //  contextApi.closeContactDetail(true);
+
     if (props.sendMessageToServer == null) {
       setTimeout(() => {
         // making group first that whose are join into it

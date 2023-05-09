@@ -1,15 +1,14 @@
 .profile-edit-model {
-   background: none;
-   color: white;
-   border: 1px solid #8a98ac;
-   padding: 0;
-   font: inherit;
-   cursor: pointer;
-   outline: inherit;
- }
+  background: none;
+  color: white;
+  border: 1px solid #8a98ac;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
 
-
- .main-form-header {
+.main-form-header {
   color: #19a299;
 }
 
@@ -74,4 +73,14 @@ label {
 
 .editForm {
   text-align: center;
+}
+
+.profile-edit-model {
+  width: 30%;
+}
+
+@media (max-width: 768px) {
+  .profile-edit-model {
+    width: 100%;
+  }
 }

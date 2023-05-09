@@ -78,7 +78,6 @@ const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
       <Dialog
         header="Edit Profile"
         visible={true}
-        style={{ width: "20vw" }}
         onHide={hideDialogOfModel}
         className={ProfileEditCss["profile-edit-model"]}
         contentStyle={{ backgroundColor: "#2c3638", cursor:'auto' }}

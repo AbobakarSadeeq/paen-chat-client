@@ -2,11 +2,12 @@ import React from "react";
 import MessageSenderCss from "./message-sender-profile.module.css";
 import NoUserImg from "../../../assest/No Image.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 const MessageSenderProfile = (prop) => {
   return (
     <>
       <div className={MessageSenderCss["user-profile"]}>
+      <FontAwesomeIcon icon={faArrowLeft} className={MessageSenderCss["back-btn-to-Contact"]}/>
         <div className={MessageSenderCss["profile-img"]}>
           <img
             src={prop.profile?.userImage ? prop.profile.userImage : NoUserImg}

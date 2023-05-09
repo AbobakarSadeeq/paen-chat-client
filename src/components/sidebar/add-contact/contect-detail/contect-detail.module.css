@@ -1,71 +1,111 @@
 .contect-main-div {
-   width: 100%;
-   height: 100%;
-   background-color: #2c3638;
-   color: white;
-   position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #2c3638;
+  color: white;
+  position: relative;
 }
 
 .Contect-detail {
-   background-color: #2c3638;
-   position: absolute;
-   left: 60%;
-   top: 50%;
-   -webkit-transform: translate(-50%, -50%);
-   transform: translate(-50%, -50%);
-   width: 50%;
-   height: 70%;
+  background-color: #2c3638;
+  position: absolute;
+  left: 60%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 70%;
 }
 
 .ContectImage {
-   text-align: center;
-   margin-top: 5%;
+  text-align: center;
+  margin-top: 5%;
 }
 
 .ContectImage img {
-   width: 200px;
-   height: 200px;
-   border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 
 .contect-detail-text {
-   text-align: center;
-   font-size: 1.45rem;
-   border-bottom: 1px solid #19a299;
-
+  text-align: center;
+  font-size: 1.45rem;
+  border-bottom: 1px solid #19a299;
 }
 .contect-detail-text .val {
-   color: #8a98ac;
+  color: #8a98ac;
 }
 
 .contect-detail-text strong {
-   color: #ffffff;
+  color: #ffffff;
 }
 
-
-
 .icons {
-   cursor: pointer;
-   font-size: 2.5rem;
-   color: #8a98ac;
+  cursor: pointer;
+  font-size: 2.5rem;
+  color: #8a98ac;
 }
 
 .icons:hover {
-   color: #19a299;
+  color: #19a299;
 }
 
 .contect-options {
-   margin-top: 0.5rem;
-   display: flex;
-   gap: 3rem;
-   justify-content: center;
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
 }
 
 .val .icons {
-   color: white;
-   font-size: 1.5rem;
+  color: white;
+  font-size: 1.5rem;
 }
 
-.myCSS{
-   margin-left: 50% ;
+.myCSS {
+  margin-left: 50%;
+}
+
+.back-btn-to-Contact {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .contect-main-div {
+    position: none;
+    min-height: 100vh;
+  }
+
+  .Contect-detail {
+    background-color: #2c3638;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+  }
+
+  .back-btn-to-Contact {
+   display: block;
+    padding-left: 1rem;
+    color: #8a98ac;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding-top: 0.7rem;
+  }
+
+  .back-btn-to-Contact:hover {
+   color: #19a299;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .remove-contact-detail-and-open-sidebar {
+    display: none;
+  }
+
+  .show-contact {
+    display: block;
+  }
 }

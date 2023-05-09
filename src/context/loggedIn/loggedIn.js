@@ -4,7 +4,8 @@ const LoggedInContext = React.createContext({
   showAddContactMainPanel: false,
   showChatSectionThroughUserDetailProfileSection: null,
   messageSectionOpenend: false,
-  updatedContactNameVal:null
+  updatedContactNameVal:null,
+  showContactDetailHandler:null
 });
 
 export default LoggedInContext;

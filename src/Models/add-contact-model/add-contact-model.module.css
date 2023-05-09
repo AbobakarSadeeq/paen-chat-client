@@ -47,3 +47,13 @@ input:focus {
   background-color: red;
   padding: 1rem;
 }
+
+.add-contact-model {
+  width: 35%;
+}
+
+@media (max-width: 768px) {
+  .add-contact-model {
+    width: 100%;
+  }
+}

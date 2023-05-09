@@ -106,11 +106,22 @@ input:focus {
   }
 } */
 
-
 /* Mobile responsiveness */
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .sidebar {
+    /* display: none; */
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .show-contact-detail-and-hide-sidebar {
     display: none;
+  }
+
+  .show-side-bar {
+    display: block;
   }
 }

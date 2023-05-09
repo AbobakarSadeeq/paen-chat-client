@@ -20,6 +20,7 @@ import UserEditProfile from "./user-edit-profile/user-edit-profile";
 import { useRef } from "react";
 
 const Sidebar = (props) => {
+  console.log(props.closeContactDetailInResponsiveMobile);
   const location = useLocation();
   const navigate = useNavigate();
   const loggedInContextApi = useContext(LoggedInContext);
@@ -35,6 +36,8 @@ const Sidebar = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(() => {
     return 0;
   });
+
+
 
   useEffect(() => {
     axios
@@ -71,11 +74,20 @@ const Sidebar = (props) => {
 
   function changeView() {
     props.showChatSectionn();
+
   }
+
+  console.log(props.closeContactDetailInResponsiveMobile);
 
   return (
     <>
-      <div className={sidebarCss["sidebar"]}>
+      <div
+        className={`${sidebarCss["sidebar"]} ${
+          props.closeContactDetailInResponsiveMobile == true
+            ? sidebarCss["show-contact-detail-and-hide-sidebar"]
+            : "show-side-bar"
+        }`}
+      >
         {/* logo and application name sections */}
         <div className={sidebarCss["paen-chat-logo-section"]}>
           <div className={sidebarCss["chat-logo-text"]}>
@@ -154,7 +166,7 @@ const Sidebar = (props) => {
               showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}
               showAddContactPanelDataObj={props.selectedNewContactObj}
-              showChatSection={changeView}
+              showChatSection={changeView} // this is the selected thing
             />
           ) : null}
           {menuSelectedVal == "User Profile" ? <UserEditProfile /> : null}

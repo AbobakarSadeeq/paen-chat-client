@@ -44,7 +44,7 @@ const AddContactModel = (props) => {
         .then(
           (response) => {
             console.log("CONTECT ADDED");
-            
+
           },
           (error) => {
             console.log(error);
@@ -62,7 +62,7 @@ const AddContactModel = (props) => {
       <Dialog
         header="Add Contact"
         visible={true}
-        style={{ width: "20vw" }}
+ 
         onHide={hideDialogOfModel}
         className={AddContactCss["add-contact-model"]}
         contentStyle={{ backgroundColor: "#2c3638" }}

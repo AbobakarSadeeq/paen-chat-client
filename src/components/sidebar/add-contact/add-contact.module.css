@@ -28,5 +28,11 @@
 }
 
 .users-section {
-  border-bottom: 1px solid #2c3638;
+  border-bottom: 1px solid #2c3638; 
+}
+
+@media (max-width: 768px) {
+  .add-contact-section button {
+    min-width: 100%;
+  }
 }

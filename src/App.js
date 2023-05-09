@@ -11,8 +11,6 @@ import { useLocation, useNavigate } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import MessageContextApi from "./context/message-context/message-context-api";
 
-
-
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,6 +33,13 @@ function App() {
 
   const [updatedContactName, setUpdatedContactName] = useState(() => {
     return "";
+  });
+
+  const [
+    closeContactDetailOnMobileResponsiveness,
+    setCloseContactDetailOnMobileResponsiveness,
+  ] = useState(() => {
+    return false;
   });
 
   useEffect(() => {
@@ -60,6 +65,14 @@ function App() {
     setMessageVal(val);
   }
 
+  function callShowContactDetailHandler() {
+
+      setCloseContactDetailOnMobileResponsiveness((prevs) => {
+        return !prevs;
+      });
+  }
+
+
   return (
     <LoggedInContext.Provider
       value={{
@@ -68,6 +81,7 @@ function App() {
           setChangeUserProfileViewToItsChatSection,
         messageSectionOpenend: setNewUserMessageSectionOpened,
         updatedContactNameVal: setUpdatedContactName,
+        showContactDetailHandler: callShowContactDetailHandler,
       }}
     >
       {loggedIn && localStorage.getItem("Token") != null ? (
@@ -82,6 +96,9 @@ function App() {
               newUserMessagedOpen={newUserMessageSectionOpened}
               ContactNameEdited={updatedContactName}
               sendMessageVal={messageVal}
+              closeContactDetailForMobileResponsive={
+                closeContactDetailOnMobileResponsiveness
+              }
             />
           </MessageContextApi.Provider>
         </>
