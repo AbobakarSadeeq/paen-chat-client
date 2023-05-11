@@ -56,7 +56,6 @@ const EditContectModel = (props) => {
       <Dialog
         header="Edit Contact"
         visible={true}
-        style={{ width: "20vw" }}
         onHide={props.hideDialog}
         className={EditContectDetailCss["add-contact-model"]}
         contentStyle={{ backgroundColor: "#2c3638" }}

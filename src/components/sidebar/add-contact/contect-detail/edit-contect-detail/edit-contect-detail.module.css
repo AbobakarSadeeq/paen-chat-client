@@ -47,3 +47,10 @@ input:focus {
   background-color: red;
   padding: 1rem;
 }
+
+
+/* Responsiveness */
+
+.add-contact-model {
+  min-width:40%;
+}

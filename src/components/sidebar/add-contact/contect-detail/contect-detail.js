@@ -73,7 +73,7 @@ const ContectDetail = (props) => {
 
   function OpenSelectedUserChat() {
     contextApi.showChatSectionThroughUserDetailProfileSection({
-      ...props.detail,
+      ...props.detail
     });
     contextApi.messageSectionOpenend(true);
   }
@@ -113,7 +113,7 @@ const ContectDetail = (props) => {
     );
   }
 
-  console.log(props.isShowContactDetail);
+
 
   return (
     <div
