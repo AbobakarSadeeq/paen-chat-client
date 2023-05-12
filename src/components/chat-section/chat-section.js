@@ -16,7 +16,7 @@ import axios from "axios";
 const Chat = (props) => {
   // context api's
   const contextApi = useContext(MessageContextApi);
-
+  const contextApiForChatSection = useContext(LoggedInContext);
   // **********************************************************
 
   // states of chat components
@@ -276,12 +276,18 @@ const Chat = (props) => {
   };
 
   // **********************************************************
-
+  
   // react-component-template-page-or-code-of-component
-
+  console.log(contextApiForChatSection.getShowChatSection);
   return (
     <>
-      <div>
+      <div
+        className={` ${
+          contextApiForChatSection.getShowChatSection == true
+            ? ChatCss["complete-chat-read-section-show"]
+            : "complete-chat-read-section-off"
+        }`}
+      >
         {/* profile section */}
         <MessageSenderProfile />
 
@@ -315,7 +321,6 @@ const Chat = (props) => {
             <>No message with this chat</>
           )}
         </div>
-        <div ></div>
 
         {/* message send section */}
         <MessageSend userMessageHandler={userMessageHandler} />

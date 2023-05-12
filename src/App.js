@@ -42,11 +42,13 @@ function App() {
     return false;
   });
 
+  const [showChatSection, setShowChatSection] = useState(false);
+
   useEffect(() => {
     if (localStorage.getItem("Token")) {
       if (JSON.parse(localStorage.getItem("Token")).ProfileAddValid) {
         setLoggedIn(true);
-        navigate("/Chats");
+        navigate("/Chats?main-chat-section");
       }
     }
   }, [loggedIn]);
@@ -61,18 +63,29 @@ function App() {
     return null;
   });
 
+
+  const [showSideBarSection, setShowSideBarSection] = useState(() => {
+    return true;
+  });
+
   function messageSendedHandler(val) {
     setMessageVal(val);
   }
 
-  function callShowContactDetailHandler() {
-
+  function callShowContactDetailHandler(selectChatSectionFromRouteName) {
+    if (selectChatSectionFromRouteName == "AddContact") {
       setCloseContactDetailOnMobileResponsiveness((prevs) => {
         return !prevs;
       });
+    } else if (selectChatSectionFromRouteName == "chat") {
+      // when it clicked the hide the sidebar
+      // so here i have to hide the sidebar
+      setShowSideBarSection((prevs) => {
+        return !prevs;
+      });
+    }
   }
-
-
+  console.log(showChatSection);
   return (
     <LoggedInContext.Provider
       value={{
@@ -82,6 +95,10 @@ function App() {
         messageSectionOpenend: setNewUserMessageSectionOpened,
         updatedContactNameVal: setUpdatedContactName,
         showContactDetailHandler: callShowContactDetailHandler,
+        showChatSectionAssign: setShowChatSection,
+        getShowChatSection: showChatSection,
+        setShowSideBarSection:setShowSideBarSection,
+        getShowSideBarSection:showSideBarSection
       }}
     >
       {loggedIn && localStorage.getItem("Token") != null ? (

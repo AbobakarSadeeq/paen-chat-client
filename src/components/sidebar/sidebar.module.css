@@ -117,7 +117,7 @@ input:focus {
     width: 100%;
   }
 
-  .show-contact-detail-and-hide-sidebar {
+  .hide-sidebar {
     display: none;
   }
 

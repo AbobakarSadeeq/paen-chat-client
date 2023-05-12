@@ -43,15 +43,19 @@ const UserChat = (props) => {
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
       props.selectedChatUperProfileData(props.AddContactData);
-      contextApi.messageSectionOpenend(false);
-      contextApi.showChatSectionThroughUserDetailProfileSection(null);
+    //  contextApi.messageSectionOpenend(false);
+    //  contextApi.showChatSectionThroughUserDetailProfileSection(null);
+    //  contextApi.showContactDetailHandler("chat");
+      contextApi.showChatSectionAssign(true); // turn it On.
+      contextApi.setShowSideBarSection(false);
+
     } else if (props.AddContactData && location.pathname == "/AddContact") {
       props.showAddContactPanel(props.AddContactData);
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
       contextApi.messageSectionOpenend(false);
       contextApi.showChatSectionThroughUserDetailProfileSection(null);
-      contextApi.showContactDetailHandler();
+      contextApi.showContactDetailHandler("AddContact");
     }
   }
 
@@ -62,7 +66,7 @@ const UserChat = (props) => {
 
     // for connect the user in group and it will be execute only one time and send empty message message without it host message does not shown to the connected users.
     // user joinned group
-  //  contextApi.closeContactDetail(true);
+    //  contextApi.closeContactDetail(true);
 
     if (props.sendMessageToServer == null) {
       setTimeout(() => {

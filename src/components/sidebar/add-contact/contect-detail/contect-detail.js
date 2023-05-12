@@ -12,7 +12,7 @@ import {
   faMessage,
   faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useContext } from "react";
 import LoggedInContext from "../../../../context/loggedIn/loggedIn";
 import { useEffect } from "react";
@@ -22,6 +22,8 @@ import BlockContact from "./block-contact/block-contect";
 import UnlockContact from "./unlock-contact/unlock-contact";
 
 const ContectDetail = (props) => {
+  const path = useLocation();
+
   const [editContactModel, setEditContactModel] = useState(() => {
     return false;
   });
@@ -57,9 +59,13 @@ const ContectDetail = (props) => {
   });
 
   function closeContactDetail() {
-    contextApi.showContactDetailHandler();
-    console.log(props.isShowContactDetail);
-    setHideContactDetail(props.isShowContactDetail);
+    const selectedQueryParameterName = path.search;
+    if (selectedQueryParameterName == "?AddContact") {
+      contextApi.showContactDetailHandler("AddContact");
+      setHideContactDetail(props.isShowContactDetail);
+    } else if (selectedQueryParameterName == "?main-chat-section") {
+      contextApi.showContactDetailHandler("chat");
+    }
   }
 
   useEffect(() => {
@@ -73,7 +79,7 @@ const ContectDetail = (props) => {
 
   function OpenSelectedUserChat() {
     contextApi.showChatSectionThroughUserDetailProfileSection({
-      ...props.detail
+      ...props.detail,
     });
     contextApi.messageSectionOpenend(true);
   }
@@ -112,8 +118,6 @@ const ContectDetail = (props) => {
       "unlocked" + changingViewOfConnectedContact
     );
   }
-
-
 
   return (
     <div

@@ -37,21 +37,27 @@ const Sidebar = (props) => {
     return 0;
   });
 
-
-
   useEffect(() => {
     axios
       .get(
-        "https://localhost:44389/api/Contact/ListOfChatConnectedWithSingleUser/" +
+        "https://localhost:44389/api/Contact/" +
           JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
             .UserId
       )
       .then((responseData) => {
-        let customArr = [...responseData.data];
-        customArr = customArr.map((obj) => ({
-          ...obj,
-          selectedContectStyle: false,
-        }));
+        let customArr = [];
+
+        for (var singleUserAllContacts of responseData.data) {
+          if (singleUserAllContacts.connectedInMessages) {
+            customArr.push({
+              ...singleUserAllContacts,
+              selectedContectStyle: false,
+            });
+          }
+        }
+
+        console.log(customArr);
+
         setConnectedContactList(customArr);
       });
   }, [props.EditContactName]);
@@ -74,7 +80,6 @@ const Sidebar = (props) => {
 
   function changeView() {
     props.showChatSectionn();
-
   }
 
   console.log(props.closeContactDetailInResponsiveMobile);
@@ -83,8 +88,9 @@ const Sidebar = (props) => {
     <>
       <div
         className={`${sidebarCss["sidebar"]} ${
-          props.closeContactDetailInResponsiveMobile == true
-            ? sidebarCss["show-contact-detail-and-hide-sidebar"]
+          props.closeContactDetailInResponsiveMobile == true ||
+          loggedInContextApi.getShowSideBarSection == false
+            ? sidebarCss["hide-sidebar"]
             : "show-side-bar"
         }`}
       >

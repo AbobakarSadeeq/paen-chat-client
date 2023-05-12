@@ -4,13 +4,23 @@ import NoUserImg from "../../../assest/No Image.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
+import { useLocation } from "react-router";
 const MessageSenderProfile = (prop) => {
   const contextApi = useContext(LoggedInContext);
+  const path = useLocation();
 
   function goBackwardPage() {
-    contextApi.messageSectionOpenend(false);
-    contextApi.showContactDetailHandler(); // it backs to add-contact page
+    const selectedQueryParameterName = path.search;
+    if (selectedQueryParameterName == "?AddContact") {
+      contextApi.messageSectionOpenend(false);
+      contextApi.showContactDetailHandler("AddContact"); // it backs to add-contact page
+    } else if (selectedQueryParameterName == "?main-chat-section") {
+     // contextApi.messageSectionOpenend(false);
+     contextApi.setShowSideBarSection(true);
+     contextApi.showChatSectionAssign(false); // turn it off
+  //  contextApi.showContactDetailHandler("chat");
 
+    }
   }
 
   return (

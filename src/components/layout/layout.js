@@ -12,9 +12,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 const Layout = (props) => {
-
-
-
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
 
@@ -35,7 +32,6 @@ const Layout = (props) => {
   const [showContactDetail, setShowContactDetail] = useState(() => {
     return false;
   });
-
 
   const [uperProfileData, setUperProfileData] = useState(() => {
     return {};
@@ -59,6 +55,7 @@ const Layout = (props) => {
     if (location.pathname == "/Chats") {
       setShowChat(true);
       setShowContactDetail(false);
+      // hide sidebar
     } else if (location.pathname == "/AddContact") {
       setShowContactDetail(true);
       setShowChat(false);
@@ -114,17 +111,22 @@ const Layout = (props) => {
           senderMessageVal={props.sendMessageVal}
           gettingSenderMessage={senderMessageHandler}
           messageDataSendedFromUser={gettingUserMessage}
-          closeContactDetailInResponsiveMobile={props.closeContactDetailForMobileResponsive}
+          closeContactDetailInResponsiveMobile={
+            props.closeContactDetailForMobileResponsive
+          }
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
         {showChat || showContectRightSidePane ? "" : <Home />}
 
         {showContactDetail && !props.newUserMessagedOpen ? (
-          <ContectDetail detail={showContectRightSidePane} isShowContactDetail={props.closeContactDetailForMobileResponsive} />
+          <ContectDetail
+            detail={showContectRightSidePane}
+            isShowContactDetail={props.closeContactDetailForMobileResponsive}
+          />
         ) : null}
 
-        {showChat ? (
+        {showChat == true && contextApi.getShowChatSection == true  ? (
           <Chat
             singleUserChatAllInfo={uperProfileData}
             senderMessageObj={props.sendMessageVal}

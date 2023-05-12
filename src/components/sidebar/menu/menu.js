@@ -8,9 +8,12 @@ import {
   faUser,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
+
+
 const Menu = (props) => {
-  
+
   function clickMenu(selectedLinkName) {
+    console.log(selectedLinkName);
     props.changeSidebarViewByMenuClicked(selectedLinkName);
   }
 
@@ -23,7 +26,7 @@ const Menu = (props) => {
               className={({ isActive }) =>
                 isActive ? MenuCss.active : MenuCss.inactive
               }
-              to={"/Chats"}
+              to={"/Chats?main-chat-section"}
             >
               <FontAwesomeIcon icon={faComment} />{" "}
             </NavLink>
@@ -38,7 +41,7 @@ const Menu = (props) => {
               className={({ isActive }) =>
                 isActive ? MenuCss.active : MenuCss.inactive
               }
-              to={"/AddContact"}
+              to={"/AddContact?AddContact"}
             >
               <FontAwesomeIcon icon={faPen} />
             </NavLink>
@@ -53,7 +56,7 @@ const Menu = (props) => {
               className={({ isActive }) =>
                 isActive ? MenuCss.active : MenuCss.inactive
               }
-              to={"UserProfile"}
+              to={"UserProfile?UserProfile"}
             >
               <FontAwesomeIcon icon={faUser} />
             </NavLink>
@@ -68,7 +71,7 @@ const Menu = (props) => {
               className={({ isActive }) =>
                 isActive ? MenuCss.active : MenuCss.inactive
               }
-              to={"/Setting"}
+              to={"/Setting?Setting"}
             >
               <FontAwesomeIcon icon={faGear} />
             </NavLink>
