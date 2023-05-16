@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import { useLocation } from "react-router";
-const MessageSenderProfile = (prop) => {
+const MessageSenderProfile = (props) => {
   const contextApi = useContext(LoggedInContext);
   const path = useLocation();
 
@@ -33,7 +33,7 @@ const MessageSenderProfile = (prop) => {
         />
         <div className={MessageSenderCss["profile-img"]}>
           <img
-            src={prop.profile?.userImage ? prop.profile.userImage : NoUserImg}
+            src={props.profile?.userImage ? props.profile.userImage : NoUserImg}
             alt=""
           />{" "}
           &nbsp;&nbsp;
@@ -42,11 +42,11 @@ const MessageSenderProfile = (prop) => {
         <div className={MessageSenderCss["user-name-and-status"]}>
           <span>
             <strong>
-              {prop?.profile?.contactName != "" &&
-              prop?.profile?.contactName != " " &&
-              prop?.profile?.contactName != null
-                ? prop?.profile?.contactName
-                : prop?.profile?.phoneNumber}{" "}
+              {props?.profile?.contactName != "" &&
+              props?.profile?.contactName != " " &&
+              props?.profile?.contactName != null
+                ? props?.profile?.contactName
+                : props?.profile?.phoneNumber}{" "}
               Abobakar Sadeeq
             </strong>
           </span>

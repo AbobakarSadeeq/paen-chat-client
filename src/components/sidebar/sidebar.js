@@ -175,7 +175,7 @@ const Sidebar = (props) => {
               showChatSection={changeView} // this is the selected thing
             />
           ) : null}
-          {menuSelectedVal == "User Profile" ? <UserEditProfile /> : null}
+          {menuSelectedVal == "User Profile" ? <UserEditProfile showProfileDetail={true} /> : <UserEditProfile showProfileDetail={false} />}
           {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>
 

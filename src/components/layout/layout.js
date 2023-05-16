@@ -11,6 +11,7 @@ import { useLocation } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
+
 const Layout = (props) => {
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);

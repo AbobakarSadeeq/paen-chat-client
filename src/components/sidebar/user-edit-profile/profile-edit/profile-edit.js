@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 
-const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
+const ProfileEdit = ({ hideDialog, userFormDataObj, fetchUpdatedUserProfileHandler }) => {
   const [preview, setPreview] = useState(null);
 
   const [selectedFile, setSelectedFile] = useState(() => {
@@ -68,7 +68,13 @@ const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
           formFrom
         )
         .then((responseData) => {
-         hideDialog(false);
+          hideDialog(false);
+
+          fetchUpdatedUserProfileHandler({
+            userName: value.userName,
+            aboutStatus: value.aboutStatus,
+            userProfilePictureUrl:  responseData.data.profilePhotoUrl
+          });
         });
     },
   });
@@ -80,10 +86,17 @@ const ProfileEdit = ({ hideDialog, userFormDataObj }) => {
         visible={true}
         onHide={hideDialogOfModel}
         className={ProfileEditCss["profile-edit-model"]}
-        contentStyle={{ backgroundColor: "#2c3638", cursor:'auto' }}
-        headerStyle={{ backgroundColor: "#2c3638", color: "#8a98ac", cursor:'auto' }}
+        contentStyle={{ backgroundColor: "#2c3638", cursor: "auto" }}
+        headerStyle={{
+          backgroundColor: "#2c3638",
+          color: "#8a98ac",
+          cursor: "auto",
+        }}
       >
-        <form onSubmit={userProfileFormik.handleSubmit} className={ProfileEditCss['editForm']}>
+        <form
+          onSubmit={userProfileFormik.handleSubmit}
+          className={ProfileEditCss["editForm"]}
+        >
           {
             <>
               <img

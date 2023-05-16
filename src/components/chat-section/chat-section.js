@@ -14,6 +14,7 @@ import { useRef } from "react";
 import axios from "axios";
 
 const Chat = (props) => {
+  console.log(props);
   // context api's
   const contextApi = useContext(MessageContextApi);
   const contextApiForChatSection = useContext(LoggedInContext);
@@ -57,14 +58,12 @@ const Chat = (props) => {
           .UserId
     ) {
       let selectedChatAllMessages = chatMessage;
-      console.log("Reciver data onlyyyyyyyy");
       selectedChatAllMessages.push(props.senderMessageData);
 
       // this array is used for to show the real time message on the chat and also show the pervious message as well
       setChatMessage((pervsVal) => {
         return [...selectedChatAllMessages];
       });
-
       // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
       // group will be used for to find the connection
       console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
@@ -157,37 +156,34 @@ const Chat = (props) => {
 
   function userMessageHandler(val) {
     let myArr = [...chatMessage];
-    let myArrObj = {
-      userMessage: val,
-      senderId: props.singleUserChatAllInfo.userItSelfId,
-      reciverId: props.singleUserChatAllInfo.usersConnectedId,
-      message_Type: "text",
-      messageSeen: true,
+    let messageSendObj = {
+      groupId: props?.singleUserChatAllInfo?.singleContactGroupConnectionId,
+      clientMessageRedis: {
+        userMessage: val,
+        senderId: props.singleUserChatAllInfo.userItSelfId,
+        reciverId: props.singleUserChatAllInfo.usersConnectedId,
+        message_Type: "text",
+        messageSeen: true,
+      },
     };
-    contextApi.sendMessageFunc(myArrObj);
-    myArr.push(myArrObj);
+    contextApi.sendMessageFunc(messageSendObj);
+    myArr.push(messageSendObj);
     setChatMessage((pervsVal) => {
       return myArr;
     });
 
     // send message to other user to see instant or in real time
 
-    mySignalRconnection
-      .invoke(
-        "SendMessageToGroup",
-        myArrObj,
-        props?.singleUserChatAllInfo?.singleContactGroupConnectionId
-      )
-      .then(
-        () => {
-          // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
-          console.log("Sended message");
-          scrollToBottom();
-        },
-        (errors) => {
-          console.log(errors);
-        }
-      );
+    mySignalRconnection.invoke("SendMessageToGroup", messageSendObj).then(
+      () => {
+        // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
+        console.log("Sended message");
+        scrollToBottom();
+      },
+      (errors) => {
+        console.log(errors);
+      }
+    );
 
     // storing new messages on both side inside the new message array for to store that messages inside database whenever single of em leave or connection is detect disconnected.
 
@@ -276,7 +272,7 @@ const Chat = (props) => {
   };
 
   // **********************************************************
-  
+
   // react-component-template-page-or-code-of-component
   console.log(contextApiForChatSection.getShowChatSection);
   return (
@@ -289,7 +285,7 @@ const Chat = (props) => {
         }`}
       >
         {/* profile section */}
-        <MessageSenderProfile />
+        <MessageSenderProfile profile={props.singleUserChatAllInfo} />
 
         {/* chat read section */}
         <div className={ChatCss["chat-read-section"]} ref={messagesEndRef}>
@@ -329,3 +325,4 @@ const Chat = (props) => {
   );
 };
 export default Chat;
+

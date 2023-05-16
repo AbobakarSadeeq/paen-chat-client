@@ -72,13 +72,8 @@ const UserChat = (props) => {
       setTimeout(() => {
         // making group first that whose are join into it
         mySignalRconnection
-          .invoke(
-            "JoinGroup",
-            props?.AddContactData?.singleContactGroupConnectionId,
-            JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
-              .UserId
-          )
-          .then(
+          .invoke("JoinGroup", props?.AddContactData?.singleContactGroupConnectionId,
+          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId).then(
             () => {},
             (errors) => {
               console.log(errors);

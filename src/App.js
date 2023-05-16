@@ -85,13 +85,12 @@ function App() {
       });
     }
   }
-  console.log(showChatSection);
+
   return (
     <LoggedInContext.Provider
       value={{
         isLoggedIn: setLoggedIn,
-        showChatSectionThroughUserDetailProfileSection:
-          setChangeUserProfileViewToItsChatSection,
+        showChatSectionThroughUserDetailProfileSection: setChangeUserProfileViewToItsChatSection,
         messageSectionOpenend: setNewUserMessageSectionOpened,
         updatedContactNameVal: setUpdatedContactName,
         showContactDetailHandler: callShowContactDetailHandler,
