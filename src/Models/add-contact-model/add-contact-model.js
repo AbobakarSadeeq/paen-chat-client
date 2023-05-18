@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import AddContactCss from "./add-contact-model.module.css";
@@ -8,7 +8,10 @@ import useInput from "../../hooks/form-control";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import ContactContext from "../../context/contact-context/contact-context";
 const AddContactModel = (props) => {
+  const contactContextApi = useContext(ContactContext);
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -32,7 +35,7 @@ const AddContactModel = (props) => {
     }),
     onSubmit: (value, { resetForm }) => {
       resetForm();
-      props.refreshMyContect();
+      //  props.refreshMyContect();
       props.hideDialog();
       axios
         .post("https://localhost:44389/api/Contact", {
@@ -43,8 +46,7 @@ const AddContactModel = (props) => {
         })
         .then(
           (response) => {
-            console.log("CONTECT ADDED");
-
+            contactContextApi.setAddNewContact(response.data);
           },
           (error) => {
             console.log(error);
@@ -62,7 +64,6 @@ const AddContactModel = (props) => {
       <Dialog
         header="Add Contact"
         visible={true}
- 
         onHide={hideDialogOfModel}
         className={AddContactCss["add-contact-model"]}
         contentStyle={{ backgroundColor: "#2c3638" }}

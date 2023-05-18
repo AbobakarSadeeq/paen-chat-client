@@ -92,14 +92,14 @@ const Layout = (props) => {
       {openContactModel ? (
         <AddContactModel
           hideDialog={contactAddModel}
-          refreshMyContect={refreshMyContect}
+         // refreshMyContect={refreshMyContect} // changes
         />
       ) : null}
 
       <div className={layoutCss["main-layout"]}>
         <Sidebar
           EditContactName={props.ContactNameEdited}
-          refreshingContect={contectAddRefresh}
+        //  refreshingContect={contectAddRefresh}  // changes 
           addingContactDone={openContactModel}
           addContactOpen={setContactModel}
           showChatSectionn={changeViewww}

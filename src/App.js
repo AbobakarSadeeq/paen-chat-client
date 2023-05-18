@@ -10,6 +10,7 @@ import LoggedInContext from "./context/loggedIn/loggedIn";
 import { useLocation, useNavigate } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import MessageContextApi from "./context/message-context/message-context-api";
+import { ContactContextProvider } from "./context/contact-context/contact-context";
 
 function App() {
   const navigate = useNavigate();
@@ -63,7 +64,6 @@ function App() {
     return null;
   });
 
-
   const [showSideBarSection, setShowSideBarSection] = useState(() => {
     return true;
   });
@@ -90,14 +90,15 @@ function App() {
     <LoggedInContext.Provider
       value={{
         isLoggedIn: setLoggedIn,
-        showChatSectionThroughUserDetailProfileSection: setChangeUserProfileViewToItsChatSection,
+        showChatSectionThroughUserDetailProfileSection:
+          setChangeUserProfileViewToItsChatSection,
         messageSectionOpenend: setNewUserMessageSectionOpened,
         updatedContactNameVal: setUpdatedContactName,
         showContactDetailHandler: callShowContactDetailHandler,
         showChatSectionAssign: setShowChatSection,
         getShowChatSection: showChatSection,
-        setShowSideBarSection:setShowSideBarSection,
-        getShowSideBarSection:showSideBarSection
+        setShowSideBarSection: setShowSideBarSection,
+        getShowSideBarSection: showSideBarSection,
       }}
     >
       {loggedIn && localStorage.getItem("Token") != null ? (
@@ -105,17 +106,19 @@ function App() {
           <MessageContextApi.Provider
             value={{ sendMessageFunc: messageSendedHandler }}
           >
-            <Layout
-              viewChangeToChatSectionFromUserDetail={
-                changeUserProfileViewToItsChatSection
-              }
-              newUserMessagedOpen={newUserMessageSectionOpened}
-              ContactNameEdited={updatedContactName}
-              sendMessageVal={messageVal}
-              closeContactDetailForMobileResponsive={
-                closeContactDetailOnMobileResponsiveness
-              }
-            />
+            <ContactContextProvider>
+              <Layout
+                viewChangeToChatSectionFromUserDetail={
+                  changeUserProfileViewToItsChatSection
+                }
+                newUserMessagedOpen={newUserMessageSectionOpened}
+                ContactNameEdited={updatedContactName}
+                sendMessageVal={messageVal}
+                closeContactDetailForMobileResponsive={
+                  closeContactDetailOnMobileResponsiveness
+                }
+              />
+            </ContactContextProvider>
           </MessageContextApi.Provider>
         </>
       ) : (

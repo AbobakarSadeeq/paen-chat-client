@@ -20,7 +20,6 @@ import UserEditProfile from "./user-edit-profile/user-edit-profile";
 import { useRef } from "react";
 
 const Sidebar = (props) => {
-  console.log(props.closeContactDetailInResponsiveMobile);
   const location = useLocation();
   const navigate = useNavigate();
   const loggedInContextApi = useContext(LoggedInContext);
@@ -37,6 +36,11 @@ const Sidebar = (props) => {
     return 0;
   });
 
+  const [addContactSectionContactList, setAddContactSectionContactList] =
+    useState(() => {
+      return [];
+    });
+
   useEffect(() => {
     axios
       .get(
@@ -46,8 +50,9 @@ const Sidebar = (props) => {
       )
       .then((responseData) => {
         let customArr = [];
-
+        setAddContactSectionContactList(responseData.data);
         for (var singleUserAllContacts of responseData.data) {
+          console.log(singleUserAllContacts);
           if (singleUserAllContacts.connectedInMessages) {
             customArr.push({
               ...singleUserAllContacts,
@@ -56,7 +61,7 @@ const Sidebar = (props) => {
           }
         }
 
-        console.log(customArr);
+        console.log(responseData.data);
 
         setConnectedContactList(customArr);
       });
@@ -82,7 +87,11 @@ const Sidebar = (props) => {
     props.showChatSectionn();
   }
 
-  console.log(props.closeContactDetailInResponsiveMobile);
+  function updateContactListForAddingNewContactHandler(newContact) {
+    setAddContactSectionContactList((prevs) => {
+      return [...prevs, newContact];
+    });
+  }
 
   return (
     <>
@@ -168,14 +177,22 @@ const Sidebar = (props) => {
           {menuSelectedVal == "Add Contact" ? (
             <AddContact
               contactEdited={props.EditContactName}
-              refreshContectProp={props.refreshingContect}
+              //    refreshContectProp={props.refreshingContect}
               showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}
               showAddContactPanelDataObj={props.selectedNewContactObj}
               showChatSection={changeView} // this is the selected thing
+              allContactList={addContactSectionContactList}
+              updateContactListForAddNewContact={
+                updateContactListForAddingNewContactHandler
+              }
             />
           ) : null}
-          {menuSelectedVal == "User Profile" ? <UserEditProfile showProfileDetail={true} /> : <UserEditProfile showProfileDetail={false} />}
+          {menuSelectedVal == "User Profile" ? (
+            <UserEditProfile showProfileDetail={true} />
+          ) : (
+            <UserEditProfile showProfileDetail={false} />
+          )}
           {menuSelectedVal == "Setting" ? <h1>Hello setting</h1> : null}
         </div>
 

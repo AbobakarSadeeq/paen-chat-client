@@ -12,12 +12,15 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
+import ContactContext from "../../../context/contact-context/contact-context";
 
 const AddContact = (props) => {
+  const contactContextApi = useContext(ContactContext);
 
   const contextApi = useContext(LoggedInContext);
+
   const [contactList, setContactList] = useState(() => {
-    return [];
+    return [...props.allContactList];
   });
 
   const [selectedIndex, setSelectedIndex] = useState(() => {
@@ -42,64 +45,76 @@ const AddContact = (props) => {
   }
 
   useEffect(() => {
-    axios.get(
-        "https://localhost:44389/api/Contact/" +
-          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
-            .UserId)
-      .then((responseData) => {
-        let customArr = [...responseData.data];
-        customArr = customArr.map((obj) => ({
-          ...obj,
-          selectedContectStyle: false,
-        }));
-        setContactList(customArr);
+    if (Object.keys(contactContextApi.addNewContact).length != 0) {
+      let contactArr = [...contactList];
+      contactArr.push(contactContextApi.addNewContact);
+
+      setContactList((prevs) => {
+        return contactArr;
       });
+      props.updateContactListForAddNewContact(contactContextApi.addNewContact);
+      contactContextApi.setAddNewContact({});
+    }
 
-
-  }, [props.contactEdited]);
+    // axios
+    //   .get(
+    //     "https://localhost:44389/api/Contact/" +
+    //       JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
+    //         .UserId
+    //   )
+    //   .then((responseData) => {
+    //     let customArr = [...responseData.data];
+    //     customArr = customArr.map((obj) => ({
+    //       ...obj,
+    //       selectedContectStyle: false,
+    //     }));
+    //     setContactList(customArr);
+    //   });
+  }, [contactContextApi.addNewContact]);
 
   function openModelHandler() {
     props.openAddContactDialog(true);
   }
 
   function changeSelectedContactEffect(i) {
-    let fetchArrData = [...contactList];
+    debugger;
+    let fetchArrData = [contactList];
     setSelectedIndex(i);
-    fetchArrData[selectedIndex].selectedContectStyle = false;
-    fetchArrData[i].selectedContectStyle = true;
-    setContactList(() => {
-      return fetchArrData;
-    });
+    // fetchArrData[selectedIndex].selectedContectStyle = false;
+    // fetchArrData[i].selectedContectStyle = true;
+    // setContactList(() => {
+    //   return fetchArrData;
+    // });
   }
 
-  
-
   return (
-    <>
-      <div className={addContactCss["add-contact-section"]}>
-        <button onClick={openModelHandler}>
-          Add Contact &nbsp;
-          <FontAwesomeIcon icon={faUserPlus} />
-        </button>
-      </div>
+    <div>
+      <>
+        <div className={addContactCss["add-contact-section"]}>
+          <button onClick={openModelHandler}>
+            Add Contact &nbsp;
+            <FontAwesomeIcon icon={faUserPlus} />
+          </button>
+        </div>
 
-      <div className={addContactCss["users-section"]}>
-        {contactList.length > 0 &&
-          contactList.map((singleContact, index) => {
-            return (
-              <div key={index}>
-                <UserChat
-                  showChatSection={props.showChatSection}
-                  index={index}
-                  showAddContactPanel={props.showAddContactPanelDataObj}
-                  AddContactData={singleContact}
-                  changeSelectedContactEffect={changeSelectedContactEffect}
-                />
-              </div>
-            );
-          })}
-      </div>
-    </>
+        <div className={addContactCss["users-section"]}>
+          {contactList.length > 0 &&
+            contactList.map((singleContact, index) => {
+              return (
+                <div key={index}>
+                  <UserChat
+                    showChatSection={props.showChatSection}
+                    index={index}
+                    showAddContactPanel={props.showAddContactPanelDataObj}
+                    AddContactData={singleContact}
+                    changeSelectedContactEffect={changeSelectedContactEffect}
+                  />
+                </div>
+              );
+            })}
+        </div>
+      </>
+    </div>
   );
 };
 
