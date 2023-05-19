@@ -98,7 +98,7 @@ function App() {
         showChatSectionAssign: setShowChatSection,
         getShowChatSection: showChatSection,
         setShowSideBarSection: setShowSideBarSection,
-        getShowSideBarSection: showSideBarSection,
+        getShowSideBarSection: showSideBarSection
       }}
     >
       {loggedIn && localStorage.getItem("Token") != null ? (

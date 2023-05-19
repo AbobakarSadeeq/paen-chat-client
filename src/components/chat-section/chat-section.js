@@ -24,7 +24,7 @@ const Chat = (props) => {
 
   // 1. all pervious messages
   const [chatMessage, setChatMessage] = useState(() => {
-    return [props.singleUserChatAllInfo.singleConnectedUserMessagesList];
+    return []; // props.singleUserChatAllInfo.singleConnectedUserMessagesList
   });
 
   // 2. new messages added
@@ -47,37 +47,41 @@ const Chat = (props) => {
 
   // **********************************************************
 
+
+
   // use effects
 
   useEffect(() => {
-    // if user sended message to the receiver then if condition will be true
-    if (
-      props.senderMessageData &&
-      props.senderMessageData.senderId !=
-        JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1]))
-          .UserId
-    ) {
+
+      // if user sended message to the receiver then if condition will be true
+
+    if (props.senderMessageData && props.senderMessageData.senderId !=
+      JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId) {
       let selectedChatAllMessages = chatMessage;
       selectedChatAllMessages.push(props.senderMessageData);
 
       // this array is used for to show the real time message on the chat and also show the pervious message as well
+
       setChatMessage((pervsVal) => {
         return [...selectedChatAllMessages];
       });
+
       // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
       // group will be used for to find the connection
-      console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
+
+      // console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
       let fetchingDataFromSate = userConnectedWithUserGroupsName;
-      let findingUserGroup = fetchingDataFromSate.indexOf(
-        props.singleUserChatAllInfo.singleContactGroupConnectionId
-      );
+      let findingUserGroup = fetchingDataFromSate.indexOf(props.singleUserChatAllInfo.singleContactGroupConnectionId);
+
       if (findingUserGroup == -1) {
+
         setUserConnectedWithUserGroupName((prevData) => {
           return [
             ...prevData,
             props.singleUserChatAllInfo.singleContactGroupConnectionId,
           ];
         });
+
       }
 
       // ******** List database data on session expire *********
@@ -102,7 +106,6 @@ const Chat = (props) => {
       };
 
       setNewMessagesAdded(() => {
-        console.log(storingMessageCustomizeObj);
         return [...newMessagesAdded, storingMessageCustomizeObj];
       });
 
@@ -131,9 +134,7 @@ const Chat = (props) => {
                 });
               }
             }
-            console.log(
-              "that user is has been disconnected" + disconnectedUserId
-            );
+
           }
         }
       );
@@ -155,13 +156,14 @@ const Chat = (props) => {
   // 1. Sending Message To User Handler
 
   function userMessageHandler(val) {
+
     let myArr = [...chatMessage];
     let messageSendObj = {
       groupId: props?.singleUserChatAllInfo?.singleContactGroupConnectionId,
       clientMessageRedis: {
         userMessage: val,
         senderId: props.singleUserChatAllInfo.userItSelfId,
-        reciverId: props.singleUserChatAllInfo.usersConnectedId,
+        receiverId: props.singleUserChatAllInfo.usersConnectedId,
         message_Type: "text",
         messageSeen: true,
       },
@@ -177,13 +179,22 @@ const Chat = (props) => {
     mySignalRconnection.invoke("SendMessageToGroup", messageSendObj).then(
       () => {
         // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
-        console.log("Sended message");
         scrollToBottom();
       },
       (errors) => {
         console.log(errors);
       }
     );
+    // ******************* check out here about is user is connectedInMessage or not and if not then send request otherwise not ***************
+      if(props.singleUserChatAllInfo.connectedInMessages == false) {
+        props.mutateConnectedInMessageHandler(props.singleUserChatAllInfo.groupId);
+
+        axios.get("https://localhost:44389/api/Contact/MakeValidConnectedInMessageBetweenUser/" + props.singleUserChatAllInfo.groupId).then(()=>{
+
+        });
+
+      }
+
 
     // storing new messages on both side inside the new message array for to store that messages inside database whenever single of em leave or connection is detect disconnected.
 
@@ -274,7 +285,6 @@ const Chat = (props) => {
   // **********************************************************
 
   // react-component-template-page-or-code-of-component
-  console.log(contextApiForChatSection.getShowChatSection);
   return (
     <>
       <div

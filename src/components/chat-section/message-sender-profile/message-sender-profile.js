@@ -46,8 +46,8 @@ const MessageSenderProfile = (props) => {
               props?.profile?.contactName != " " &&
               props?.profile?.contactName != null
                 ? props?.profile?.contactName
-                : props?.profile?.phoneNumber}{" "}
-              Abobakar Sadeeq
+                : props?.profile?.phoneNumber}
+
             </strong>
           </span>
           <p className={MessageSenderCss["isUserOnline"]}>online</p>

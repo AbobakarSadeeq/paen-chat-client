@@ -76,7 +76,6 @@ const UserChat = (props) => {
           JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId).then(
             () => {},
             (errors) => {
-              console.log(errors);
             }
           );
       }, 1000);
@@ -91,7 +90,6 @@ const UserChat = (props) => {
       mySignalRconnection.on(
         "SendMessage",
         (message, userId) => {
-          console.log("Hello");
           props.getSenderMessage(message);
         },
         (error) => {}

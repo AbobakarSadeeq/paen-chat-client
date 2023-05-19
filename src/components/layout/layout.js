@@ -42,6 +42,14 @@ const Layout = (props) => {
     return false;
   });
 
+  const [gettingUserMessage, setGettingUserMessage] = useState(() => {
+    return null;
+  });
+
+  const [connectedInMessageGroupId, setConnectedInMessageGroupId] = useState(()=>{
+    return "";
+  })
+
   function refreshMyContect() {
     setContectAddRefresh(() => {
       return true;
@@ -63,12 +71,12 @@ const Layout = (props) => {
     }
   }
 
-  const [gettingUserMessage, setGettingUserMessage] = useState(() => {
-    return null;
-  });
-
   function senderMessageHandler(value) {
     setGettingUserMessage(value);
+  }
+
+  function mutateConnectedInMessageContact(groupId) {
+    setConnectedInMessageGroupId(groupId);
   }
 
   useEffect(() => {
@@ -92,14 +100,14 @@ const Layout = (props) => {
       {openContactModel ? (
         <AddContactModel
           hideDialog={contactAddModel}
-         // refreshMyContect={refreshMyContect} // changes
+          // refreshMyContect={refreshMyContect} // changes
         />
       ) : null}
 
       <div className={layoutCss["main-layout"]}>
         <Sidebar
           EditContactName={props.ContactNameEdited}
-        //  refreshingContect={contectAddRefresh}  // changes 
+          //  refreshingContect={contectAddRefresh}  // changes
           addingContactDone={openContactModel}
           addContactOpen={setContactModel}
           showChatSectionn={changeViewww}
@@ -115,6 +123,7 @@ const Layout = (props) => {
           closeContactDetailInResponsiveMobile={
             props.closeContactDetailForMobileResponsive
           }
+          connectUserInMessageSectionThroughGroupId={connectedInMessageGroupId}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
@@ -127,11 +136,13 @@ const Layout = (props) => {
           />
         ) : null}
 
-        {showChat == true && contextApi.getShowChatSection == true  ? (
+        {showChat == true && contextApi.getShowChatSection == true ? (
           <Chat
             singleUserChatAllInfo={uperProfileData}
             senderMessageObj={props.sendMessageVal}
             senderMessageData={gettingUserMessage}
+            mutateConnectedInMessageHandler={mutateConnectedInMessageContact}
+
           />
         ) : null}
 
@@ -141,6 +152,7 @@ const Layout = (props) => {
           <Chat
             singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetail}
             senderMessageObj={props.sendMessageVal}
+            mutateConnectedInMessageHandler={mutateConnectedInMessageContact}
           />
         ) : null}
       </div>

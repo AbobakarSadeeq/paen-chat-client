@@ -42,30 +42,47 @@ const Sidebar = (props) => {
     });
 
   useEffect(() => {
-    axios
-      .get(
-        "https://localhost:44389/api/Contact/" +
-          JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
-            .UserId
-      )
-      .then((responseData) => {
-        let customArr = [];
-        setAddContactSectionContactList(responseData.data);
-        for (var singleUserAllContacts of responseData.data) {
-          console.log(singleUserAllContacts);
-          if (singleUserAllContacts.connectedInMessages) {
-            customArr.push({
-              ...singleUserAllContacts,
-              selectedContectStyle: false,
-            });
+    if (
+      connectedContactList.length == 0 &&
+      addContactSectionContactList.length == 0
+    ) {
+      axios
+        .get(
+          "https://localhost:44389/api/Contact/" +
+            JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1]))
+              .UserId
+        )
+        .then((responseData) => {
+          let customArr = [];
+          setAddContactSectionContactList(responseData.data);
+          for (var singleUserAllContacts of responseData.data) {
+            if (singleUserAllContacts.connectedInMessages) {
+              customArr.push({
+                ...singleUserAllContacts,
+                selectedContectStyle: false,
+              });
+            }
           }
-        }
 
-        console.log(responseData.data);
 
-        setConnectedContactList(customArr);
+          setConnectedContactList(customArr);
+        });
+    }
+
+    if (props.connectUserInMessageSectionThroughGroupId != "") {
+      let addContactSectionArr = addContactSectionContactList;
+      let findValidIndex = addContactSectionArr.findIndex((a) => a.groupId == props.connectUserInMessageSectionThroughGroupId);
+      addContactSectionArr[findValidIndex].connectedInMessages = true;
+      setConnectedContactList((prevs) => {
+        return [...prevs, addContactSectionArr[findValidIndex]];
       });
-  }, [props.EditContactName]);
+      setAddContactSectionContactList(() => {
+        return [...addContactSectionArr];
+      });
+    }
+
+
+  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId]);
 
   function changeSelectedContactEffect(i) {
     let fetchArrData = [...connectedContactList];

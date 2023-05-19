@@ -77,7 +77,6 @@ const AddContact = (props) => {
   }
 
   function changeSelectedContactEffect(i) {
-    debugger;
     let fetchArrData = [contactList];
     setSelectedIndex(i);
     // fetchArrData[selectedIndex].selectedContectStyle = false;
