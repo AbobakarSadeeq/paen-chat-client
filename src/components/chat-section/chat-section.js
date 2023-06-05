@@ -14,7 +14,11 @@ import { useRef } from "react";
 import axios from "axios";
 
 const Chat = (props) => {
-  console.log(props);
+  console.log(props.viewChangeToChatSectionFromUserDetail);
+  console.log(props.chatSectionOpenedFromContactDetail);
+  console.log(props.abc);
+  debugger;
+
   // context api's
   const contextApi = useContext(MessageContextApi);
   const contextApiForChatSection = useContext(LoggedInContext);
@@ -311,6 +315,7 @@ const Chat = (props) => {
                 props.singleUserChatAllInfo.userItSelfId ==
                 singleMessage?.senderId
               ) {
+
                 // other user sended message to you
 
                 return <RightMessageSection key={index} message={customObj} />;

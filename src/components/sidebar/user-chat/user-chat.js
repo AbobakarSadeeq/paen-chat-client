@@ -35,27 +35,36 @@ mySignalRconnection.start().then(
 // });
 
 const UserChat = (props) => {
-  console.log(props);
+
+
+
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
   function onClickContact() {
+
     if (location.pathname == "/Chats" && props.AddContactData) {
+      // this block is only execute when user-specific chat section open in chats route like click on the chat
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
       props.selectedChatUperProfileData(props.AddContactData);
-    //  contextApi.messageSectionOpenend(false);
-    //  contextApi.showChatSectionThroughUserDetailProfileSection(null);
-    //  contextApi.showContactDetailHandler("chat");
+      contextApi.messageSectionOpenend(false);
+      contextApi.showChatSectionThroughUserDetailProfileSection(props.AddContactData);
+      contextApi.showContactDetailHandler("chat");
       contextApi.showChatSectionAssign(true); // turn it On.
       contextApi.setShowSideBarSection(false);
 
     } else if (props.AddContactData && location.pathname == "/AddContact") {
+
+      // this block is execute when contact-detail page is opened through add-contact route
+
       props.showAddContactPanel(props.AddContactData);
       props.changeSelectedContactEffect(props.index);
       props.showChatSection();
       contextApi.messageSectionOpenend(false);
-      contextApi.showChatSectionThroughUserDetailProfileSection(null);
+      contextApi.showChatSectionThroughUserDetailProfileSection(props.AddContactData);
       contextApi.showContactDetailHandler("AddContact");
+
+
     }
   }
 
@@ -95,7 +104,7 @@ const UserChat = (props) => {
         (error) => {}
       );
 
-      contextApi.showChatSectionThroughUserDetailProfileSection({});
+     // contextApi.showChatSectionThroughUserDetailProfileSection({});
     }
   }, [props.sendMessageToServer]);
 

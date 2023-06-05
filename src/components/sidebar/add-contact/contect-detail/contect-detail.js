@@ -81,7 +81,12 @@ const ContectDetail = (props) => {
     contextApi.showChatSectionThroughUserDetailProfileSection({
       ...props.detail,
     });
+
     contextApi.messageSectionOpenend(true);
+
+
+
+
   }
 
   function OpenEditContactModel() {

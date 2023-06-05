@@ -30,7 +30,7 @@ function App() {
   const [newUserMessageSectionOpened, setNewUserMessageSectionOpened] =
     useState(() => {
       return false;
-    }, []);
+    }, []); // this will or become true execute when chat opened from the addcontact route and with contact detail
 
   const [updatedContactName, setUpdatedContactName] = useState(() => {
     return "";
@@ -73,17 +73,26 @@ function App() {
   }
 
   function callShowContactDetailHandler(selectChatSectionFromRouteName) {
+    // this handler is execute when in chat route chat specific opend and also this execute when in add-contact opened and then contact-detail opened on sepecific user then this execute.
+    if(window.screen.width <= 768) {
     if (selectChatSectionFromRouteName == "AddContact") {
+      console.log(closeContactDetailOnMobileResponsiveness);
       setCloseContactDetailOnMobileResponsiveness((prevs) => {
         return !prevs;
       });
     } else if (selectChatSectionFromRouteName == "chat") {
       // when it clicked the hide the sidebar
       // so here i have to hide the sidebar
+
+      // here when a specfic chat-section is opened and also route is in chat then this execute and it become true here
       setShowSideBarSection((prevs) => {
-        return !prevs;
+        return !prevs; // so here if it is true then make it false
       });
     }
+
+
+  }
+
   }
 
   return (
@@ -108,10 +117,10 @@ function App() {
           >
             <ContactContextProvider>
               <Layout
-                viewChangeToChatSectionFromUserDetail={
+                viewChangeToChatSectionFromUserDetailViewUserInfo={
                   changeUserProfileViewToItsChatSection
                 }
-                newUserMessagedOpen={newUserMessageSectionOpened}
+                chatSectionOpenedFromContactDetail={newUserMessageSectionOpened}
                 ContactNameEdited={updatedContactName}
                 sendMessageVal={messageVal}
                 closeContactDetailForMobileResponsive={

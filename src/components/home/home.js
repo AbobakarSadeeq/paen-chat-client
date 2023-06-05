@@ -7,8 +7,8 @@ import homeCss from "./home.module.css";
 const Home = () => {
   useEffect(() => {
     var serverDate = new Date("2023-02-09 18:47:00.0000000");
-    console.log(serverDate.toLocaleDateString("en-US"));
-    console.log(serverDate.toLocaleTimeString("en-US"));
+    // console.log(serverDate.toLocaleDateString("en-US"));
+    // console.log(serverDate.toLocaleTimeString("en-US"));
 
   }, []);
 

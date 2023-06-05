@@ -13,6 +13,7 @@ import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 
 const Layout = (props) => {
+  console.log(props.viewChangeToChatSectionFromUserDetailViewUserInfo);
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
 
@@ -50,6 +51,7 @@ const Layout = (props) => {
     return "";
   })
 
+
   function refreshMyContect() {
     setContectAddRefresh(() => {
       return true;
@@ -61,9 +63,20 @@ const Layout = (props) => {
   }
 
   function changeViewww() {
+    console.log(props.viewChangeToChatSectionFromUserDetail);
+    console.log(props.viewChangeToChatSectionFromUserDetail);
     if (location.pathname == "/Chats") {
-      setShowChat(true);
-      setShowContactDetail(false);
+      if(showChat !== true) {
+        setShowChat(true);
+
+      }
+
+      // this block will be execute when in chat route selected chat-specific person.
+
+      if(showContactDetail !== false) {
+        setShowContactDetail(false);
+      }
+
       // hide sidebar
     } else if (location.pathname == "/AddContact") {
       setShowContactDetail(true);
@@ -80,19 +93,22 @@ const Layout = (props) => {
   }
 
   useEffect(() => {
+
+
+      // this is here profile data is store in this prop => props.viewChangeToChatSectionFromUserDetail
     if (
       props.viewChangeToChatSectionFromUserDetail != null &&
-      !props.newUserMessagedOpen
+      !props.chatSectionOpenedFromContactDetail // => it means false if chat section was not opened
     ) {
       contextApi.showChatSectionThroughUserDetailProfileSection(null);
       //setShowContactDetail(true);
     } else if (
       props.viewChangeToChatSectionFromUserDetail &&
-      props.newUserMessagedOpen
+      props.chatSectionOpenedFromContactDetail
     ) {
-      setShowContactDetail(false);
+      setShowContactDetail(false); //  here contact-detail section is closed and opend the chat-section from add-contact section THIS IS TRUE AND VALID FORM.
     }
-  }, [props.newUserMessagedOpen]);
+  }, [props.chatSectionOpenedFromContactDetail]);
 
   return (
     <>
@@ -129,13 +145,14 @@ const Layout = (props) => {
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
         {showChat || showContectRightSidePane ? "" : <Home />}
 
-        {showContactDetail && !props.newUserMessagedOpen ? (
+        {showContactDetail && !props.chatSectionOpenedFromContactDetail ? (
           <ContectDetail
             detail={showContectRightSidePane}
             isShowContactDetail={props.closeContactDetailForMobileResponsive}
           />
         ) : null}
 
+          {/* this chat will execute when chat section open from chat route */}
         {showChat == true && contextApi.getShowChatSection == true ? (
           <Chat
             singleUserChatAllInfo={uperProfileData}
@@ -146,12 +163,15 @@ const Layout = (props) => {
           />
         ) : null}
 
-        {/* User detail messeage section. */}
-        {props.viewChangeToChatSectionFromUserDetail &&
-        props.newUserMessagedOpen ? (
+        {/* when User detail opened from add-contact route and then open the messeage or chat section this chat will execute.
+        and this will exeucte when chat-section is opened from the user-detail */}
+        {props.viewChangeToChatSectionFromUserDetailViewUserInfo &&
+        props.chatSectionOpenedFromContactDetail ? (
           <Chat
-            singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetail}
+            singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetailViewUserInfo } // this props is nothing passing here
+            abc={"asd"}
             senderMessageObj={props.sendMessageVal}
+            senderMessageData={gettingUserMessage}
             mutateConnectedInMessageHandler={mutateConnectedInMessageContact}
           />
         ) : null}

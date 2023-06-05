@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import MenuCss from "./menu.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, NavLink } from "react-router-dom";
@@ -8,13 +8,20 @@ import {
   faUser,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
-
+import LoggedInContext from "../../../context/loggedIn/loggedIn";
 
 const Menu = (props) => {
+  const contextApi = useContext(LoggedInContext);
 
   function clickMenu(selectedLinkName) {
-    console.log(selectedLinkName);
+    console.log(window.screen.width);
+
     props.changeSidebarViewByMenuClicked(selectedLinkName);
+
+    //  if(window.screen.width > 768 && (selectedLinkName == "AddContact" || selectedLinkName == "Chats")
+    //  && contextApi.messageSectionOpenend ==) {
+    // //   contextApi.messageSectionOpenend(true);
+    // // }
   }
 
   return (

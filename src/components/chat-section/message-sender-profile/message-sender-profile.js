@@ -6,6 +6,8 @@ import { faArrowLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import { useLocation } from "react-router";
 const MessageSenderProfile = (props) => {
+
+  
   const contextApi = useContext(LoggedInContext);
   const path = useLocation();
 
