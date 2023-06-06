@@ -9,15 +9,13 @@ import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 import { useState } from "react";
 import MessageContextApi from "../../context/message-context/message-context-api";
-import { mySignalRconnection } from "../sidebar/user-chat/user-chat";
+
 import { useRef } from "react";
 import axios from "axios";
+import { signalRConnectionSingletonObj } from "../Auth/auth";
 
 const Chat = (props) => {
-  console.log(props.viewChangeToChatSectionFromUserDetail);
-  console.log(props.chatSectionOpenedFromContactDetail);
-  console.log(props.abc);
-  debugger;
+
 
   // context api's
   const contextApi = useContext(MessageContextApi);
@@ -113,35 +111,7 @@ const Chat = (props) => {
         return [...newMessagesAdded, storingMessageCustomizeObj];
       });
 
-      // make custom array and do everything inside changes and fully apply update and apply the logic on it.
-      mySignalRconnection.on(
-        "RemoveDisconnectedUserDataFromArray",
-        (disconnectedUserId) => {
-          let updatingMessagesState = [...newMessagesAdded];
-          if (
-            updatingMessagesState.find(
-              (a) =>
-                a.senderId == disconnectedUserId ||
-                a.reciverId == disconnectedUserId
-            )
-          ) {
-            for (var index in updatingMessagesState) {
-              if (
-                updatingMessagesState[index].senderId == disconnectedUserId ||
-                updatingMessagesState[index].reciverId == disconnectedUserId
-              ) {
-                updatingMessagesState.splice(index, 1);
-              }
-              if (updatingMessagesState.length - 1 == index) {
-                setNewMessagesAdded(() => {
-                  return [...updatingMessagesState];
-                });
-              }
-            }
 
-          }
-        }
-      );
     }
 
     // ************************************************
@@ -180,7 +150,7 @@ const Chat = (props) => {
 
     // send message to other user to see instant or in real time
 
-    mySignalRconnection.invoke("SendMessageToGroup", messageSendObj).then(
+    signalRConnectionSingletonObj.invoke("SendMessageToGroup", messageSendObj).then(
       () => {
         // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
         scrollToBottom();
@@ -244,43 +214,7 @@ const Chat = (props) => {
     scrollToBottom();
   }
 
-  // 2. Event execute when closing browser or tab happens on that user browser who's she/he closed it only
 
-  // function ClosingOrRefreshingChatSession() {
-  //   window.onbeforeunload = function (event) {
-  //     if (newMessagesAdded.length > 0) {
-  //       axios
-  //         .post("https://localhost:44389/api/Message", newMessagesAdded)
-  //         .then((response) => {
-  //           console.log("data has been send to db.....");
-  //         });
-
-  //       mySignalRconnection
-  //         .invoke(
-  //           "UserTryingToDisconnecting",
-  //           userConnectedWithUserGroupsName,
-  //           JSON.parse(
-  //             window.atob(localStorage.getItem("Token")?.split(".")[1])
-  //           ).UserId
-  //         )
-  //         .then(() => {
-  //           console.log(newMessagesAdded);
-  //         });
-
-  //       setNewMessagesAdded(() => {
-  //         return [];
-  //       });
-
-  //       setUserConnectedWithUserGroupName(() => {
-  //         return [];
-  //       });
-  //     }
-
-  //     return "";
-  //   };
-  // }
-
-  // 3. Scroll to bottom when message sended or received handler
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

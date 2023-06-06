@@ -12,6 +12,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import MessageContextApi from "./context/message-context/message-context-api";
 import { ContactContextProvider } from "./context/contact-context/contact-context";
 
+
+
+
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,11 +57,7 @@ function App() {
     }
   }, [loggedIn]);
 
-  function removeDataFromChangeUserChatSection() {
-    // if (changeUserProfileViewToItsChatSection != null && location.pathname == "/Chats") {
-    //   setChangeUserProfileViewToItsChatSection(null);
-    // }
-  }
+
 
   const [messageVal, setMessageVal] = useState(() => {
     return null;
@@ -138,3 +137,4 @@ function App() {
 }
 
 export default App;
+

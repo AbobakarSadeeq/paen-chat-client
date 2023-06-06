@@ -1,11 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useMemo, useState } from "react";
 import sidebarCss from "./sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  solid,
-  regular,
-  brands,
-} from "@fortawesome/fontawesome-svg-core/import.macro";
+
 import {
   faArrowRightFromBracket,
   faSearch,
@@ -24,6 +20,8 @@ const Sidebar = (props) => {
   const navigate = useNavigate();
   const loggedInContextApi = useContext(LoggedInContext);
 
+
+
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
     return "Chats";
   });
@@ -36,12 +34,15 @@ const Sidebar = (props) => {
     return 0;
   });
 
+
+
   const [addContactSectionContactList, setAddContactSectionContactList] =
     useState(() => {
       return [];
     });
 
   useEffect(() => {
+
     if (
       connectedContactList.length == 0 &&
       addContactSectionContactList.length == 0
@@ -53,10 +54,14 @@ const Sidebar = (props) => {
               .UserId
         )
         .then((responseData) => {
+
           let customArr = [];
           setAddContactSectionContactList(responseData.data);
           for (var singleUserAllContacts of responseData.data) {
-            if (singleUserAllContacts.connectedInMessages) {
+            if (
+              singleUserAllContacts.connectedInMessages ||
+              singleUserAllContacts.verifiedContactUser
+            ) {
               customArr.push({
                 ...singleUserAllContacts,
                 selectedContectStyle: false,
@@ -64,14 +69,15 @@ const Sidebar = (props) => {
             }
           }
 
-
           setConnectedContactList(customArr);
         });
     }
 
     if (props.connectUserInMessageSectionThroughGroupId != "") {
       let addContactSectionArr = addContactSectionContactList;
-      let findValidIndex = addContactSectionArr.findIndex((a) => a.groupId == props.connectUserInMessageSectionThroughGroupId);
+      let findValidIndex = addContactSectionArr.findIndex(
+        (a) => a.groupId == props.connectUserInMessageSectionThroughGroupId
+      );
       addContactSectionArr[findValidIndex].connectedInMessages = true;
       setConnectedContactList((prevs) => {
         return [...prevs, addContactSectionArr[findValidIndex]];
@@ -80,8 +86,6 @@ const Sidebar = (props) => {
         return [...addContactSectionArr];
       });
     }
-
-
   }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId]);
 
   function changeSelectedContactEffect(i) {
@@ -176,16 +180,16 @@ const Sidebar = (props) => {
             ? connectedContactList.length > 0 &&
               connectedContactList.map((singleContact, index) => {
                 return (
-                  <div key={index}>
+                  <div key={singleContact.userId}>
                     <UserChat
                       index={index}
                       AddContactData={singleContact}
-                      changeSelectedContactEffect={changeSelectedContactEffect}
-                      showChatSection={changeView}
-                      selectedChatUperProfileData={props.profileUperData}
-                      sendMessageToServer={props.senderMessageVal}
-                      getSenderMessage={props.gettingSenderMessage}
-                      messageSendFromUser={props.messageDataSendedFromUser}
+                        changeSelectedContactEffect={changeSelectedContactEffect}
+                       showChatSection={changeView}
+                       selectedChatUperProfileData={props.profileUperData}
+                       sendMessageToServer={props.senderMessageVal}
+                       getSenderMessage={props.gettingSenderMessage}
+                       messageSendFromUser={props.messageDataSendedFromUser}
                     />
                   </div>
                 );

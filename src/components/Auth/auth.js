@@ -2,15 +2,30 @@ import React, { useEffect, useState } from "react";
 import UserProfileInfo from "../user-profile-info/user-profile-info";
 import AuthForm from "./auth-form/auth-form";
 import AuthCss from "./auth.module.css";
+import useMakingSignalRConnection from "../../hooks/signalr-connection";
+
+export let signalRConnectionSingletonObj = {};
+
 const Auth = () => {
+  const { makeTheSignalRConnectionOn } = useMakingSignalRConnection();
+
   const [userProfileFormForAuthorired, setUserProfileFormForAuthorired] =
     useState(() => {
       return false;
     });
 
   useEffect(() => {
-    if (localStorage.getItem("Token")) {
-      setUserProfileFormForAuthorired(true);
+    // user become sign in and valid user info
+    if (
+      localStorage.getItem("Token") != null ||
+      userProfileFormForAuthorired === true
+    ) {
+      // run the singleR in front-side only here
+      
+      makeTheSignalRConnectionOn().then((respConnectionObj) => {
+        signalRConnectionSingletonObj = respConnectionObj;
+      });
+
     }
   }, [userProfileFormForAuthorired]);
 
