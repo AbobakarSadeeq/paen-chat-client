@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import Chat from "../chat-section/chat-section";
 import Sidebar from "../sidebar/sidebar";
 import layoutCss from "./layout.module.css";
@@ -63,8 +63,6 @@ const Layout = (props) => {
   }
 
   function changeViewww() {
-    console.log(props.viewChangeToChatSectionFromUserDetail);
-    console.log(props.viewChangeToChatSectionFromUserDetail);
     if (location.pathname == "/Chats") {
       if(showChat !== true) {
         setShowChat(true);
@@ -83,6 +81,28 @@ const Layout = (props) => {
       setShowChat(false);
     }
   }
+
+  const changeViewMemoize = useCallback(()=>{
+    if (location.pathname == "/Chats") {
+      if(showChat !== true) {
+        setShowChat(true); // here masla
+
+      }
+
+      // this block will be execute when in chat route selected chat-specific person.
+
+      if(showContactDetail !== false) {
+        setShowContactDetail(false);
+      }
+
+      // hide sidebar
+    } else if (location.pathname == "/AddContact") {
+      setShowContactDetail(true);
+      setShowChat(false);
+    }
+  }, [location.pathname, showChat, showContactDetail])
+
+
 
   function senderMessageHandler(value) {
     setGettingUserMessage(value);
@@ -126,14 +146,14 @@ const Layout = (props) => {
           //  refreshingContect={contectAddRefresh}  // changes
           addingContactDone={openContactModel}
           addContactOpen={setContactModel}
-          showChatSectionn={changeViewww}
+          showChatSectionn={changeViewMemoize}
           selectedNewContactObj={(data) => {
             setShowContectRightSidePane(data);
           }}
           profileUperData={(data) => {
             setUperProfileData(data);
           }}
-          senderMessageVal={props.sendMessageVal}
+        //  senderMessageVal={props.sendMessageVal}
           gettingSenderMessage={senderMessageHandler}
           messageDataSendedFromUser={gettingUserMessage}
           closeContactDetailInResponsiveMobile={
@@ -169,7 +189,7 @@ const Layout = (props) => {
         props.chatSectionOpenedFromContactDetail ? (
           <Chat
             singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetailViewUserInfo } // this props is nothing passing here
-            abc={"asd"}
+
             senderMessageObj={props.sendMessageVal}
             senderMessageData={gettingUserMessage}
             mutateConnectedInMessageHandler={mutateConnectedInMessageContact}
@@ -180,4 +200,4 @@ const Layout = (props) => {
   );
 };
 
-export default Layout;
+export default memo(Layout);

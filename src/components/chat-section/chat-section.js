@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import ChatCss from "./chat-section.module.css";
 import LeftMessageSection from "./left-message-section/left-message-section";
 import RightMessageSection from "./right-message-section/right-message-section";
@@ -16,7 +16,7 @@ import { signalRConnectionSingletonObj } from "../Auth/auth";
 
 const Chat = (props) => {
 
-
+  console.log(props?.singleUserChatAllInfo);
   // context api's
   const contextApi = useContext(MessageContextApi);
   const contextApiForChatSection = useContext(LoggedInContext);
@@ -131,18 +131,22 @@ const Chat = (props) => {
 
   function userMessageHandler(val) {
 
+    const senderId = JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId;
+
     let myArr = [...chatMessage];
     let messageSendObj = {
-      groupId: props?.singleUserChatAllInfo?.singleContactGroupConnectionId,
+      groupId: props?.singleUserChatAllInfo?.groupId,
       clientMessageRedis: {
         userMessage: val,
-        senderId: props.singleUserChatAllInfo.userItSelfId,
-        receiverId: props.singleUserChatAllInfo.usersConnectedId,
-        message_Type: "text",
-        messageSeen: true,
+        senderId: +senderId,
+        receiverId: props.singleUserChatAllInfo.userId,
+        messageSeen: false,
       },
     };
-    contextApi.sendMessageFunc(messageSendObj);
+
+    // this below code is for now in commented and not required yet
+    // contextApi.sendMessageFunc(messageSendObj);
+
     myArr.push(messageSendObj);
     setChatMessage((pervsVal) => {
       return myArr;
@@ -150,10 +154,14 @@ const Chat = (props) => {
 
     // send message to other user to see instant or in real time
 
+
+
     signalRConnectionSingletonObj.invoke("SendMessageToGroup", messageSendObj).then(
       () => {
         // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
         scrollToBottom();
+        const getDataFromSelectorId = document.getElementById(messageSendObj.groupId+"highlight-listMessage");
+        getDataFromSelectorId.textContent = messageSendObj.clientMessageRedis.userMessage;
       },
       (errors) => {
         console.log(errors);
@@ -190,7 +198,7 @@ const Chat = (props) => {
       }),
     };
 
-    // updating state of adding new message to state.
+   // updating state of adding new message to state.
     setNewMessagesAdded(() => {
       return [...newMessagesAdded, sendMessageObj];
     });
@@ -229,9 +237,8 @@ const Chat = (props) => {
         className={` ${
           contextApiForChatSection.getShowChatSection == true
             ? ChatCss["complete-chat-read-section-show"]
-            : "complete-chat-read-section-off"
-        }`}
-      >
+            : "complete-chat-read-section-off"}`}>
+
         {/* profile section */}
         <MessageSenderProfile profile={props.singleUserChatAllInfo} />
 
@@ -239,33 +246,29 @@ const Chat = (props) => {
         <div className={ChatCss["chat-read-section"]} ref={messagesEndRef}>
           {chatMessage ? (
             chatMessage?.map((singleMessage, index) => {
+
               let customObj = {
                 ...singleMessage,
               };
 
               delete customObj["senderUser"];
               delete customObj["reciverUser"];
-              if (
-                props.singleUserChatAllInfo.userItSelfId ==
-                singleMessage?.senderId
-              ) {
+
+              if (props.singleUserChatAllInfo.userItSelfId == singleMessage?.senderId) {
 
                 // other user sended message to you
 
                 return <RightMessageSection key={index} message={customObj} />;
+
               }
               // you have sended message to the connected user
-              if (
-                props.singleUserChatAllInfo.usersConnectedId ==
-                singleMessage?.senderId
-              ) {
+              if (props.singleUserChatAllInfo.usersConnectedId == singleMessage?.senderId) {
                 return <LeftMessageSection key={index} message={customObj} />;
               }
             })
           ) : (
             <>No message with this chat</>
-          )}
-        </div>
+          )}</div>
 
         {/* message send section */}
         <MessageSend userMessageHandler={userMessageHandler} />
@@ -273,5 +276,5 @@ const Chat = (props) => {
     </>
   );
 };
-export default Chat;
+export default React.memo(Chat);
 

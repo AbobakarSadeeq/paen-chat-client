@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import sidebarCss from "./sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -88,15 +88,15 @@ const Sidebar = (props) => {
     }
   }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId]);
 
-  function changeSelectedContactEffect(i) {
-    let fetchArrData = [...connectedContactList];
-    setSelectedIndex(i);
-    fetchArrData[selectedIndex].selectedContectStyle = false;
-    fetchArrData[i].selectedContectStyle = true;
-    setConnectedContactList(() => {
-      return fetchArrData;
-    });
-  }
+  // function changeSelectedContactEffect(i) {
+  //   let fetchArrData = [...connectedContactList];
+  //   setSelectedIndex(i);
+  //   fetchArrData[selectedIndex].selectedContectStyle = false;
+  //   fetchArrData[i].selectedContectStyle = true;
+  //   setConnectedContactList(() => {
+  //     return fetchArrData;
+  //   });
+  // }
 
   function logOut() {
     localStorage.removeItem("Token");
@@ -108,14 +108,33 @@ const Sidebar = (props) => {
     props.showChatSectionn();
   }
 
+
+
+
   function updateContactListForAddingNewContactHandler(newContact) {
     setAddContactSectionContactList((prevs) => {
       return [...prevs, newContact];
     });
   }
 
+
+
+
+  const changeSelectedContactEffectMemoized = useCallback((i)=>{
+    let fetchArrData = [...connectedContactList]; // like here i am using the state data of the component so i have to pass the dependecies here of that state.
+
+    fetchArrData[i].selectedContectStyle = false;
+    fetchArrData[i].selectedContectStyle = true;
+     setConnectedContactList(() => {
+       return fetchArrData; // if i am changing the something inside the connectedContactList then obviously connectedContact again iterate
+     });
+  }, [connectedContactList])
+
   return (
     <>
+
+
+
       <div
         className={`${sidebarCss["sidebar"]} ${
           props.closeContactDetailInResponsiveMobile == true ||
@@ -180,14 +199,15 @@ const Sidebar = (props) => {
             ? connectedContactList.length > 0 &&
               connectedContactList.map((singleContact, index) => {
                 return (
-                  <div key={singleContact.userId}>
+
+                  <div key={singleContact.userId} >
                     <UserChat
                       index={index}
                       AddContactData={singleContact}
-                        changeSelectedContactEffect={changeSelectedContactEffect}
+                      changeSelectedContactEffect={changeSelectedContactEffectMemoized}
                        showChatSection={changeView}
                        selectedChatUperProfileData={props.profileUperData}
-                       sendMessageToServer={props.senderMessageVal}
+                     // sendMessageToServer={props.senderMessageVal}
                        getSenderMessage={props.gettingSenderMessage}
                        messageSendFromUser={props.messageDataSendedFromUser}
                     />
@@ -198,11 +218,11 @@ const Sidebar = (props) => {
           {menuSelectedVal == "Add Contact" ? (
             <AddContact
               contactEdited={props.EditContactName}
-              //    refreshContectProp={props.refreshingContect}
+              // refreshContectProp={props.refreshingContect}
               showChatOnAddContactSection={props.showAddContectSection}
               openAddContactDialog={props.addContactOpen}
               showAddContactPanelDataObj={props.selectedNewContactObj}
-              showChatSection={changeView} // this is the selected thing
+              showChatSection={changeView}
               allContactList={addContactSectionContactList}
               updateContactListForAddNewContact={
                 updateContactListForAddingNewContactHandler
@@ -224,4 +244,4 @@ const Sidebar = (props) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

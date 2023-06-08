@@ -68,7 +68,7 @@ function App() {
   });
 
   function messageSendedHandler(val) {
-    setMessageVal(val);
+  //  setMessageVal(val);
   }
 
   function callShowContactDetailHandler(selectChatSectionFromRouteName) {
@@ -121,7 +121,7 @@ function App() {
                 }
                 chatSectionOpenedFromContactDetail={newUserMessageSectionOpened}
                 ContactNameEdited={updatedContactName}
-                sendMessageVal={messageVal}
+             //   sendMessageVal={messageVal}
                 closeContactDetailForMobileResponsive={
                   closeContactDetailOnMobileResponsiveness
                 }
