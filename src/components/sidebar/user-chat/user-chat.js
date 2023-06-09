@@ -45,7 +45,6 @@ const UserChat = (props) => {
       contextApi.showContactDetailHandler("AddContact");
     }
   }, [location.pathname, props.AddContactData]);
-
   useEffect(() => {
     // nulls will help here to connect the users within their's group and if it become not null or having the data then it means single user are connected with their contacts that are releated
     // if i connect with the signalR group separetly like connect first chat-section all user and then add-contact all user
@@ -100,7 +99,6 @@ const UserChat = (props) => {
   }
 
   if (
-    props.AddContactData.connectedInMessages &&
     location.pathname == "/Chats"
   ) {
     renderingSingleContact = (

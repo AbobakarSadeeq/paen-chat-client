@@ -13,26 +13,20 @@ import MessageContextApi from "../../context/message-context/message-context-api
 import { useRef } from "react";
 import axios from "axios";
 import { signalRConnectionSingletonObj } from "../Auth/auth";
+import FetchingMessagesContext from "../../context/fetching-message-context/fetching-message-context";
 
 const Chat = (props) => {
-
-  console.log(props?.singleUserChatAllInfo);
   // context api's
   const contextApi = useContext(MessageContextApi);
+  const fetchingMessagesContext = useContext(FetchingMessagesContext);
   const contextApiForChatSection = useContext(LoggedInContext);
   // **********************************************************
 
   // states of chat components
 
-  // 1. all pervious messages
+  // 1. message to store here on both side sender as well as receiver
   const [chatMessage, setChatMessage] = useState(() => {
     return []; // props.singleUserChatAllInfo.singleConnectedUserMessagesList
-  });
-
-  // 2. new messages added
-
-  const [newMessagesAdded, setNewMessagesAdded] = useState(() => {
-    return [];
   });
 
   // 3. groups name that single user connected with it
@@ -42,6 +36,8 @@ const Chat = (props) => {
       return [];
     });
 
+  const [checkUserChangeContactObject, setCheckUserChangeContactObject] = useState();
+
   // **********************************************************
 
   // refs varibles
@@ -49,79 +45,143 @@ const Chat = (props) => {
 
   // **********************************************************
 
-
-
   // use effects
+
+  // useEffect(() => {
+
+  //     // if user sended message to the receiver then if condition will be true here this will be exeucte when message sended from one user to anther
+  //   if (props.senderMessageData && props.senderMessageData.senderId !=
+  //     JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId) {
+  //     let selectedChatAllMessages = chatMessage;
+  //     selectedChatAllMessages.push(props.senderMessageData);
+
+  //     // this array is used for to show the real time message on the chat and also show the pervious message as well
+
+  //     setChatMessage((pervsVal) => {
+  //       return [...selectedChatAllMessages];
+  //     });
+
+  //     // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
+  //     // group will be used for to find the connection
+
+  //     // console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
+  //     let fetchingDataFromSate = userConnectedWithUserGroupsName;
+  //     let findingUserGroup = fetchingDataFromSate.indexOf(props.singleUserChatAllInfo.singleContactGroupConnectionId);
+
+  //     if (findingUserGroup == -1) {
+
+  //       setUserConnectedWithUserGroupName((prevData) => {
+  //         return [
+  //           ...prevData,
+  //           props.singleUserChatAllInfo.singleContactGroupConnectionId,
+  //         ];
+  //       });
+
+  //     }
+
+  //   }
+
+  //   // ************************************************
+
+  //   // calling scrollToBottom method for execute when data is changed inside the component
+  //   scrollToBottom();
+
+  //   // whenever user send a message and the user want to go offline or closing browser then before closing browsing send data to db...
+  //   // ClosingOrRefreshingChatSession();
+  // }, [props.senderMessageData]);
 
   useEffect(() => {
 
-      // if user sended message to the receiver then if condition will be true
+    // NOTE!
+    // THIS USEEFFECT WILL EXECUTE TWO TIME BECAUSE WHEN CHAT_SECTION COMPONENT OPENED THEN IT WILL SEND DATA TO THE SIDEBAR COMPONENT
+    // THEN SIDEBAR WILL EXECUTE THE USEEFFECT AND WHEN THAT SIDEBAR EXECUTE IT WILL RE_RESEND THE DATA TO CHAT_SECTION FOR INITIAL_MESSAGE ARRAY
 
-    if (props.senderMessageData && props.senderMessageData.senderId !=
-      JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId) {
-      let selectedChatAllMessages = chatMessage;
-      selectedChatAllMessages.push(props.senderMessageData);
+    // empty the state because when ever message sended then update remove the other all message or add its the user those message which are stored in redis
+    // here -----TASK----- whenever user make or change the contact then fetch the data from the redis here first.
 
-      // this array is used for to show the real time message on the chat and also show the pervious message as well
-
-      setChatMessage((pervsVal) => {
-        return [...selectedChatAllMessages];
+    if (checkUserChangeContactObject !== props.singleUserChatAllInfo) {
+      setChatMessage(() => {
+        return [];
       });
 
-      // it will give us advantage when user want to disccount him self then whose he/she connected chat then it will be remove the data from them that are already store in db.
-      // group will be used for to find the connection
-
-      // console.log(props.singleUserChatAllInfo.singleContactGroupConnectionId);
-      let fetchingDataFromSate = userConnectedWithUserGroupsName;
-      let findingUserGroup = fetchingDataFromSate.indexOf(props.singleUserChatAllInfo.singleContactGroupConnectionId);
-
-      if (findingUserGroup == -1) {
-
-        setUserConnectedWithUserGroupName((prevData) => {
-          return [
-            ...prevData,
-            props.singleUserChatAllInfo.singleContactGroupConnectionId,
-          ];
-        });
-
+      setCheckUserChangeContactObject(() => {
+        return props.singleUserChatAllInfo;
+      });
+    }else {
+    if(fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList) {
+      // reversing the array for to show the initial message correct way and assigning to the list.
+      let customizingArr = [];
+      let reverseIndex = fetchingMessagesContext.singleConversationInitialMessage.fetchedMessagesList.length - 1;
+      for(let startFromLastIndex = reverseIndex -1; startFromLastIndex>=0; startFromLastIndex--) {
+        customizingArr.push({
+          groupId:props?.singleUserChatAllInfo?.groupId,
+          clientMessageRedis: fetchingMessagesContext.singleConversationInitialMessage.fetchedMessagesList[startFromLastIndex]
+        })
       }
 
-      // ******** List database data on session expire *********
-      // this array will add new message to array only and it will be only used for to send that list when session is over
-      // if last data is not stored then the problem is here. solution is found when data is sending to the backend then the state will be having update data.
-      let storingMessageCustomizeObj = {
-        userMessage: props.senderMessageData.userMessage,
-        senderId: props.senderMessageData.senderId,
-        reciverId: props.senderMessageData.reciverId,
-        message_Type: "text",
-        messageSeen: true,
-        messageTimeStamp: new Date().toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        }),
-        messageDateStamp: new Date().toLocaleString("en-US", {
-          month: "numeric",
-          day: "numeric",
-          year: "numeric",
-        }),
-      };
-
-      setNewMessagesAdded(() => {
-        return [...newMessagesAdded, storingMessageCustomizeObj];
+      setChatMessage(()=>{
+        return [...customizingArr];
       });
-
 
     }
 
-    // ************************************************
+  }
 
-    // calling scrollToBottom method for execute when data is changed inside the component
+
+
+
+    // fetching the data from the sidbar single-chat-initiial value and this below code will execute the sidebar useEffect
+
+    if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage !== props?.singleUserChatAllInfo?.groupId) {
+      fetchingMessagesContext.setSelectedContactGroupForToFetchingItsMessage(props?.singleUserChatAllInfo?.groupId);
+    }
+
+
+
+    const loggedInUserId = +JSON.parse(
+      window.atob(localStorage.getItem("Token")?.split(".")[1])
+    ).UserId;
+
+    signalRConnectionSingletonObj.on("ReceiveingSenderMessageFromConnectedContactUser",(receivingSenderData) => {
+      if (loggedInUserId === receivingSenderData.clientMessageRedis.receiverId) {
+          const currentTime = new Date().toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          });
+
+          const currentDate = new Date().toLocaleDateString([], {
+            month: 'numeric',
+            day: 'numeric',
+            year: 'numeric',
+          });
+
+         let myArr = [...chatMessage];
+
+          let messageSendObj = {
+            groupId: props?.singleUserChatAllInfo?.groupId,
+            clientMessageRedis: {
+              userMessage: receivingSenderData.clientMessageRedis.userMessage,
+              senderId: receivingSenderData.clientMessageRedis.senderId,
+              receiverId: loggedInUserId,
+              messageSeen: false,
+              messageTimeStamp:currentTime,
+              messageDateStamp:currentDate
+            },
+          };
+
+          myArr.push(messageSendObj);
+          setChatMessage(() => {
+            return [...myArr];
+          });
+
+
+        }
+      }
+    );
+
     scrollToBottom();
-
-    // whenever user send a message and the user want to go offline or closing browser then before closing browsing send data to db...
-    // ClosingOrRefreshingChatSession();
-  }, [props.senderMessageData]);
+  }, [props.singleUserChatAllInfo, fetchingMessagesContext.singleConversationInitialMessage]);
 
   // **********************************************************
 
@@ -130,8 +190,24 @@ const Chat = (props) => {
   // 1. Sending Message To User Handler
 
   function userMessageHandler(val) {
+    if (!val || val.trim() === "") return;
 
-    const senderId = JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId;
+    const senderId = JSON.parse(
+      window.atob(localStorage.getItem("Token")?.split(".")[1])
+    ).UserId;
+
+
+    const currentTime = new Date().toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    const currentDate = new Date().toLocaleDateString([], {
+      month: 'numeric',
+      day: 'numeric',
+      year: 'numeric',
+    });
 
     let myArr = [...chatMessage];
     let messageSendObj = {
@@ -141,91 +217,76 @@ const Chat = (props) => {
         senderId: +senderId,
         receiverId: props.singleUserChatAllInfo.userId,
         messageSeen: false,
+        messageTimeStamp:currentTime,
+        messageDateStamp:currentDate
       },
     };
 
-    // this below code is for now in commented and not required yet
-    // contextApi.sendMessageFunc(messageSendObj);
-
     myArr.push(messageSendObj);
-    setChatMessage((pervsVal) => {
+    setChatMessage(() => {
       return myArr;
     });
 
-    // send message to other user to see instant or in real time
-
-
-
-    signalRConnectionSingletonObj.invoke("SendMessageToGroup", messageSendObj).then(
-      () => {
-        // if the message request is sended correctly to the server side and also respsonse correct to the receiver then this block execute otherwise error block.
-        scrollToBottom();
-        const getDataFromSelectorId = document.getElementById(messageSendObj.groupId+"highlight-listMessage");
-        getDataFromSelectorId.textContent = messageSendObj.clientMessageRedis.userMessage;
-      },
-      (errors) => {
-        console.log(errors);
-      }
-    );
-    // ******************* check out here about is user is connectedInMessage or not and if not then send request otherwise not ***************
-      if(props.singleUserChatAllInfo.connectedInMessages == false) {
-        props.mutateConnectedInMessageHandler(props.singleUserChatAllInfo.groupId);
-
-        axios.get("https://localhost:44389/api/Contact/MakeValidConnectedInMessageBetweenUser/" + props.singleUserChatAllInfo.groupId).then(()=>{
-
-        });
-
-      }
-
-
-    // storing new messages on both side inside the new message array for to store that messages inside database whenever single of em leave or connection is detect disconnected.
-
-    let sendMessageObj = {
-      userMessage: val,
-      senderId: props.singleUserChatAllInfo.userItSelfId,
-      reciverId: props.singleUserChatAllInfo.usersConnectedId,
-      message_Type: "text",
-      messageSeen: true,
-      messageTimeStamp: new Date().toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      }),
-      messageDateStamp: new Date().toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        year: "numeric",
-      }),
-    };
-
-   // updating state of adding new message to state.
-    setNewMessagesAdded(() => {
-      return [...newMessagesAdded, sendMessageObj];
-    });
+    // send sender message to the server and storing it in redis and then from server calling this component function from there to store the sender data in message
+    signalRConnectionSingletonObj
+      .invoke("SendMessageToGroup", messageSendObj)
+      .then(
+        () => {
+          // if the message request is sended correctly to the server side and
+          const getDataFromSelectorId = document.getElementById(
+            messageSendObj.groupId + "highlight-listMessage"
+          );
+          getDataFromSelectorId.textContent =
+            messageSendObj.clientMessageRedis.userMessage; // highlight the message below the contact banner
+        },
+        (errors) => {
+          console.log(errors);
+        }
+      );
 
     // storing or detecting that user group-name is connected or chatting with other user, for to store that groups name whenever that user leave the connection so,
     // then we can do some logic to send that groups to connected user and tell em that user is disconnected now.
 
-    let fetchingDataFromSate = userConnectedWithUserGroupsName;
-    let findingUserGroup = fetchingDataFromSate.indexOf(
-      props.singleUserChatAllInfo.singleContactGroupConnectionId
-    );
-    if (findingUserGroup == -1) {
-      setUserConnectedWithUserGroupName((prevData) => {
-        return [
-          ...prevData,
-          props.singleUserChatAllInfo.singleContactGroupConnectionId,
-        ];
-      });
+    // let fetchingDataFromSate = userConnectedWithUserGroupsName;
+    // let findingUserGroup = fetchingDataFromSate.indexOf(
+    //   props.singleUserChatAllInfo.singleContactGroupConnectionId
+    // );
+    // if (findingUserGroup == -1) {
+    //   setUserConnectedWithUserGroupName((prevData) => {
+    //     return [
+    //       ...prevData,
+    //       props.singleUserChatAllInfo.singleContactGroupConnectionId,
+    //     ];
+    //   });
+    // }
+
+    // this below code should be here and not will be change-----------------------------.
+
+    // this code will be only execute for to connect the add-contact user into user-chat-route
+    // ******************* check out here about is user is connectedInMessage or not and if not then send request otherwise not ***************
+    if (props.singleUserChatAllInfo.connectedInMessages == false) {
+      props.mutateConnectedInMessageHandler(
+        props.singleUserChatAllInfo.groupId
+      );
+
+      axios
+        .get(
+          "https://localhost:44389/api/Contact/MakeValidConnectedInMessageBetweenUser/" +
+            props.singleUserChatAllInfo.groupId
+        )
+        .then(() => {});
     }
 
     scrollToBottom();
+    // ---------------------------------------------------
   }
 
-
-
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    setTimeout(()=>{
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    },100)
   };
 
   // **********************************************************
@@ -237,44 +298,63 @@ const Chat = (props) => {
         className={` ${
           contextApiForChatSection.getShowChatSection == true
             ? ChatCss["complete-chat-read-section-show"]
-            : "complete-chat-read-section-off"}`}>
-
+            : "complete-chat-read-section-off"
+        }`}
+          >
         {/* profile section */}
         <MessageSenderProfile profile={props.singleUserChatAllInfo} />
 
         {/* chat read section */}
-        <div className={ChatCss["chat-read-section"]} ref={messagesEndRef}>
+        <div className={ChatCss["chat-read-section"]}   >
           {chatMessage ? (
             chatMessage?.map((singleMessage, index) => {
+              if (
+                +JSON.parse(
+                  window.atob(localStorage.getItem("Token")?.split(".")[1])
+                ).UserId == singleMessage?.clientMessageRedis.senderId
+              ) {
+                return (
+                  <>
+                  <RightMessageSection
+                    key={index}
+                    singleMessage={singleMessage.clientMessageRedis}
+                  />
+                  
+                   <div ref={messagesEndRef}></div>
 
-              let customObj = {
-                ...singleMessage,
-              };
-
-              delete customObj["senderUser"];
-              delete customObj["reciverUser"];
-
-              if (props.singleUserChatAllInfo.userItSelfId == singleMessage?.senderId) {
-
-                // other user sended message to you
-
-                return <RightMessageSection key={index} message={customObj} />;
-
+                  </>
+                );
               }
               // you have sended message to the connected user
-              if (props.singleUserChatAllInfo.usersConnectedId == singleMessage?.senderId) {
-                return <LeftMessageSection key={index} message={customObj} />;
+              if (
+                +JSON.parse(
+                  window.atob(localStorage.getItem("Token")?.split(".")[1])
+                ).UserId != singleMessage?.clientMessageRedis.senderId
+              ) {
+
+                return (
+                  <>
+                  <LeftMessageSection
+                    key={index}
+                    singleMessage={singleMessage.clientMessageRedis}
+                  />
+
+                  <div ref={messagesEndRef}></div>
+
+                  </>
+                );
               }
             })
           ) : (
             <>No message with this chat</>
-          )}</div>
+          )}
+        </div>
 
         {/* message send section */}
         <MessageSend userMessageHandler={userMessageHandler} />
       </div>
+
     </>
   );
 };
 export default React.memo(Chat);
-

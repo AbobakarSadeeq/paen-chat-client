@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import sidebarCss from "./sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -14,12 +21,15 @@ import LoggedInContext from "../../context/loggedIn/loggedIn";
 import { useLocation, useNavigate } from "react-router";
 import UserEditProfile from "./user-edit-profile/user-edit-profile";
 import { useRef } from "react";
+import useFetchSingleGroupMessages from "../../hooks/fetch-single-group-messages";
+import FetchingMessagesContext from "../../context/fetching-message-context/fetching-message-context";
 
 const Sidebar = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { singleGroupMessagesAsync } = useFetchSingleGroupMessages();
   const loggedInContextApi = useContext(LoggedInContext);
-
+  const fetchingMessagesContext = useContext(FetchingMessagesContext);
 
 
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
@@ -34,7 +44,9 @@ const Sidebar = (props) => {
     return 0;
   });
 
-
+  const [connectedContactsInitialMessages, setConnectedContactsInitialMessages] = useState(()=>{
+    return [];
+  })
 
   const [addContactSectionContactList, setAddContactSectionContactList] =
     useState(() => {
@@ -43,10 +55,19 @@ const Sidebar = (props) => {
 
   useEffect(() => {
 
-    if (
-      connectedContactList.length == 0 &&
-      addContactSectionContactList.length == 0
-    ) {
+        // NOTE!
+    // THIS USEEFFECT WILL EXECUTE TWO TIME BECAUSE WHEN CHAT_SECTION COMPONENT OPENED THEN IT WILL SEND DATA TO THE SIDEBAR COMPONENT
+    // THEN SIDEBAR WILL EXECUTE THE USEEFFECT AND WHEN THAT SIDEBAR EXECUTE IT WILL RE_RESEND THE DATA TO CHAT_SECTION FOR INITIAL_MESSAGE ARRAY
+    // this code will execute the chat-section side bar
+    if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1) {
+      const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
+      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage);
+      fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
+
+    }
+
+
+    if (connectedContactList.length == 0 && addContactSectionContactList.length == 0) {
       axios
         .get(
           "https://localhost:44389/api/Contact/" +
@@ -54,7 +75,6 @@ const Sidebar = (props) => {
               .UserId
         )
         .then((responseData) => {
-
           let customArr = [];
           setAddContactSectionContactList(responseData.data);
           for (var singleUserAllContacts of responseData.data) {
@@ -67,26 +87,51 @@ const Sidebar = (props) => {
                 selectedContectStyle: false,
               });
             }
+            if (singleUserAllContacts.connectedInMessages === true) {
+              // here fetch the data
+              const fetchingMessagesByFilteringInitialPoint = {
+                currentScrollingPosition: 1,
+                fetchingMessagesStorageNo: 1,
+                groupId: singleUserAllContacts.groupId,
+                user1: singleUserAllContacts.userId,
+                user2: +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId),
+                lastMessagesCount: 0,
+              };
+              singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((response)=>{
+                // assigning the last message to the contact below
+                const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
+                getDataFromSelectorId.textContent = response.data.fetchedMessagesList[0].userMessage;
+
+
+                setConnectedContactsInitialMessages((prevs)=>{
+                  return [prevs, {...response.data, groupId:fetchingMessagesByFilteringInitialPoint.groupId}];
+                });
+
+
+
+              });
+            }
           }
 
           setConnectedContactList(customArr);
         });
     }
 
-    if (props.connectUserInMessageSectionThroughGroupId != "") {
-      let addContactSectionArr = addContactSectionContactList;
-      let findValidIndex = addContactSectionArr.findIndex(
-        (a) => a.groupId == props.connectUserInMessageSectionThroughGroupId
-      );
-      addContactSectionArr[findValidIndex].connectedInMessages = true;
-      setConnectedContactList((prevs) => {
-        return [...prevs, addContactSectionArr[findValidIndex]];
-      });
-      setAddContactSectionContactList(() => {
-        return [...addContactSectionArr];
-      });
-    }
-  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId]);
+    // for this below lines i donot required
+    // if (props.connectUserInMessageSectionThroughGroupId != "") {
+    //   let addContactSectionArr = addContactSectionContactList;
+    //   let findValidIndex = addContactSectionArr.findIndex(
+    //     (a) => a.groupId == props.connectUserInMessageSectionThroughGroupId
+    //   );
+    //   addContactSectionArr[findValidIndex].connectedInMessages = true;
+    //   setConnectedContactList((prevs) => {
+    //     return [...prevs, addContactSectionArr[findValidIndex]];
+    //   });
+    //   setAddContactSectionContactList(() => {
+    //     return [...addContactSectionArr];
+    //   });
+    // }
+  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId, fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage]);
 
   // function changeSelectedContactEffect(i) {
   //   let fetchArrData = [...connectedContactList];
@@ -108,33 +153,27 @@ const Sidebar = (props) => {
     props.showChatSectionn();
   }
 
-
-
-
   function updateContactListForAddingNewContactHandler(newContact) {
     setAddContactSectionContactList((prevs) => {
       return [...prevs, newContact];
     });
   }
 
+  const changeSelectedContactEffectMemoized = useCallback(
+    (i) => {
+      let fetchArrData = [...connectedContactList]; // like here i am using the state data of the component so i have to pass the dependecies here of that state.
 
-
-
-  const changeSelectedContactEffectMemoized = useCallback((i)=>{
-    let fetchArrData = [...connectedContactList]; // like here i am using the state data of the component so i have to pass the dependecies here of that state.
-
-    fetchArrData[i].selectedContectStyle = false;
-    fetchArrData[i].selectedContectStyle = true;
-     setConnectedContactList(() => {
-       return fetchArrData; // if i am changing the something inside the connectedContactList then obviously connectedContact again iterate
-     });
-  }, [connectedContactList])
+      fetchArrData[i].selectedContectStyle = false;
+      fetchArrData[i].selectedContectStyle = true;
+      setConnectedContactList(() => {
+        return fetchArrData; // if i am changing the something inside the connectedContactList then obviously connectedContact again iterate
+      });
+    },
+    [connectedContactList]
+  );
 
   return (
     <>
-
-
-
       <div
         className={`${sidebarCss["sidebar"]} ${
           props.closeContactDetailInResponsiveMobile == true ||
@@ -199,17 +238,18 @@ const Sidebar = (props) => {
             ? connectedContactList.length > 0 &&
               connectedContactList.map((singleContact, index) => {
                 return (
-
-                  <div key={singleContact.userId} >
+                  <div key={singleContact.userId}>
                     <UserChat
                       index={index}
                       AddContactData={singleContact}
-                      changeSelectedContactEffect={changeSelectedContactEffectMemoized}
-                       showChatSection={changeView}
-                       selectedChatUperProfileData={props.profileUperData}
-                     // sendMessageToServer={props.senderMessageVal}
-                       getSenderMessage={props.gettingSenderMessage}
-                       messageSendFromUser={props.messageDataSendedFromUser}
+                      changeSelectedContactEffect={
+                        changeSelectedContactEffectMemoized
+                      }
+                      showChatSection={changeView}
+                      selectedChatUperProfileData={props.profileUperData}
+                      // sendMessageToServer={props.senderMessageVal}
+                      getSenderMessage={props.gettingSenderMessage}
+                      messageSendFromUser={props.messageDataSendedFromUser}
                     />
                   </div>
                 );

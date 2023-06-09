@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import MessageContextApi from "./context/message-context/message-context-api";
 import { ContactContextProvider } from "./context/contact-context/contact-context";
+import { FetchingMessagesContextProvider } from "./context/fetching-message-context/fetching-message-context";
 
 
 
@@ -115,6 +116,7 @@ function App() {
             value={{ sendMessageFunc: messageSendedHandler }}
           >
             <ContactContextProvider>
+            <FetchingMessagesContextProvider>
               <Layout
                 viewChangeToChatSectionFromUserDetailViewUserInfo={
                   changeUserProfileViewToItsChatSection
@@ -126,6 +128,8 @@ function App() {
                   closeContactDetailOnMobileResponsiveness
                 }
               />
+              
+              </FetchingMessagesContextProvider>
             </ContactContextProvider>
           </MessageContextApi.Provider>
         </>
