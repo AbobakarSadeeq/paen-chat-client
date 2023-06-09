@@ -46,7 +46,7 @@ const RightMessageSection = (props) => {
       </div>
       <div className={RightMessageCss["chat-right-message-meta"]}>
         <div>
-          {messageSendTime} &nbsp;&nbsp;
+          {props.singleMessage.messageTimeStamp} &nbsp;&nbsp;
           <FontAwesomeIcon icon={faCheck} />
         </div>
       </div>

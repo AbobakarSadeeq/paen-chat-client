@@ -276,7 +276,7 @@ const Chat = (props) => {
         )
         .then(() => {});
     }
- 
+
     scrollToBottom();
     // ---------------------------------------------------
   }
@@ -314,15 +314,14 @@ const Chat = (props) => {
                 ).UserId == singleMessage?.clientMessageRedis.senderId
               ) {
                 return (
-                  <>
+                  <div key={index}>
                   <RightMessageSection
-                    key={index}
                     singleMessage={singleMessage.clientMessageRedis}
                   />
 
                    <div ref={messagesEndRef}></div>
 
-                  </>
+                  </div>
                 );
               }
               // you have sended message to the connected user
@@ -333,15 +332,15 @@ const Chat = (props) => {
               ) {
 
                 return (
-                  <>
+                  <div key={index}>
                   <LeftMessageSection
-                    key={index}
+
                     singleMessage={singleMessage.clientMessageRedis}
                   />
 
                   <div ref={messagesEndRef}></div>
 
-                  </>
+                  </div>
                 );
               }
             })

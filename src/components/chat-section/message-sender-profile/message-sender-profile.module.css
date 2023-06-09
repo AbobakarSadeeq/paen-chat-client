@@ -41,6 +41,12 @@
   padding: 0;
 }
 
+.back-btn-to-Contact {
+  display: none;
+}
+
+
+
 @media (max-width: 768px) {
   .back-btn-to-Contact {
     padding-left: 1rem;
@@ -48,6 +54,8 @@
     cursor: pointer;
     font-size: 1.8rem;
     padding-top: 0.8rem;
+  display: block;
+
   }
 
 
