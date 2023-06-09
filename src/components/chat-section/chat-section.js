@@ -276,7 +276,7 @@ const Chat = (props) => {
         )
         .then(() => {});
     }
-
+ 
     scrollToBottom();
     // ---------------------------------------------------
   }
@@ -319,7 +319,7 @@ const Chat = (props) => {
                     key={index}
                     singleMessage={singleMessage.clientMessageRedis}
                   />
-                  
+
                    <div ref={messagesEndRef}></div>
 
                   </>
