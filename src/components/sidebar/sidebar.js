@@ -99,12 +99,15 @@ const Sidebar = (props) => {
               };
               singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((response)=>{
                 // assigning the last message to the contact below
-                const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
-                getDataFromSelectorId.textContent = response.data.fetchedMessagesList[0].userMessage;
+                if(response.data?.fetchedMessagesList[0]?.userMessage) {
+
+                  const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
+                  getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[0]?.userMessage;
+                }
 
 
                 setConnectedContactsInitialMessages((prevs)=>{
-                  return [prevs, {...response.data, groupId:fetchingMessagesByFilteringInitialPoint.groupId}];
+                  return [...prevs, {...response.data, groupId:fetchingMessagesByFilteringInitialPoint.groupId}];
                 });
 
 
