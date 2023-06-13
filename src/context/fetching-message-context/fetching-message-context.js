@@ -12,7 +12,9 @@ const FetchingMessagesContextProvider = (props) =>{
       return "";
    })
 
-
+   const [singleConversationAllNewMessage, setSingleConversationAllNewMessage] = useState(()=>{
+      return "";
+   })
 
 
 
@@ -21,8 +23,14 @@ const FetchingMessagesContextProvider = (props) =>{
       <FetchingMessagesContext.Provider value={{
       selectedContactGroupForToFetchingItsMessage,
       setSelectedContactGroupForToFetchingItsMessage,
+
       singleConversationInitialMessage,
-      setSingleConversationInitialMessage }}>
+      setSingleConversationInitialMessage,
+
+      singleConversationAllNewMessage,
+      setSingleConversationAllNewMessage
+      
+      }}>
 
       {props.children}
       </FetchingMessagesContext.Provider>

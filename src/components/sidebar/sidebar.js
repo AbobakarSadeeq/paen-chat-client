@@ -53,15 +53,55 @@ const Sidebar = (props) => {
       return [];
     });
 
+
+
   useEffect(() => {
 
         // NOTE!
     // THIS USEEFFECT WILL EXECUTE TWO TIME BECAUSE WHEN CHAT_SECTION COMPONENT OPENED THEN IT WILL SEND DATA TO THE SIDEBAR COMPONENT
     // THEN SIDEBAR WILL EXECUTE THE USEEFFECT AND WHEN THAT SIDEBAR EXECUTE IT WILL RE_RESEND THE DATA TO CHAT_SECTION FOR INITIAL_MESSAGE ARRAY
     // this code will execute the chat-section side bar
-    if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1) {
+
+
+  
+    if(fetchingMessagesContext.singleConversationAllNewMessage?.length > 0
+       && (fetchingMessagesContext.singleConversationAllNewMessage[0].groupId !== fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage)) {
       const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
-      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage);
+      .findIndex(a=>a.groupId === fetchingMessagesContext.singleConversationAllNewMessage[0].groupId);
+      let initialMessages = [...connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]?.fetchedMessagesList];
+      for(var singleMessageNewMessage = 0;
+        singleMessageNewMessage < fetchingMessagesContext.singleConversationAllNewMessage.length; singleMessageNewMessage++) {
+        let customizingObj = {
+          senderId:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.senderId,
+          receiverId:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.receiverId,
+          userMessage:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.userMessage,
+          messageTimeStamp:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.messageTimeStamp,
+          messageDateStamp:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.messageDateStamp,
+          messageSeen:fetchingMessagesContext.singleConversationAllNewMessage[singleMessageNewMessage].clientMessageRedis.messageSeen,
+        }
+        initialMessages.unshift(customizingObj);
+      }
+
+      const updatingConnectedContactsInitialMessages = [...connectedContactsInitialMessages];
+      updatingConnectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList = initialMessages;
+
+      setConnectedContactsInitialMessages(()=>{
+        return [...updatingConnectedContactsInitialMessages];
+      })
+
+
+      fetchingMessagesContext.setSingleConversationAllNewMessage(()=>{
+        return [];
+      })
+
+      return;
+    }
+
+
+    if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1 &&
+       fetchingMessagesContext.singleConversationAllNewMessage?.length === 0) {
+      const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
+      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage); // changes  should done in connectedContactInitialMessageArr
       fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
 
     }
@@ -134,7 +174,7 @@ const Sidebar = (props) => {
     //     return [...addContactSectionArr];
     //   });
     // }
-  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId, fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage]);
+  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId, fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage, fetchingMessagesContext.singleConversationAllNewMessage]);
 
   // function changeSelectedContactEffect(i) {
   //   let fetchArrData = [...connectedContactList];

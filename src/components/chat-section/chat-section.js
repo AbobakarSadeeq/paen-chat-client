@@ -15,6 +15,7 @@ import axios from "axios";
 import { signalRConnectionSingletonObj } from "../Auth/auth";
 import FetchingMessagesContext from "../../context/fetching-message-context/fetching-message-context";
 import useFetchSingleGroupMessages from "../../hooks/fetch-single-group-messages";
+import userChat from "../sidebar/user-chat/user-chat";
 
 const Chat = (props) => {
 
@@ -64,8 +65,8 @@ const Chat = (props) => {
 
 
   useEffect(() => {
+
      // fetching the data from the sidbar single-chat-initiial value and this below code will execute the sidebar useEffect
-    console.log(fetchingMessagesContext.singleConversationInitialMessage);
      if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage !== props?.singleUserChatAllInfo?.groupId) {
       fetchingMessagesContext.setSelectedContactGroupForToFetchingItsMessage(props?.singleUserChatAllInfo?.groupId);
 
@@ -76,13 +77,24 @@ const Chat = (props) => {
           return [];
         });
 
-        console.log(fetchingMessagesContext.singleConversationInitialMessage);
+        // here i have to call or assign the data to the connectedContactsInitialMessages through execute the in side bar.
+        const beforeConversationStartedMessageIndex = fetchingMessagesContext.singleConversationInitialMessage?.fetchedMessagesList?.length - 1;
+        if(chatMessage.length > beforeConversationStartedMessageIndex + 1 ) {
 
-        // here i have to call or assign the data to the connectedContactsInitialMessages through execute the in side bar
+        const listNewMessagesArr = [];
+        for(var singleMessageStartFrom = beforeConversationStartedMessageIndex + 1; singleMessageStartFrom < chatMessage.length; singleMessageStartFrom++) {
+          listNewMessagesArr.push(chatMessage[singleMessageStartFrom]);
+        }
+
+        fetchingMessagesContext.setSingleConversationAllNewMessage(()=>{
+          return [...listNewMessagesArr];
+        })
 
         fetchingMessagesContext.setSingleConversationInitialMessage(()=>{
           return [];
         });
+      }
+
       }
       return;
     }
@@ -134,6 +146,7 @@ const Chat = (props) => {
 
   // this useEffect will be execute when chatMessages changes happen and index added means it which date index and also execute when component execute first time
   useEffect(()=>{
+    console.log(userConversationSpecificDateIndex);
     const loggedInUserId = +JSON.parse(
       window.atob(localStorage.getItem("Token")?.split(".")[1])
     ).UserId;
@@ -174,13 +187,13 @@ const Chat = (props) => {
 
             setUserConversationSpecificDateIndex(()=>{
               return [...prevsAllMessagesIndex, -1];
-            })
+            });
           }
 
           else {
               setUserConversationSpecificDateIndex(()=>{
-                return [...prevsAllMessagesIndex, findingIndex];
-              })
+                return [...prevsAllMessagesIndex, (findingIndex + 1)];
+              });
           }
 
         }
@@ -200,16 +213,15 @@ const Chat = (props) => {
 
 
   function reversingFetchedMessageDataForToShowCorrectWayAndAssigningTheUniqueDatesToState(fetchedArr) {
+    debugger;
       if(fetchedArr === [])
         return;
-
 
       let customizingArr = [];
       let uniqueAllDatesForToShowMessagesSendedDatesIndex = [];
       let lastDate = "";
       let reverseIndex = fetchedArr.length - 1;
       for(let startFromLastIndex = reverseIndex; startFromLastIndex>=0; startFromLastIndex--) {
-
         if(fetchedArr[startFromLastIndex].messageDateStamp !== lastDate) {
           let newDateIndex = startFromLastIndex;
           uniqueAllDatesForToShowMessagesSendedDatesIndex.push(newDateIndex);
@@ -225,14 +237,13 @@ const Chat = (props) => {
       }
 
 
-      setChatMessage((prevs)=>{
-        return [...customizingArr, ...prevs];
+
+      setChatMessage(()=>{
+        return [...customizingArr];
       });
-      let updatingToRemoveLastDate = [...userConversationSpecificDateIndex];
-      updatingToRemoveLastDate[0] = -1;
 
       setUserConversationSpecificDateIndex(()=>{
-        return [...uniqueAllDatesForToShowMessagesSendedDatesIndex, ...updatingToRemoveLastDate];
+        return [...uniqueAllDatesForToShowMessagesSendedDatesIndex, -1];
       })
   }
 
@@ -246,6 +257,7 @@ const Chat = (props) => {
   // 1. Sending Message To User Handler
 
   function userMessageHandler(val) {
+    console.log(userConversationSpecificDateIndex);
     if (!val || val.trim() === "") return;
 
     const senderId = JSON.parse(
@@ -284,15 +296,24 @@ const Chat = (props) => {
 
     // here to add the unique index for date as well.
     // firstly find the date here
+
     let findingIndex = chatMessage.length - 1 == -1 ? 0: chatMessage.length - 1;
     const findingLastMessageDate = chatMessage[findingIndex]?.clientMessageRedis?.messageDateStamp;
     if(findingLastMessageDate == currentDate) {
       setUserConversationSpecificDateIndex((prevs)=>{
         return [...prevs, -1];
       })
+
+
+
+
     }else {
+
+      // new day and new date
+
+
         setUserConversationSpecificDateIndex((prevs)=>{
-          return [...prevs, findingIndex];
+          return [...prevs, (findingIndex + 1)];
         })
     }
 
@@ -412,15 +433,28 @@ const Chat = (props) => {
           {chatMessage ? (
             chatMessage?.map((singleMessage, index) => {
               if (+JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId == singleMessage?.clientMessageRedis.senderId) {
-                if(userConversationSpecificDateIndex[index] !== -1)
-                    return (
+
+                if(index === 0 && userConnectedWithUserGroupsName[0] !== -1) {
+                  return (
                       <div key={index}>
                       <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
                       <RightMessageSection singleMessage={singleMessage.clientMessageRedis} />
                       <div ref={messagesEndRef}></div>
                       </div>
                     );
+                }
+
+                if(userConversationSpecificDateIndex[index + 1] !== -1)
+                   return (
+                      <div key={index}>
+                      <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
+                      <RightMessageSection singleMessage={singleMessage.clientMessageRedis} />
+                      <div ref={messagesEndRef}></div>
+                      </div>
+                    );
+
                 else
+
                   return (
                     <div key={index}>
                     <RightMessageSection singleMessage={singleMessage.clientMessageRedis}/>
@@ -432,16 +466,28 @@ const Chat = (props) => {
               }
               // you have sended message to the connected user
               if (+JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId != singleMessage?.clientMessageRedis.senderId) {
-                if(userConversationSpecificDateIndex[index] !== -1)
-                return (
-                  <div key={index}>
-                  <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
-                  <LeftMessageSection singleMessage={singleMessage.clientMessageRedis} />
-                  <div ref={messagesEndRef}></div>
-                  </div>
-                );
 
-                else
+                if(index === 0 && userConnectedWithUserGroupsName[0] !== -1) {
+                  return (
+                      <div key={index}>
+                      <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
+                      <LeftMessageSection singleMessage={singleMessage.clientMessageRedis} />
+                      <div ref={messagesEndRef}></div>
+                      </div>
+                    );
+                }
+
+                if(userConversationSpecificDateIndex[index + 1] !== -1)
+
+                   return (
+                      <div key={index}>
+                      <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
+                      <LeftMessageSection singleMessage={singleMessage.clientMessageRedis} />
+                      <div ref={messagesEndRef}></div>
+                      </div>
+                    );
+
+                    else
                 return (
                   <div key={index}>
                   <LeftMessageSection singleMessage={singleMessage.clientMessageRedis}/>
