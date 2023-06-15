@@ -277,7 +277,7 @@ const Chat = (props) => {
       });
 
       setUserConversationSpecificDateIndex(()=>{
-        return [...uniqueAllDatesForToShowMessagesSendedDatesIndex, -1];
+        return [...uniqueAllDatesForToShowMessagesSendedDatesIndex];
       })
   }
 
@@ -331,6 +331,8 @@ const Chat = (props) => {
 
     let findingIndex = chatMessage.length - 1 == -1 ? 0: chatMessage.length - 1;
     const findingLastMessageDate = chatMessage[findingIndex]?.clientMessageRedis?.messageDateStamp;
+    debugger;
+    console.log(userConversationSpecificDateIndex);
     if(findingLastMessageDate == currentDate) {
       setUserConversationSpecificDateIndex((prevs)=>{
         return [...prevs, -1];
