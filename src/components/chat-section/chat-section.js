@@ -396,7 +396,6 @@ const Chat = (props) => {
     }
 
     singleGroupMessagesAsync(sendInfoForToFetchMoreMessages).then((response)=>{
-      debugger;
       if(response.data.fetchedMessagesList.length === 30) {
         sendInfoForToFetchMoreMessages.currentScrollingPosition = sendInfoForToFetchMoreMessages.currentScrollingPosition + 1;
         sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
@@ -459,11 +458,31 @@ const Chat = (props) => {
       }
 
 
+      if(conversationFetchingStoragesAllInfo.fetchingMessagesStorageNo === 3 ||
+        (response.data.fetchingMessagesStorageNo === -1 && response.data.lastMessagesCount > 0)) {
+          debugger;
+          const date = new Date(singleMessage.messageDateStamp);
+          const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
+          const splitingDate = formattedDate.split("/");
+          singleMessage.messageDateStamp = splitingDate[1] + "/" + splitingDate[0] + "/" + splitingDate[2];
 
-        customizingArr.push({
-          groupId:props?.singleUserChatAllInfo?.groupId,
-          clientMessageRedis: singleMessage
-        })
+          const [hours, minutes] = singleMessage.messageTimeStamp.split(":");
+          date.setHours(hours);
+          date.setMinutes(minutes);
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute:"numeric",
+            hour12: true,
+          });
+          singleMessage.messageTimeStamp = formattedTime;
+
+        }
+          customizingArr.push({
+            groupId:props?.singleUserChatAllInfo?.groupId,
+            clientMessageRedis: singleMessage
+          })
+
+
 
         newDateIndex = newDateIndex + 1;
 

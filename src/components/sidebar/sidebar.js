@@ -98,7 +98,31 @@ const Sidebar = (props) => {
 
     if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1) {
       const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
-      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage); // changes  should done in connectedContactInitialMessageArr
+      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage);
+
+      for(var singleMessage of connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList) {
+        if(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === 3 ||
+          (connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === -1 &&
+             connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].lastMessagesCount > 0)) {
+              debugger;
+            const date = new Date(singleMessage.messageDateStamp);
+            const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
+            const splitingDate = formattedDate.split("/");
+            singleMessage.messageDateStamp = splitingDate[1] + "/" + splitingDate[0] + "/" + splitingDate[2];
+
+            const [hours, minutes] = singleMessage.messageTimeStamp.split(":");
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            const formattedTime = date.toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute:"numeric",
+              hour12: true,
+            });
+            singleMessage.messageTimeStamp = formattedTime;
+
+          }
+      }
+
       fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
 
     }
@@ -119,6 +143,12 @@ const Sidebar = (props) => {
               singleUserAllContacts.connectedInMessages ||
               singleUserAllContacts.verifiedContactUser
             ) {
+
+
+
+
+
+
               customArr.push({
                 ...singleUserAllContacts,
                 selectedContectStyle: false,
