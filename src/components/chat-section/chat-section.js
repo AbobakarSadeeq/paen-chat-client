@@ -112,15 +112,37 @@ const Chat = (props) => {
 
     else {
     if(fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList?.length > 0 && chatMessage.length === 0) {
-      // storing all info about which storage the data came from
+
+      // when change storage
+            // reset lastCOunt
+            // reset scroll to zero
+            // if lastCOunt 30 and storage not change then change scroll only and lastCOunt to 0 again
+      if(fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo !== 1 && fetchingMessagesContext.singleConversationInitialMessage.lastMessagesCount !== 30) {
       setConversationFetchingStoragesAllInfo(()=>{
         return {
-          fetchingMessagesStorageNo:  fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo,
-          lastMessagesCount: fetchingMessagesContext.singleConversationInitialMessage.lastMessagesCount,
+          fetchingMessagesStorageNo: fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo,
+          lastMessagesCount: 0,
           groupId: fetchingMessagesContext.singleConversationInitialMessage.groupId,
-          currentScrollingPosition:fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList.length === 30 ? 2 : 1
+          currentScrollingPosition: 1
         }
       });
+
+       }
+     else {
+      // storing all info about which storage the data came from
+          setConversationFetchingStoragesAllInfo(()=>{
+            return {
+              fetchingMessagesStorageNo:  fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo,
+              lastMessagesCount: fetchingMessagesContext.singleConversationInitialMessage.lastMessagesCount,
+              groupId: fetchingMessagesContext.singleConversationInitialMessage.groupId,
+              currentScrollingPosition:fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList.length === 30 ? 2 : 1
+            }
+          });
+        }
+
+
+
+
 
       // reversing the array for to show the initial message correct way and assigning to the list.
 
@@ -374,16 +396,33 @@ const Chat = (props) => {
     }
 
     singleGroupMessagesAsync(sendInfoForToFetchMoreMessages).then((response)=>{
+      debugger;
       if(response.data.fetchedMessagesList.length === 30) {
         sendInfoForToFetchMoreMessages.currentScrollingPosition = sendInfoForToFetchMoreMessages.currentScrollingPosition + 1;
         sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
       } else {
-        sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo = response.data.fetchingMessagesStorageNo;
-        sendInfoForToFetchMoreMessages.lastMessagesCount = response.data.lastMessagesCount;
+        if(sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo !== response.data.fetchingMessagesStorageNo && response.data.fetchingMessagesStorageNo !== -1  && response
+          .data.lastMessagesCount !== 30) {
+            sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo = response.data.fetchingMessagesStorageNo;
+            sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
+            sendInfoForToFetchMoreMessages.currentScrollingPosition = 1;
+
+          }else {
+            sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo = response.data.fetchingMessagesStorageNo;
+            sendInfoForToFetchMoreMessages.lastMessagesCount = response.data.lastMessagesCount;
+
+          }
       }
 
       // no data found on every database
-      if(response.data.fetchingMessagesStorageNo === -1) {
+      if(response.data.fetchingMessagesStorageNo === -1 && response.data.lastMessagesCount > 0) {
+        sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo = -1;
+        sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
+        setConversationFetchingStoragesAllInfo(()=>{
+          return sendInfoForToFetchMoreMessages;
+        });
+
+      }else if(response.data.fetchingMessagesStorageNo === -1 && response.data.lastMessagesCount === 0) {
         sendInfoForToFetchMoreMessages.fetchingMessagesStorageNo = -1;
         sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
         setConversationFetchingStoragesAllInfo(()=>{
@@ -403,7 +442,6 @@ const Chat = (props) => {
       let customizingArr = [];
       let lastDate = "";
       let newDateIndex = 0;
-      if(fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId?.length > 0)
       response.data.fetchedMessagesList.reverse(); // reverse done
       for(const singleMessage of response.data.fetchedMessagesList) {
         if(newDateIndex == 0) {
