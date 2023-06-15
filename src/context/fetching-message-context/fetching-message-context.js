@@ -12,7 +12,7 @@ const FetchingMessagesContextProvider = (props) =>{
       return "";
    })
 
-   const [singleConversationAllNewMessage, setSingleConversationAllNewMessage] = useState(()=>{
+   const [updateInitialMessagesOfSingleConversationGroupId, setUpdateInitialMessagesOfSingleConversationGroupId] = useState(()=>{
       return "";
    })
 
@@ -27,9 +27,9 @@ const FetchingMessagesContextProvider = (props) =>{
       singleConversationInitialMessage,
       setSingleConversationInitialMessage,
 
-      singleConversationAllNewMessage,
-      setSingleConversationAllNewMessage
-      
+      updateInitialMessagesOfSingleConversationGroupId,
+      setUpdateInitialMessagesOfSingleConversationGroupId
+
       }}>
 
       {props.children}

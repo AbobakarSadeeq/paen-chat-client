@@ -63,9 +63,7 @@ const Chat = (props) => {
 
 
 
-
   useEffect(() => {
-
      // fetching the data from the sidbar single-chat-initiial value and this below code will execute the sidebar useEffect
      if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage !== props?.singleUserChatAllInfo?.groupId) {
       fetchingMessagesContext.setSelectedContactGroupForToFetchingItsMessage(props?.singleUserChatAllInfo?.groupId);
@@ -77,23 +75,25 @@ const Chat = (props) => {
           return [];
         });
 
+        fetchingMessagesContext.setSingleConversationInitialMessage(()=>{
+          return [];
+        });
         // here i have to call or assign the data to the connectedContactsInitialMessages through execute the in side bar.
         const beforeConversationStartedMessageIndex = fetchingMessagesContext.singleConversationInitialMessage?.fetchedMessagesList?.length - 1;
         if(chatMessage.length > beforeConversationStartedMessageIndex + 1 ) {
 
-        const listNewMessagesArr = [];
-        for(var singleMessageStartFrom = beforeConversationStartedMessageIndex + 1; singleMessageStartFrom < chatMessage.length; singleMessageStartFrom++) {
-          listNewMessagesArr.push(chatMessage[singleMessageStartFrom]);
-        }
+          // here i have to call sidebar to change the specfic group all messages because it is updated.
 
-        fetchingMessagesContext.setSingleConversationAllNewMessage(()=>{
-          return [...listNewMessagesArr];
-        })
-
-        fetchingMessagesContext.setSingleConversationInitialMessage(()=>{
-          return [];
+        fetchingMessagesContext.setUpdateInitialMessagesOfSingleConversationGroupId(()=>{
+          return fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage;
         });
+
+
+
       }
+
+
+
 
       }
       return;
@@ -123,6 +123,7 @@ const Chat = (props) => {
       });
 
       // reversing the array for to show the initial message correct way and assigning to the list.
+
       reversingFetchedMessageDataForToShowCorrectWayAndAssigningTheUniqueDatesToState(fetchingMessagesContext.singleConversationInitialMessage.fetchedMessagesList);
 
 
@@ -146,7 +147,6 @@ const Chat = (props) => {
 
   // this useEffect will be execute when chatMessages changes happen and index added means it which date index and also execute when component execute first time
   useEffect(()=>{
-    console.log(userConversationSpecificDateIndex);
     const loggedInUserId = +JSON.parse(
       window.atob(localStorage.getItem("Token")?.split(".")[1])
     ).UserId;
@@ -211,31 +211,43 @@ const Chat = (props) => {
 
 
 
-
   function reversingFetchedMessageDataForToShowCorrectWayAndAssigningTheUniqueDatesToState(fetchedArr) {
-    debugger;
+
       if(fetchedArr === [])
         return;
 
-      let customizingArr = [];
       let uniqueAllDatesForToShowMessagesSendedDatesIndex = [];
+      let customizingArr = [];
       let lastDate = "";
-      let reverseIndex = fetchedArr.length - 1;
-      for(let startFromLastIndex = reverseIndex; startFromLastIndex>=0; startFromLastIndex--) {
-        if(fetchedArr[startFromLastIndex].messageDateStamp !== lastDate) {
-          let newDateIndex = startFromLastIndex;
+      let newDateIndex = 0;
+      if(fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId?.length > 0)
+         fetchedArr.reverse(); // reverse done
+
+      for(const singleMessage of fetchedArr) {
+        if(newDateIndex == 0) {
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(0);
+          lastDate = singleMessage.messageDateStamp;
+        }else {
+        if(singleMessage.messageDateStamp !== lastDate) {
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(-1);
           uniqueAllDatesForToShowMessagesSendedDatesIndex.push(newDateIndex);
-          lastDate = fetchedArr[startFromLastIndex].messageDateStamp;
+          lastDate = singleMessage.messageDateStamp;
+
         }else {
           uniqueAllDatesForToShowMessagesSendedDatesIndex.push(-1);
         }
+      }
+
+
 
         customizingArr.push({
           groupId:props?.singleUserChatAllInfo?.groupId,
-          clientMessageRedis: fetchedArr[startFromLastIndex]
+          clientMessageRedis: singleMessage
         })
-      }
 
+        newDateIndex = newDateIndex + 1;
+
+      }
 
 
       setChatMessage(()=>{
@@ -253,11 +265,9 @@ const Chat = (props) => {
   // EVENT HANDLERS
 
 
-
   // 1. Sending Message To User Handler
 
   function userMessageHandler(val) {
-    console.log(userConversationSpecificDateIndex);
     if (!val || val.trim() === "") return;
 
     const senderId = JSON.parse(
@@ -364,7 +374,6 @@ const Chat = (props) => {
     }
 
     singleGroupMessagesAsync(sendInfoForToFetchMoreMessages).then((response)=>{
-
       if(response.data.fetchedMessagesList.length === 30) {
         sendInfoForToFetchMoreMessages.currentScrollingPosition = sendInfoForToFetchMoreMessages.currentScrollingPosition + 1;
         sendInfoForToFetchMoreMessages.lastMessagesCount = 0;
@@ -390,8 +399,54 @@ const Chat = (props) => {
       });
 
       // assingine the fetching message to the message array
+      let uniqueAllDatesForToShowMessagesSendedDatesIndex = [];
+      let customizingArr = [];
+      let lastDate = "";
+      let newDateIndex = 0;
+      if(fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId?.length > 0)
+      response.data.fetchedMessagesList.reverse(); // reverse done
+      for(const singleMessage of response.data.fetchedMessagesList) {
+        if(newDateIndex == 0) {
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(0);
+          lastDate = singleMessage.messageDateStamp;
+        }else {
+        if(singleMessage.messageDateStamp !== lastDate) {
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(-1);
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(newDateIndex);
+          lastDate = singleMessage.messageDateStamp;
 
-      reversingFetchedMessageDataForToShowCorrectWayAndAssigningTheUniqueDatesToState(response.data.fetchedMessagesList);
+        }else {
+          uniqueAllDatesForToShowMessagesSendedDatesIndex.push(-1);
+        }
+      }
+
+
+
+        customizingArr.push({
+          groupId:props?.singleUserChatAllInfo?.groupId,
+          clientMessageRedis: singleMessage
+        })
+
+        newDateIndex = newDateIndex + 1;
+
+      }
+
+
+      let updatingIndexArr = [...userConversationSpecificDateIndex];
+      if(chatMessage[0].clientMessageRedis.messageDateStamp === customizingArr[0].clientMessageRedis.messageDateStamp) {
+        updatingIndexArr[0] = -1;
+        updatingIndexArr = [...uniqueAllDatesForToShowMessagesSendedDatesIndex, ...updatingIndexArr];
+      }else {
+        updatingIndexArr = [...uniqueAllDatesForToShowMessagesSendedDatesIndex, ...updatingIndexArr];
+      }
+
+      setChatMessage((prevs)=>{
+        return [...customizingArr, ...prevs];
+      });
+
+      setUserConversationSpecificDateIndex((prevs)=>{
+        return [...updatingIndexArr];
+      })
 
     });
 
@@ -426,7 +481,7 @@ const Chat = (props) => {
         <div className={ChatCss["chat-read-section"]}   >
 
 
-        {(chatMessage.length !== userConversationSpecificDateIndex.length) && conversationFetchingStoragesAllInfo.fetchingMessagesStorageNo !== -1
+        {conversationFetchingStoragesAllInfo.fetchingMessagesStorageNo !== -1
          && chatMessage.length !== 0 ? <button className={ChatCss["show-more-messages"]} onClick={expendAndShowMoreConversationMessages}>More Messages</button> : null}
 
 
@@ -444,7 +499,7 @@ const Chat = (props) => {
                     );
                 }
 
-                if(userConversationSpecificDateIndex[index + 1] !== -1)
+                if(userConversationSpecificDateIndex[index] !== -1)
                    return (
                       <div key={index}>
                       <p className={ChatCss["chat-conversation-unique-dates"]}>{singleMessage.clientMessageRedis.messageDateStamp}</p>
@@ -477,7 +532,7 @@ const Chat = (props) => {
                     );
                 }
 
-                if(userConversationSpecificDateIndex[index + 1] !== -1)
+                if(userConversationSpecificDateIndex[index] !== -1)
 
                    return (
                       <div key={index}>
