@@ -47,3 +47,23 @@
   color: white;
   background-color: #2c3638;
 }
+
+.online-indicator {
+  margin-left: 30px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  margin-top: 0.5rem;
+
+}
+
+
+.offline-indicator {
+  margin-left: 30px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #CCCCCC;
+  margin-top: 0.5rem;
+
+}
+

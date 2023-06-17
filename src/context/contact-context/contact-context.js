@@ -7,9 +7,13 @@ const ContactContextProvider = ({ children }) => {
     return {};
   });
 
+  const [contactAvailability, setContactAvailability] = useState(()=>{
+    return false;
+  })
+
   return (
     <>
-      <ContactContext.Provider value={{ addNewContact, setAddNewContact }}>
+      <ContactContext.Provider value={{ addNewContact, setAddNewContact, contactAvailability, setContactAvailability }}>
         {children}
       </ContactContext.Provider>
     </>

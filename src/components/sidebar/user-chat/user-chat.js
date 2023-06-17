@@ -8,12 +8,13 @@ import { useLocation } from "react-router";
 import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import { signalRConnectionSingletonObj } from "../../Auth/auth";
+import ContactContext from "../../../context/contact-context/contact-context";
 
 // this component will be only show the user that will be shown in chat-route users that are valid and also show the user connected with the specefic component.
 const UserChat = (props) => {
-  console.log(props);
   const location = useLocation();
   const contextApi = useContext(LoggedInContext);
+  const contextContactApi = useContext(ContactContext);
 
   let renderingSingleContact = null;
 
@@ -44,13 +45,24 @@ const UserChat = (props) => {
       );
       contextApi.showContactDetailHandler("AddContact");
     }
+
+
+
+    if(props.AddContactData.userAvailabilityStatus === true) {
+      contextContactApi.setContactAvailability(true);
+
+    }else {
+      contextContactApi.setContactAvailability(false);
+
+    }
   }, [location.pathname, props.AddContactData]);
   useEffect(() => {
     // nulls will help here to connect the users within their's group and if it become not null or having the data then it means single user are connected with their contacts that are releated
     // if i connect with the signalR group separetly like connect first chat-section all user and then add-contact all user
     //   if (props.sendMessageToServer == null) { // removing this line of code because of when i send a message it render the contacts list again which is bed
     // this block will be execute only once when user logged in
-    signalRConnectionSingletonObj
+    setTimeout(()=>{
+      signalRConnectionSingletonObj
       .invoke(
         "ConnectingSingleUserOfSingleContactWithTheirUniqueGroupIdForRealTimeMessaging",
         props?.AddContactData?.groupId,
@@ -61,6 +73,9 @@ const UserChat = (props) => {
         () => {},
         (errors) => {}
       );
+    },2000)
+
+
 
     // who's logged in the user and its valid contact connected here... and this will be called from the server side this below method
     // for now below code is not required for me to do things;
@@ -161,7 +176,12 @@ const UserChat = (props) => {
           </div>
 
           <div className={UserChatCss["date-connection-on"]}>
-            <span></span>
+                {props.AddContactData.userAvailabilityStatus
+
+                ? <div className={UserChatCss["online-indicator"]}></div>
+                : <div className={UserChatCss["offline-indicator"]}></div>
+                }
+
           </div>
         </div>
       </div>

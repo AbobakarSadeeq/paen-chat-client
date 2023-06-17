@@ -23,6 +23,8 @@ import UserEditProfile from "./user-edit-profile/user-edit-profile";
 import { useRef } from "react";
 import useFetchSingleGroupMessages from "../../hooks/fetch-single-group-messages";
 import FetchingMessagesContext from "../../context/fetching-message-context/fetching-message-context";
+import { signalRConnectionSingletonObj } from "../Auth/auth";
+import ContactContext from "../../context/contact-context/contact-context";
 
 const Sidebar = (props) => {
   const location = useLocation();
@@ -30,6 +32,7 @@ const Sidebar = (props) => {
   const { singleGroupMessagesAsync } = useFetchSingleGroupMessages();
   const loggedInContextApi = useContext(LoggedInContext);
   const fetchingMessagesContext = useContext(FetchingMessagesContext);
+  const contextContactApi = useContext(ContactContext);
 
 
   const [menuSelectedVal, setMenuSelectedVal] = useState(() => {
@@ -202,6 +205,62 @@ const Sidebar = (props) => {
     //   });
     // }
   }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId, fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage, fetchingMessagesContext.updateInitialMessagesOfSingleConversation]);
+
+
+    useEffect(() => {
+
+      if(connectedContactList.length !== 0) {
+
+        const loggedInUserId = JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId;
+      setTimeout(()=>{
+
+
+        signalRConnectionSingletonObj.on("UserBecomeOnline", (singleGroupId, becomeOnlineUserId) => {
+          if(becomeOnlineUserId !== loggedInUserId) {
+            let updatedContact = [...connectedContactList];
+            const index = updatedContact.findIndex(a=>a.userId === +becomeOnlineUserId);
+            if(index != -1) {
+              updatedContact[index].userAvailabilityStatus = true;
+              setConnectedContactList(()=>{
+                return [...updatedContact];
+              });
+
+              contextContactApi.setContactAvailability(true);
+
+            }
+
+          }
+        });
+
+
+        signalRConnectionSingletonObj.on("UserBecomeOffline", (singleGroupId, becomeOfflineUserId) => {
+
+          if(becomeOfflineUserId !== loggedInUserId) {
+            let updatedContact = [...connectedContactList];
+            const index = updatedContact.findIndex(a=>a.userId === +becomeOfflineUserId);
+            if(index != -1) {
+              updatedContact[index].userAvailabilityStatus = false;
+              setConnectedContactList(()=>{
+                return [...updatedContact];
+              })
+
+              contextContactApi.setContactAvailability(false);
+
+            }
+
+          }
+
+        });
+
+
+
+      },2000)
+    }
+
+
+
+
+    }, [connectedContactList]);
 
   // function changeSelectedContactEffect(i) {
   //   let fetchArrData = [...connectedContactList];

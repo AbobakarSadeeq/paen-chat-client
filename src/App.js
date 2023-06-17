@@ -56,6 +56,7 @@ function App() {
         navigate("/Chats?main-chat-section");
       }
     }
+
   }, [loggedIn]);
 
 
@@ -128,7 +129,7 @@ function App() {
                   closeContactDetailOnMobileResponsiveness
                 }
               />
-              
+
               </FetchingMessagesContextProvider>
             </ContactContextProvider>
           </MessageContextApi.Provider>

@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import { useLocation } from "react-router";
+import ContactContext from "../../../context/contact-context/contact-context";
 const MessageSenderProfile = (props) => {
 
-  
+
   const contextApi = useContext(LoggedInContext);
+  const contextContactApi = useContext(ContactContext);
   const path = useLocation();
 
   function goBackwardPage() {
@@ -52,7 +54,7 @@ const MessageSenderProfile = (props) => {
 
             </strong>
           </span>
-          <p className={MessageSenderCss["isUserOnline"]}>online</p>
+         {contextContactApi.contactAvailability == true ? <p className={MessageSenderCss["isUserOnline"]}>Online</p>: null}
         </div>
 
         <div className={MessageSenderCss["edit-btn"]}>

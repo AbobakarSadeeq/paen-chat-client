@@ -21,10 +21,33 @@ const Auth = () => {
       userProfileFormForAuthorired === true
     ) {
       // run the singleR in front-side only here
-      
+
       makeTheSignalRConnectionOn().then((respConnectionObj) => {
         signalRConnectionSingletonObj = respConnectionObj;
+
+        const loggedInUserId = JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId;
+        respConnectionObj.invoke("OnCustomConnectedAsync", loggedInUserId).then(()=>{
+          // user become online and availability is saved inside the redis
+
+        });
+
+        setTimeout(()=>{
+
+          respConnectionObj.invoke("OnCustomConnectedAsync", loggedInUserId).then(()=>{
+
+          })
+
+        }, 2000)
+
+        respConnectionObj.onclose(() => {
+        });
+
+
+
+
+
       });
+
 
     }
   }, [userProfileFormForAuthorired]);
