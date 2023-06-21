@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useState } from "react";
-import Chat from "../chat-section/chat-section";
 import Sidebar from "../sidebar/sidebar";
 import layoutCss from "./layout.module.css";
 import AddContactModel from "../../Models/add-contact-model/add-contact-model";
@@ -11,6 +10,7 @@ import { useLocation } from "react-router";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
+import ChatSection from "../chat-section/chat-section";
 
 const Layout = (props) => {
   console.log(props.viewChangeToChatSectionFromUserDetailViewUserInfo);
@@ -152,6 +152,7 @@ const Layout = (props) => {
           }}
           profileUperData={(data) => {
             setUperProfileData(data);
+              setShowChat(true);
           }}
         //  senderMessageVal={props.sendMessageVal}
           gettingSenderMessage={senderMessageHandler}
@@ -160,6 +161,7 @@ const Layout = (props) => {
             props.closeContactDetailForMobileResponsive
           }
           connectUserInMessageSectionThroughGroupId={connectedInMessageGroupId}
+          showChat={showChat}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
@@ -174,7 +176,7 @@ const Layout = (props) => {
 
           {/* this chat will execute when chat section open from chat route */}
         {showChat == true && contextApi.getShowChatSection == true ? (
-          <Chat
+          <ChatSection
             singleUserChatAllInfo={uperProfileData}
             senderMessageObj={props.sendMessageVal}
             senderMessageData={gettingUserMessage}
@@ -187,7 +189,7 @@ const Layout = (props) => {
         and this will exeucte when chat-section is opened from the user-detail */}
         {props.viewChangeToChatSectionFromUserDetailViewUserInfo &&
         props.chatSectionOpenedFromContactDetail ? (
-          <Chat
+          <ChatSection
             singleUserChatAllInfo={props.viewChangeToChatSectionFromUserDetailViewUserInfo } // this props is nothing passing here
 
             senderMessageObj={props.sendMessageVal}

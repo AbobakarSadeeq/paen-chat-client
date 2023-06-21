@@ -54,16 +54,35 @@
   border-radius: 50%;
   background-color: #4CAF50;
   margin-top: 0.5rem;
-
 }
 
 
 .offline-indicator {
+  margin: 0;
   margin-left: 30px;
   height: 10px;
   border-radius: 50%;
   background-color: #CCCCCC;
   margin-top: 0.5rem;
-
 }
 
+
+.count-message {
+  margin-left: 30px;
+  height: 1rem;
+  border-radius: 40%;
+  background-color: #00a884;
+  margin-top: 0.5rem;
+  width: 1.6rem;
+  margin: 0;
+  height: 1.4rem;
+}
+
+.count-message p {
+  color: black;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.right-section {
+}

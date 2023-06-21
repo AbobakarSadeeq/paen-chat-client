@@ -9,15 +9,20 @@ import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 import { useState } from "react";
 import MessageContextApi from "../../context/message-context/message-context-api";
-
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useRef } from "react";
 import axios from "axios";
 import { signalRConnectionSingletonObj } from "../Auth/auth";
 import FetchingMessagesContext from "../../context/fetching-message-context/fetching-message-context";
 import useFetchSingleGroupMessages from "../../hooks/fetch-single-group-messages";
 import userChat from "../sidebar/user-chat/user-chat";
+import ContactContext from "../../context/contact-context/contact-context";
 
-const Chat = (props) => {
+const ChatSection = (props) => {
+  console.log(props);
+  const navigate = useNavigate();
+  const contextContactApi = useContext(ContactContext);
+
 
   // context api's
   const fetchingMessagesContext = useContext(FetchingMessagesContext);
@@ -54,177 +59,233 @@ const Chat = (props) => {
     return {};
   });
 
+  const [selectedPageGroupIdFromQueryString, setSelectedPageGroupIdFromQueryString] = useState(()=>{
+    return "";
+  })
+
+  const [selectedContactGroupId, setSelectedContactGroupId] = useState(()=>{
+    return props?.singleUserChatAllInfo?.groupId;
+  })
+
+  const [isRecievedCodeExecutedOneTime, setIsRecievedCodeExecutedOneTime] = useState(()=>{
+    return false;
+  })
+
   // **********************************************************
 
   // refs varibles
   const messagesEndRef = useRef(null);
+  const selectedGroupId = useRef(props.singleUserChatAllInfo.groupId);
 
   // **********************************************************
 
+  // custom hooks
 
 
-  useEffect(() => {
-     // fetching the data from the sidbar single-chat-initiial value and this below code will execute the sidebar useEffect
-     if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage !== props?.singleUserChatAllInfo?.groupId) {
-      fetchingMessagesContext.setSelectedContactGroupForToFetchingItsMessage(props?.singleUserChatAllInfo?.groupId);
+  useEffect(()=>{
+    const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
+    const fetchingMessagesByFilteringInitialPoint = {
+      currentScrollingPosition: 1,
+      fetchingMessagesStorageNo: 1,
+      groupId: props.singleUserChatAllInfo.groupId,
+      user1: props.singleUserChatAllInfo.userId,
+      user2: loggedInId,
+      lastMessagesCount: 0,
+      unReadMessages: props?.singleUserChatAllInfo?.countUnSeenMessages
+    };
 
+    // when chat is changed then empty or make the chat empty first
+    if(props.singleUserChatAllInfo) {
+    console.log(props.singleUserChatAllInfo);
 
-      // here i have to send the data to another component and this will execute when component is removed from the dom.
       if(chatMessage.length > 0) {
-        setChatMessage(() => {
+        setChatMessage(()=>{
           return [];
         });
-
-        fetchingMessagesContext.setSingleConversationInitialMessage(()=>{
-          return [];
-        });
-        // here i have to call or assign the data to the connectedContactsInitialMessages through execute the in side bar.
-        const beforeConversationStartedMessageIndex = fetchingMessagesContext.singleConversationInitialMessage?.fetchedMessagesList?.length - 1;
-        if(chatMessage.length > beforeConversationStartedMessageIndex + 1 ) {
-
-          // here i have to call sidebar to change the specfic group all messages because it is updated.
-
-        fetchingMessagesContext.setUpdateInitialMessagesOfSingleConversationGroupId(()=>{
-          return fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage;
-        });
-
-
-
       }
 
+      setSelectedContactGroupId(()=>{
+        return props?.singleUserChatAllInfo?.groupId;
+      })
+
+      selectedGroupId.current = props?.singleUserChatAllInfo?.groupId;
+      console.log(selectedGroupId.current);
+
+      // this below code will execute each time when contact is changed
+
+      singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
+        responseData.data.fetchedMessagesList.reverse();
+        let chatMessagess = [];
+        let findingLastMessageDate = "";
+
+        for(let singleMessage of responseData.data.fetchedMessagesList) {
+          chatMessagess.push({
+              clientMessageRedis: singleMessage,
+              groupId:fetchingMessagesByFilteringInitialPoint.groupId
+            });
+
+
+            if(findingLastMessageDate == singleMessage.messageDateStamp) {
+
+              setUserConversationSpecificDateIndex((prevsAllIndex)=>{
+                return [...prevsAllIndex, -1];
+              });
+
+            }
+
+            else {
+                setUserConversationSpecificDateIndex((prevsAllIndex)=>{
+                  return [...prevsAllIndex, 1]; // new value added
+                });
+
+              findingLastMessageDate = singleMessage.messageDateStamp;
+
+            }
 
 
 
-      }
-      return;
-    }
-
-
-    // NOTE!
-    // THIS USEEFFECT WILL EXECUTE 4 TIME BECAUSE WHEN CHAT_SECTION COMPONENT OPENED THEN IT WILL SEND DATA TO THE SIDEBAR COMPONENT
-    // THEN SIDEBAR WILL EXECUTE THE USEEFFECT AND WHEN THAT SIDEBAR EXECUTE IT WILL RE_RESEND THE DATA TO CHAT_SECTION FOR INITIAL_MESSAGE ARRAY
-    // AND THEN CHAT_MESSAGE WILL UPDATE AND AGAIN WILL EXECUTE AND INITIALMESSAGE WILL REMOVE FROM THE ARRAY SO WHEN OPENING NEW
-    // CHAT THEN DO SO OLD DATA IS NOT FOUND
-
-    // empty the state because when ever message sended then update remove the other all message or add its the user those message which are stored in redis
-    // here -----TASK----- whenever user make or change the contact then fetch the data from the redis here first.
-
-
-    else {
-    if(fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList?.length > 0 && chatMessage.length === 0) {
-
-      // when change storage
-            // reset lastCOunt
-            // reset scroll to zero
-            // if lastCOunt 30 and storage not change then change scroll only and lastCOunt to 0 again
-      if(fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo !== 1 && fetchingMessagesContext.singleConversationInitialMessage.lastMessagesCount !== 30) {
-      setConversationFetchingStoragesAllInfo(()=>{
-        return {
-          fetchingMessagesStorageNo: fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo,
-          lastMessagesCount: 0,
-          groupId: fetchingMessagesContext.singleConversationInitialMessage.groupId,
-          currentScrollingPosition: 1
         }
+        setChatMessage(()=>{
+          return [...chatMessagess];
+        });
+
+        let sendInfoForToFetchMoreMessages = {
+          currentScrollingPosition: responseData.data.fetchedMessagesList.length === 30 ? 2 : 1,
+          fetchingMessagesStorageNo: responseData.data.fetchingMessagesStorageNo,
+          groupId: fetchingMessagesByFilteringInitialPoint.groupId,
+          user1: fetchingMessagesByFilteringInitialPoint.user1,
+          user2: loggedInId,
+          lastMessagesCount: responseData.data.lastMessagesCount
+          }
+
+
+
+        setConversationFetchingStoragesAllInfo(()=>{
+          return sendInfoForToFetchMoreMessages;
+        });
       });
 
-       }
-     else {
-      // storing all info about which storage the data came from
-          setConversationFetchingStoragesAllInfo(()=>{
-            return {
-              fetchingMessagesStorageNo:  fetchingMessagesContext.singleConversationInitialMessage.fetchingMessagesStorageNo,
-              lastMessagesCount: fetchingMessagesContext.singleConversationInitialMessage.lastMessagesCount,
-              groupId: fetchingMessagesContext.singleConversationInitialMessage.groupId,
-              currentScrollingPosition:fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList.length === 30 ? 2 : 1
-            }
-          });
-        }
 
 
 
-
-
-      // reversing the array for to show the initial message correct way and assigning to the list.
-
-      reversingFetchedMessageDataForToShowCorrectWayAndAssigningTheUniqueDatesToState(fetchingMessagesContext.singleConversationInitialMessage.fetchedMessagesList);
-
-
-      // if(fetchingMessagesContext?.singleConversationInitialMessage?.fetchedMessagesList?.length > 0) {
-
-      //   fetchingMessagesContext.setSingleConversationInitialMessage(()=>{
-      //     return [];
-      //   });
-      // }
 
     }
 
-  }
 
+    // this below code will be execute only one time when chat is opened and this code is receiving code
+    if(isRecievedCodeExecutedOneTime === false) {
 
+      signalRConnectionSingletonObj.on("ReceiveingSenderMessageFromConnectedContactUser", (receivingSenderData) => {
 
-    scrollToBottom();
-  }, [props.singleUserChatAllInfo, chatMessage, fetchingMessagesContext.singleConversationInitialMessage]);
-
-  // **********************************************************
-
-  // this useEffect will be execute when chatMessages changes happen and index added means it which date index and also execute when component execute first time
-  useEffect(()=>{
-    const loggedInUserId = +JSON.parse(
-      window.atob(localStorage.getItem("Token")?.split(".")[1])
-    ).UserId;
-
-    let prevsAllMessages = [...chatMessage];
-    let prevsAllMessagesIndex = [...userConversationSpecificDateIndex];
-    signalRConnectionSingletonObj.on("ReceiveingSenderMessageFromConnectedContactUser",(receivingSenderData) => {
-      if (loggedInUserId === receivingSenderData.clientMessageRedis.receiverId) {
-        const getDataFromSelectorId = document.getElementById(receivingSenderData.groupId + "highlight-listMessage");
-        getDataFromSelectorId.textContent = receivingSenderData.clientMessageRedis.userMessage;
-
+        if (loggedInId === receivingSenderData.clientMessageRedis.receiverId) {
+          // this ReceiveingSenderMessageFromConnectedContactUser two times
 
           let messageSendObj = {
             groupId: receivingSenderData.groupId,
             clientMessageRedis: {
               userMessage: receivingSenderData.clientMessageRedis.userMessage,
               senderId: receivingSenderData.clientMessageRedis.senderId,
-              receiverId: loggedInUserId,
-              messageSeen: false,
+              receiverId: loggedInId,
+              messageSeen: 0,
               messageTimeStamp:receivingSenderData.clientMessageRedis.messageTimeStamp,
               messageDateStamp:receivingSenderData.clientMessageRedis.messageDateStamp
             },
           };
 
+          debugger;
+
+          // selectedContactGroupId this state is not updating when i sended a message
+          if(selectedGroupId.current === receivingSenderData.groupId) { // both user on the same page
+            messageSendObj.clientMessageRedis.messageSeen = 2; // saw the message
+          }else if(selectedGroupId.current !== receivingSenderData.groupId) {
+            messageSendObj.clientMessageRedis.messageSeen = 1; // saw the message
+          } // by default it will be zero because if this not execute then store data directly on db and assign 0
 
 
-          let findingIndex = prevsAllMessages.length - 1 == -1 ? 0: prevsAllMessages.length - 1;
-          const findingLastMessageDate = prevsAllMessages[findingIndex]?.clientMessageRedis?.messageDateStamp;
+          const getDataFromSelectorId = document.getElementById(receivingSenderData.groupId + "highlight-listMessage");
+          if(receivingSenderData.clientMessageRedis.userMessage?.length > 28) {
+            getDataFromSelectorId.textContent = receivingSenderData.clientMessageRedis
+            ?.userMessage?.substring(0, 25) + "....";
+            if(messageSendObj.clientMessageRedis.messageSeen === 2)
+                getDataFromSelectorId.style.color = "#8a98ac";
+            else if(messageSendObj.clientMessageRedis.messageSeen === 1)
+               getDataFromSelectorId.style.color = "#19a299";
 
 
-          prevsAllMessages.push(messageSendObj);
-          setChatMessage(() => {
-            return [...prevsAllMessages];
+          }else {
+            getDataFromSelectorId.textContent = receivingSenderData.clientMessageRedis.userMessage;
+            if(messageSendObj.clientMessageRedis.messageSeen === 2)
+            getDataFromSelectorId.style.color = "#8a98ac";
+        else if(messageSendObj.clientMessageRedis.messageSeen === 1)
+           getDataFromSelectorId.style.color = "#19a299";
+          }
+
+            // storing the data inside the redis if user become online
+            signalRConnectionSingletonObj.invoke("StoreMessageOnRedis", messageSendObj).then(()=>{
+
+            });
+
+          if(selectedGroupId.current === receivingSenderData.groupId) {
+
+              let findingLastMessageDate = "";
+
+              setChatMessage((prevChatMessage) => {
+                  const updatedChatMessage = [...prevChatMessage, messageSendObj];
+                  findingLastMessageDate = prevChatMessage[prevChatMessage.length - 1]?.clientMessageRedis?.messageDateStamp;
+                  return updatedChatMessage;
+              });
+
+              if(findingLastMessageDate == receivingSenderData.clientMessageRedis.messageDateStamp) {
+
+                setUserConversationSpecificDateIndex((prevsAllIndex)=>{
+                  return [...prevsAllIndex, -1];
+                });
+              }
+
+              else {
+                  setUserConversationSpecificDateIndex((prevsAllIndex)=>{
+                    return [...prevsAllIndex, 1]; // new value added
+                  });
+              }
+            }
+          }
+
+          }
+      );
+
+
+
+    // messageSeenUpdated callback from server side
+
+    signalRConnectionSingletonObj.on("SendedMessageSeenUpdated", (messageSendObj)=>{
+        if(messageSendObj.clientMessageRedis.senderId === loggedInId) {
+
+          setChatMessage((prevsChatMessages)=>{
+            const updatedChatMessage = [...prevsChatMessages];
+            updatedChatMessage[updatedChatMessage.length-1].clientMessageRedis.messageSeen = messageSendObj.clientMessageRedis.messageSeen;
+            return updatedChatMessage;
           });
 
-
-          if(findingLastMessageDate == receivingSenderData.clientMessageRedis.messageDateStamp) {
-
-            setUserConversationSpecificDateIndex(()=>{
-              return [...prevsAllMessagesIndex, -1];
-            });
-          }
-
-          else {
-              setUserConversationSpecificDateIndex(()=>{
-                return [...prevsAllMessagesIndex, (findingIndex + 1)];
-              });
-          }
-
         }
-      }
-    );
+    })
+
+    setIsRecievedCodeExecutedOneTime(()=>{
+      return true;
+    });
+    }
 
 
 
-  },[chatMessage, userConversationSpecificDateIndex])
+
+    scrollToBottom();
+  }, [props.singleUserChatAllInfo])
+
+
+
+  // **********************************************************
+
+  // this useEffect will be execute when chatMessages changes happen and index added means it which date index and also execute when component execute first time
+
 
 
   // Custom function
@@ -315,7 +376,7 @@ const Chat = (props) => {
         userMessage: val,
         senderId: +senderId,
         receiverId: props.singleUserChatAllInfo.userId,
-        messageSeen: false,
+        messageSeen: 0, // by default user is in home page and if it is
         messageTimeStamp:currentTime,
         messageDateStamp:currentDate
       },
@@ -331,8 +392,6 @@ const Chat = (props) => {
 
     let findingIndex = chatMessage.length - 1 == -1 ? 0: chatMessage.length - 1;
     const findingLastMessageDate = chatMessage[findingIndex]?.clientMessageRedis?.messageDateStamp;
-    debugger;
-    console.log(userConversationSpecificDateIndex);
     if(findingLastMessageDate == currentDate) {
       setUserConversationSpecificDateIndex((prevs)=>{
         return [...prevs, -1];
@@ -351,6 +410,10 @@ const Chat = (props) => {
         })
     }
 
+
+
+
+
     // send sender message to the server and storing it in redis and then from server calling this component function from there to store the sender data in message
     signalRConnectionSingletonObj
       .invoke("SendMessageToGroup", messageSendObj)
@@ -360,8 +423,14 @@ const Chat = (props) => {
           const getDataFromSelectorId = document.getElementById(
             messageSendObj.groupId + "highlight-listMessage"
           );
-          getDataFromSelectorId.textContent =
-            messageSendObj.clientMessageRedis.userMessage; // highlight the message below the contact banner
+          if(messageSendObj.clientMessageRedis.userMessage?.length > 28) {
+            getDataFromSelectorId.textContent =  messageSendObj.clientMessageRedis.userMessage
+            ?.substring(0, 25) + "....";
+
+          }else {
+            getDataFromSelectorId.textContent =  messageSendObj.clientMessageRedis.userMessage;
+          }
+
         },
         (errors) => {
           console.log(errors);
@@ -462,7 +531,6 @@ const Chat = (props) => {
 
       if(conversationFetchingStoragesAllInfo.fetchingMessagesStorageNo === 3 ||
         (response.data.fetchingMessagesStorageNo === -1 && response.data.lastMessagesCount > 0)) {
-          debugger;
           const date = new Date(singleMessage.messageDateStamp);
           const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
           const splitingDate = formattedDate.split("/");
@@ -622,6 +690,6 @@ const Chat = (props) => {
     </>
   );
 };
-export default React.memo(Chat);
+export default React.memo(ChatSection);
 
 

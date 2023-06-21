@@ -147,6 +147,9 @@ const UserChat = (props) => {
             </span>
             <p id={props.AddContactData.groupId + "highlight-listMessage"}>
               {/* whose sender and reciver both id is equal to array and connectedAddContactData are same */}
+
+
+
               {/* {location.pathname == "/Chats"
                 ? props?.messageSendFromUser?.userMessage?.length > 28
                   ? // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well and also here if string chars is greater then 28 then it will be shown only in dots else it wont in else state
@@ -175,14 +178,33 @@ const UserChat = (props) => {
             </p>
           </div>
 
-          <div className={UserChatCss["date-connection-on"]}>
-                {props.AddContactData.userAvailabilityStatus
 
-                ? <div className={UserChatCss["online-indicator"]}></div>
-                : <div className={UserChatCss["offline-indicator"]}></div>
+
+          <div className={UserChatCss["right-section"]}>
+                {/* chat unread */}
+                <div>
+                {props.AddContactData.countUnSeenMessages > 0 ?
+                  <div className={UserChatCss["count-message"]}>
+                    <p>{props.AddContactData.countUnSeenMessages >= 30 ? "30+" : props.AddContactData.countUnSeenMessages}</p>
+                  </div>
+                  : null
                 }
 
+                </div>
+
+                {/* data connection */}
+                <div>
+                {props.AddContactData.userAvailabilityStatus
+
+            ? <div className={UserChatCss["online-indicator"]}></div>
+            : <div className={UserChatCss["offline-indicator"]}></div>
+                }</div>
+
+
           </div>
+
+
+
         </div>
       </div>
     );

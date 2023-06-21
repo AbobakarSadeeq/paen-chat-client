@@ -13,15 +13,11 @@ const RightMessageSection = (props) => {
     return "";
   });
 
-
   const scrollToBottom = () => {
-
-    setTimeout(()=>{
+    setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-
-    },100)
+    }, 100);
   };
-
 
   useEffect(() => {
     const dateTime = new Date();
@@ -32,7 +28,7 @@ const RightMessageSection = (props) => {
         hour12: true,
       })
     );
-
+    console.log(props);
   }, []);
 
   return (
@@ -45,13 +41,37 @@ const RightMessageSection = (props) => {
         <br />
       </div>
       <div className={RightMessageCss["chat-right-message-meta"]}>
+        {props.singleMessage.messageTimeStamp} &nbsp;&nbsp;
         <div>
-          {props.singleMessage.messageTimeStamp} &nbsp;&nbsp;
-          <FontAwesomeIcon icon={faCheck} />
+          {props.singleMessage.messageSeen === 0 ? (
+            <>
+              <FontAwesomeIcon icon={faCheck} />
+            </>
+          ) : null}
+
+          {props.singleMessage.messageSeen === 1 ? (
+            <>
+              <FontAwesomeIcon
+                icon={faCheck}
+                style={{ position: "relative", left: "6px" }}
+              />
+              <FontAwesomeIcon icon={faCheck} />
+            </>
+          ) : null}
+
+          {props.singleMessage.messageSeen === 2 ? (
+            <>
+              <FontAwesomeIcon
+                icon={faCheck}
+                style={{ color: "#53bdeb", position: "relative", left: "6px" }}
+              />
+              <FontAwesomeIcon icon={faCheck} style={{ color: "#53bdeb" }} />
+            </>
+          ) : null}
+          
         </div>
       </div>
-    {/* <div ref={messagesEndRef}></div> */}
-
+      {/* <div ref={messagesEndRef}></div> */}
     </>
   );
 };

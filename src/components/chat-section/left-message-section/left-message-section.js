@@ -45,7 +45,6 @@ const LeftMessageSection = (props) => {
       <div className={leftMessageCss["chat-left-message-meta"]}>
         <span>
           {props.singleMessage.messageTimeStamp} &nbsp;&nbsp;
-          <FontAwesomeIcon icon={faCheck} />
         </span>
       </div>
     {/* <div ref={messagesEndRef}></div> */}

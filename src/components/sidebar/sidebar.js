@@ -27,6 +27,7 @@ import { signalRConnectionSingletonObj } from "../Auth/auth";
 import ContactContext from "../../context/contact-context/contact-context";
 
 const Sidebar = (props) => {
+  console.log(props);
   const location = useLocation();
   const navigate = useNavigate();
   const { singleGroupMessagesAsync } = useFetchSingleGroupMessages();
@@ -78,6 +79,7 @@ const Sidebar = (props) => {
         user2: loggedInId,
         lastMessagesCount: 0,
       };
+
       singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
         const updatingConnectedContactsInitialMessages = [...connectedContactsInitialMessages];
         updatingConnectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList = responseData.data.fetchedMessagesList;
@@ -107,7 +109,6 @@ const Sidebar = (props) => {
         if(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === 3 ||
           (connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === -1 &&
              connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].lastMessagesCount > 0)) {
-              debugger;
             const date = new Date(singleMessage.messageDateStamp);
             const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
             const splitingDate = formattedDate.split("/");
@@ -173,7 +174,30 @@ const Sidebar = (props) => {
                 if(response.data?.fetchedMessagesList[0]?.userMessage) {
 
                   const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
-                  getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.userMessage;
+                  if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.userMessage?.length > 28) {
+                    getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]
+                    ?.userMessage?.substring(0, 25) + "....";
+                    console.log(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]);
+                    getDataFromSelectorId.style.color = "#19a299";
+
+                    if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.senderId ===
+                      +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId)) {
+                    getDataFromSelectorId.style.color = "#8a98ac";
+
+                      }
+
+
+                  }else {
+                    getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.userMessage;
+                    getDataFromSelectorId.style.color = "#19a299";
+
+                    if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.senderId ===
+                      +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId)) {
+                      getDataFromSelectorId.style.color = "#8a98ac";
+
+                      }
+
+                  }
                 }
 
                 setConnectedContactsInitialMessages((prevs)=>{
@@ -209,25 +233,22 @@ const Sidebar = (props) => {
 
     useEffect(() => {
 
-      if(connectedContactList.length !== 0) {
 
         const loggedInUserId = JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId;
       setTimeout(()=>{
 
-
         signalRConnectionSingletonObj.on("UserBecomeOnline", (singleGroupId, becomeOnlineUserId) => {
           if(becomeOnlineUserId !== loggedInUserId) {
-            let updatedContact = [...connectedContactList];
+              setConnectedContactList((prevsContacts)=>{
+            let updatedContact = [...prevsContacts];
             const index = updatedContact.findIndex(a=>a.userId === +becomeOnlineUserId);
             if(index != -1) {
               updatedContact[index].userAvailabilityStatus = true;
-              setConnectedContactList(()=>{
+            }
                 return [...updatedContact];
               });
 
               contextContactApi.setContactAvailability(true);
-
-            }
 
           }
         });
@@ -236,31 +257,40 @@ const Sidebar = (props) => {
         signalRConnectionSingletonObj.on("UserBecomeOffline", (singleGroupId, becomeOfflineUserId) => {
 
           if(becomeOfflineUserId !== loggedInUserId) {
-            let updatedContact = [...connectedContactList];
-            const index = updatedContact.findIndex(a=>a.userId === +becomeOfflineUserId);
-            if(index != -1) {
-              updatedContact[index].userAvailabilityStatus = false;
-              setConnectedContactList(()=>{
-                return [...updatedContact];
-              })
+            setConnectedContactList((prevsContacts)=>{
+          let updatedContact = [...prevsContacts];
+          const index = updatedContact.findIndex(a=>a.userId === +becomeOfflineUserId);
+          if(index != -1) {
+            updatedContact[index].userAvailabilityStatus = false;
 
-              contextContactApi.setContactAvailability(false);
-
-            }
 
           }
+
+              return [...updatedContact];
+            });
+
+            contextContactApi.setContactAvailability(false);
+
+        }
 
         });
 
 
 
+
+
+
+
+
+
+
+
       },2000)
-    }
 
 
 
 
-    }, [connectedContactList]);
+    }, []);
 
   // function changeSelectedContactEffect(i) {
   //   let fetchArrData = [...connectedContactList];
