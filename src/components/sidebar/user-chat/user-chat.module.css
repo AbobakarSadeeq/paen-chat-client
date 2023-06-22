@@ -12,7 +12,7 @@
 
 .main-contacts-section {
   display: grid;
-  grid-template-columns: 3.4rem 14rem 2.5rem;
+  grid-template-columns: 3.4rem 14rem 3.5rem;
   padding-top: 1rem;
   padding-bottom: 0.4rem;
   margin-left: 0.8rem;
@@ -49,21 +49,18 @@
 }
 
 .online-indicator {
-  margin-left: 30px;
+  width: 10px;
   height: 10px;
   border-radius: 50%;
   background-color: #4CAF50;
-  margin-top: 0.5rem;
 }
 
 
 .offline-indicator {
-  margin: 0;
-  margin-left: 30px;
+  width: 10px;
   height: 10px;
   border-radius: 50%;
   background-color: #CCCCCC;
-  margin-top: 0.5rem;
 }
 
 
@@ -78,11 +75,24 @@
   height: 1.4rem;
 }
 
-.count-message p {
+.not-having-count-message {
+  width: 1.6rem;
+  margin: 0;
+
+}
+
+.count-message  {
   color: black;
   text-align: center;
   padding-bottom: 20px;
 }
 
 .right-section {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.right-section > div {
+  margin-right: 10px; /* add some spacing between the two divs */
 }

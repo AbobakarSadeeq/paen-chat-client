@@ -181,27 +181,20 @@ const UserChat = (props) => {
 
 
           <div className={UserChatCss["right-section"]}>
-                {/* chat unread */}
-                <div>
-                {props.AddContactData.countUnSeenMessages > 0 ?
-                  <div className={UserChatCss["count-message"]}>
-                    <p>{props.AddContactData.countUnSeenMessages >= 30 ? "30+" : props.AddContactData.countUnSeenMessages}</p>
-                  </div>
-                  : null
-                }
+  {/* chat unread */}
+  {props.AddContactData.countUnSeenMessages > 0 ? (
+    <p className={UserChatCss["count-message"]}>{props.AddContactData.countUnSeenMessages >= 30 ? "30+" : props.AddContactData.countUnSeenMessages}</p>
+  ) : <p className={UserChatCss["not-having-count-message"]}></p>}
 
-                </div>
-
-                {/* data connection */}
-                <div>
-                {props.AddContactData.userAvailabilityStatus
-
-            ? <div className={UserChatCss["online-indicator"]}></div>
-            : <div className={UserChatCss["offline-indicator"]}></div>
-                }</div>
-
-
-          </div>
+  {/* data connection */}
+  <div>
+    {props.AddContactData.userAvailabilityStatus ? (
+      <div className={UserChatCss["online-indicator"]}></div>
+    ) : (
+      <div className={UserChatCss["offline-indicator"]}></div>
+    )}
+  </div>
+</div>
 
 
 
