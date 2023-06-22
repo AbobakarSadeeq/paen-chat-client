@@ -51,6 +51,12 @@ const Layout = (props) => {
     return "";
   })
 
+  const [messageNotficationSendedFromOtherContactId ,setMessageNotficationSendedFromOtherContactId] = useState(()=>{
+    return 0;
+  })
+
+
+
 
   function refreshMyContect() {
     setContectAddRefresh(() => {
@@ -130,6 +136,7 @@ const Layout = (props) => {
     }
   }, [props.chatSectionOpenedFromContactDetail]);
 
+
   return (
     <>
       {/* Models */}
@@ -162,6 +169,7 @@ const Layout = (props) => {
           }
           connectUserInMessageSectionThroughGroupId={connectedInMessageGroupId}
           showChat={showChat}
+          messageSendedFromContactNotify={messageNotficationSendedFromOtherContactId}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}
@@ -181,7 +189,7 @@ const Layout = (props) => {
             senderMessageObj={props.sendMessageVal}
             senderMessageData={gettingUserMessage}
             mutateConnectedInMessageHandler={mutateConnectedInMessageContact}
-
+            notificationFromContactArrayIndexOfNewMessageOfOtherUserEvenReceiverIsOnline={setMessageNotficationSendedFromOtherContactId}
           />
         ) : null}
 

@@ -63,75 +63,76 @@ const Sidebar = (props) => {
     // THIS USEEFFECT WILL EXECUTE TWO TIME BECAUSE WHEN CHAT_SECTION COMPONENT OPENED THEN IT WILL SEND DATA TO THE SIDEBAR COMPONENT
     // THEN SIDEBAR WILL EXECUTE THE USEEFFECT AND WHEN THAT SIDEBAR EXECUTE IT WILL RE_RESEND THE DATA TO CHAT_SECTION FOR INITIAL_MESSAGE ARRAY
     // this code will execute the chat-section side bar
-    if(fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId?.length > 0 &&
-      fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId !== fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage) {
-      const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
-      .findIndex(a=>a.groupId === fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId);
+    // if(fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId?.length > 0 &&
+    //   fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId !== fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage) {
+    //   const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
+    //   .findIndex(a=>a.groupId === fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId);
 
-      const findingUserId = connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]?.fetchedMessagesList[0];
+    //   const findingUserId = connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]?.fetchedMessagesList[0];
 
-      const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId);
-      const fetchingMessagesByFilteringInitialPoint = {
-        currentScrollingPosition: 1,
-        fetchingMessagesStorageNo: 1,
-        groupId: fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId,
-        user1: findingUserId.senderId == loggedInId ? findingUserId.receiverId  : findingUserId.senderId,
-        user2: loggedInId,
-        lastMessagesCount: 0,
-      };
+    //   const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId);
+    //   const fetchingMessagesByFilteringInitialPoint = {
+    //     currentScrollingPosition: 1,
+    //     fetchingMessagesStorageNo: 1,
+    //     groupId: fetchingMessagesContext.updateInitialMessagesOfSingleConversationGroupId,
+    //     user1: findingUserId.senderId == loggedInId ? findingUserId.receiverId  : findingUserId.senderId,
+    //     user2: loggedInId,
+    //     lastMessagesCount: 0,
+    //   };
 
-      singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
-        const updatingConnectedContactsInitialMessages = [...connectedContactsInitialMessages];
-        updatingConnectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList = responseData.data.fetchedMessagesList;
-        setConnectedContactsInitialMessages(()=>{
-        return [...updatingConnectedContactsInitialMessages];
-        });
+    //   singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
+    //     const updatingConnectedContactsInitialMessages = [...connectedContactsInitialMessages];
+    //     updatingConnectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList = responseData.data.fetchedMessagesList;
+    //     setConnectedContactsInitialMessages(()=>{
+    //     return [...updatingConnectedContactsInitialMessages];
+    //     });
 
-      })
-
-
-
-      // updating the initial messages of the array
+    //   })
 
 
 
-      return;
-    }
+    //   // updating the initial messages of the array
+
+
+
+    //   return;
+    // }
 
 
     // SEPEARTE THING BELOW HERE.
 
-    if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1) {
-      const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
-      .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage);
+    // if(fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage.length > 1) {
+    //   const findingInitialMessagesByGroupIdFromInitialMessageListIndex = connectedContactsInitialMessages
+    //   .findIndex(a=>a.groupId === fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage);
 
-      for(var singleMessage of connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList) {
-        if(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === 3 ||
-          (connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === -1 &&
-             connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].lastMessagesCount > 0)) {
-            const date = new Date(singleMessage.messageDateStamp);
-            const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
-            const splitingDate = formattedDate.split("/");
-            singleMessage.messageDateStamp = splitingDate[1] + "/" + splitingDate[0] + "/" + splitingDate[2];
+    //   for(var singleMessage of connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchedMessagesList) {
+    //     if(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === 3 ||
+    //       (connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].fetchingMessagesStorageNo === -1 &&
+    //          connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex].lastMessagesCount > 0)) {
+    //         const date = new Date(singleMessage.messageDateStamp);
+    //         const formattedDate = date.toLocaleDateString("en-US", {day:"numeric", month:"numeric",year:"numeric"});
+    //         const splitingDate = formattedDate.split("/");
+    //         singleMessage.messageDateStamp = splitingDate[1] + "/" + splitingDate[0] + "/" + splitingDate[2];
 
-            const [hours, minutes] = singleMessage.messageTimeStamp.split(":");
-            date.setHours(hours);
-            date.setMinutes(minutes);
-            const formattedTime = date.toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute:"numeric",
-              hour12: true,
-            });
-            singleMessage.messageTimeStamp = formattedTime;
+    //         const [hours, minutes] = singleMessage.messageTimeStamp.split(":");
+    //         date.setHours(hours);
+    //         date.setMinutes(minutes);
+    //         const formattedTime = date.toLocaleTimeString("en-US", {
+    //           hour: "numeric",
+    //           minute:"numeric",
+    //           hour12: true,
+    //         });
+    //         singleMessage.messageTimeStamp = formattedTime;
 
-          }
-      }
+    //       }
+    //   }
 
-      fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
+    //   fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
 
-    }
+    // }
 
 
+    // this will only execute below code one time
     if (connectedContactList.length == 0 && addContactSectionContactList.length == 0) {
       axios
         .get(
@@ -143,6 +144,7 @@ const Sidebar = (props) => {
           let customArr = [];
           setAddContactSectionContactList(responseData.data);
           for (var singleUserAllContacts of responseData.data) {
+            console.log(singleUserAllContacts);
             if (
               singleUserAllContacts.connectedInMessages ||
               singleUserAllContacts.verifiedContactUser
@@ -168,51 +170,62 @@ const Sidebar = (props) => {
                 user2: +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId),
                 lastMessagesCount: 0,
               };
-              singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((response)=>{
-                response.data.fetchedMessagesList.reverse();
-                // assigning the last message to the contact below
-                if(response.data?.fetchedMessagesList[0]?.userMessage) {
 
-                  const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
-                  if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.userMessage?.length > 28) {
-                    getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]
-                    ?.userMessage?.substring(0, 25) + "....";
-                    console.log(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]);
-                    getDataFromSelectorId.style.color = "#19a299";
 
-                    if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.senderId ===
-                      +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId)) {
+              const lastMessage = singleUserAllContacts?.lastMessageOfSingleContact;
+              const countUnSeenMessages = singleUserAllContacts?.countUnSeenMessages;
+              setTimeout(() => {
+                const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
+                if (lastMessage?.length > 28) {
+                  getDataFromSelectorId.textContent = lastMessage?.substring(0, 25) + "....";
+                  getDataFromSelectorId.style.color = "#19a299";
+
+                  if (countUnSeenMessages === 0) {
                     getDataFromSelectorId.style.color = "#8a98ac";
+                  }
+                } else {
+                  getDataFromSelectorId.textContent = lastMessage;
+                  getDataFromSelectorId.style.color = "#19a299";
 
-                      }
-
-
-                  }else {
-                    getDataFromSelectorId.textContent = response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.userMessage;
-                    getDataFromSelectorId.style.color = "#19a299";
-
-                    if(response.data?.fetchedMessagesList[response.data?.fetchedMessagesList.length - 1]?.senderId ===
-                      +(JSON.parse(window.atob(localStorage.getItem("Token").split(".")[1])).UserId)) {
-                      getDataFromSelectorId.style.color = "#8a98ac";
-
-                      }
-
+                  if (countUnSeenMessages === 0) {
+                    getDataFromSelectorId.style.color = "#8a98ac";
                   }
                 }
-
-                setConnectedContactsInitialMessages((prevs)=>{
-                  return [...prevs, {...response.data, groupId:fetchingMessagesByFilteringInitialPoint.groupId}];
-                });
+              }, 500);
 
 
 
-              });
+
             }
           }
 
           setConnectedContactList(customArr);
         });
     }
+
+    // when new messages sended and user online but with other user is busy then show the number notification about how much new messages sended
+
+    if(props.messageSendedFromContactNotify?.length > 0) {
+      setConnectedContactList((prevsContact)=>{
+
+        if(props.messageSendedFromContactNotify.split(" ")[1] === "DEL") {
+          const groupId = props.messageSendedFromContactNotify.split(" ")[0];
+          const findingIndex = prevsContact.findIndex(a=>a.groupId=== groupId);
+          prevsContact[findingIndex].countUnSeenMessages = 0;
+        } else {
+          const findingIndex = prevsContact.findIndex(a=>a.groupId=== props.messageSendedFromContactNotify);
+          prevsContact[findingIndex].countUnSeenMessages = prevsContact[findingIndex].countUnSeenMessages + 1;
+        }
+
+
+
+        return [...prevsContact];
+      })
+    }
+
+
+
+
 
     // for this below lines i donot required
     // if (props.connectUserInMessageSectionThroughGroupId != "") {
@@ -228,8 +241,8 @@ const Sidebar = (props) => {
     //     return [...addContactSectionArr];
     //   });
     // }
-  }, [props.EditContactName, props.connectUserInMessageSectionThroughGroupId, fetchingMessagesContext.selectedContactGroupForToFetchingItsMessage, fetchingMessagesContext.updateInitialMessagesOfSingleConversation]);
-
+  }, [props.EditContactName, props.messageSendedFromContactNotify]);
+  console.log(connectedContactList);
 
     useEffect(() => {
 

@@ -109,7 +109,6 @@ const ChatSection = (props) => {
       })
 
       selectedGroupId.current = props?.singleUserChatAllInfo?.groupId;
-      console.log(selectedGroupId.current);
 
       // this below code will execute each time when contact is changed
 
@@ -150,7 +149,7 @@ const ChatSection = (props) => {
         });
 
         let sendInfoForToFetchMoreMessages = {
-          currentScrollingPosition: responseData.data.fetchedMessagesList.length === 30 ? 2 : 1,
+          currentScrollingPosition: responseData.data.fetchedMessagesList?.length === 30 ? 2 : 1,
           fetchingMessagesStorageNo: responseData.data.fetchingMessagesStorageNo,
           groupId: fetchingMessagesByFilteringInitialPoint.groupId,
           user1: fetchingMessagesByFilteringInitialPoint.user1,
@@ -165,6 +164,27 @@ const ChatSection = (props) => {
         });
       });
 
+      console.log(props);
+
+      if(props.singleUserChatAllInfo?.countUnSeenMessages > 0) {
+        const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
+        getDataFromSelectorId.style.color = "#8a98ac";
+        props.notificationFromContactArrayIndexOfNewMessageOfOtherUserEvenReceiverIsOnline(fetchingMessagesByFilteringInitialPoint.groupId + " DEL");
+        // DEl means readed all messages so remove the notification and last message color as well,.
+       setTimeout(()=>{
+        props.notificationFromContactArrayIndexOfNewMessageOfOtherUserEvenReceiverIsOnline("");
+       },1500)
+
+       // here call the backend here about messages has been seeen....
+       // group Id and sended userId passed who's sended the messages and to that user only update the messages list array
+       let senderId = fetchingMessagesByFilteringInitialPoint.user1;
+       signalRConnectionSingletonObj.invoke("TickReadedForSenderOfAllSendedMessages", props.singleUserChatAllInfo.groupId, senderId).then(()=>{
+
+       });
+
+
+
+      }
 
 
 
@@ -192,13 +212,16 @@ const ChatSection = (props) => {
             },
           };
 
-          debugger;
-
           // selectedContactGroupId this state is not updating when i sended a message
           if(selectedGroupId.current === receivingSenderData.groupId) { // both user on the same page
             messageSendObj.clientMessageRedis.messageSeen = 2; // saw the message
           }else if(selectedGroupId.current !== receivingSenderData.groupId) {
             messageSendObj.clientMessageRedis.messageSeen = 1; // saw the message
+            props.notificationFromContactArrayIndexOfNewMessageOfOtherUserEvenReceiverIsOnline(receivingSenderData.groupId);
+            setTimeout(()=>{
+            props.notificationFromContactArrayIndexOfNewMessageOfOtherUserEvenReceiverIsOnline("");
+
+            },1500)
           } // by default it will be zero because if this not execute then store data directly on db and assign 0
 
 
@@ -272,13 +295,43 @@ const ChatSection = (props) => {
     setIsRecievedCodeExecutedOneTime(()=>{
       return true;
     });
-    }
 
 
+    // here will be receive the data from callback backend for to remove
+
+    signalRConnectionSingletonObj.on("MakeItReadedAllUnReadMessagesFromSenderSide", (senderId)=>{
+
+      if( loggedInId === senderId) {
+        // update message
+
+        setChatMessage((prevs)=>{
+          for(var lastIndexStart = prevs.length -1; lastIndexStart>0; lastIndexStart--) {
+            if(prevs[lastIndexStart].clientMessageRedis.messageSeen === 2)
+              break;
+
+              // 2 means messages saw it
+
+          prevs[lastIndexStart].clientMessageRedis.messageSeen = 2;
+
+          }
+
+          return [...prevs]
+
+        });
+
+
+      }
+
+
+    });
+
+  }
 
 
     scrollToBottom();
   }, [props.singleUserChatAllInfo])
+
+
 
 
 
