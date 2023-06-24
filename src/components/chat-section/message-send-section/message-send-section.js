@@ -34,10 +34,12 @@ const MessageSend = (props) => {
     }
   }
 
-  function ReceiveMessage() {}
+ 
 
   function sendMessageHandlerOnClick() {
-    contextApi.sendMessageFunc(props.messageSendObj);
+    props.userMessageHandler(fetchMessageData.current.value)
+
+    fetchMessageData.current.value = "";
   }
 
   return (

@@ -35,6 +35,7 @@ const AddContact = (props) => {
             .UserId
       )
       .then((responseData) => {
+
         let customArr = [...responseData.data];
         customArr = customArr.map((obj) => ({
           ...obj,
@@ -45,6 +46,22 @@ const AddContact = (props) => {
   }
 
   useEffect(() => {
+
+        // live blocking updating array
+        if(contactContextApi.contactBlockUpdating !== null) {
+
+          setContactList((prevsContacts)=>{
+            debugger;
+            let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contactContextApi.contactBlockUpdating.contactId);
+            prevsContacts[findingContactIndex].blockContact = !prevsContacts[findingContactIndex].blockContact;
+            return [...prevsContacts];
+          });
+          contactContextApi.setContactBlockUpdating(null);
+        }
+
+
+
+
     if (Object.keys(contactContextApi.addNewContact).length != 0) {
       let contactArr = [...contactList];
       contactArr.push(contactContextApi.addNewContact);
@@ -52,6 +69,7 @@ const AddContact = (props) => {
       setContactList((prevs) => {
         return contactArr;
       });
+
       props.updateContactListForAddNewContact(contactContextApi.addNewContact);
       contactContextApi.setAddNewContact({});
     }
@@ -70,7 +88,7 @@ const AddContact = (props) => {
     //     }));
     //     setContactList(customArr);
     //   });
-  }, [contactContextApi.addNewContact]);
+  }, [contactContextApi.addNewContact, contactContextApi.contactBlockUpdating]);
 
   function openModelHandler() {
     props.openAddContactDialog(true);

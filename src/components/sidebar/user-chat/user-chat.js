@@ -113,8 +113,12 @@ const UserChat = (props) => {
     //   );
   }
 
+  console.log(props);
+
   if (
-    location.pathname == "/Chats"
+    location.pathname == "/Chats" &&
+    props.AddContactData.blockContact === false &&
+    props.AddContactData.connectedInMessages === true
   ) {
     renderingSingleContact = (
       <div

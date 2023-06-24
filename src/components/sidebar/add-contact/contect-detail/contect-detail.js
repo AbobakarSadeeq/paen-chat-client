@@ -20,9 +20,12 @@ import { useState } from "react";
 import EditContectModel from "./edit-contect-detail/edit-contect-detail";
 import BlockContact from "./block-contact/block-contect";
 import UnlockContact from "./unlock-contact/unlock-contact";
+import ContactContext from "../../../../context/contact-context/contact-context";
 
 const ContectDetail = (props) => {
   const path = useLocation();
+ const contextApi = useContext(LoggedInContext);
+  const contactContextApi = useContext(ContactContext);
 
   const [editContactModel, setEditContactModel] = useState(() => {
     return false;
@@ -52,7 +55,8 @@ const ContectDetail = (props) => {
     return false;
   });
 
-  const contextApi = useContext(LoggedInContext);
+
+
 
   const [hideContactDetail, setHideContactDetail] = useState(() => {
     return false;
@@ -69,8 +73,10 @@ const ContectDetail = (props) => {
   }
 
   useEffect(() => {
+    console.log(props.detail);
     setEditedContactName("");
-    if (props.detail.blockContact == true) {
+
+    if (props.detail.blockContact === true) {
       setContactBlocked(true);
     } else {
       setContactBlocked(false);
@@ -102,9 +108,17 @@ const ContectDetail = (props) => {
 
   function BlockUserModelHandler() {
     setBlockUserModel(!blockUserModel);
+
+
+
+
   }
 
   function blockContactViewChangeHandler() {
+    // send here the
+
+    contactContextApi.setContactBlockUpdating(props.detail);
+
     setContactBlocked(true);
     let changingViewOfConnectedContact = Math.random();
     contextApi.updatedContactNameVal(
@@ -117,7 +131,9 @@ const ContectDetail = (props) => {
   }
 
   function unlockingBlockContacViewChangeHandler() {
+    contactContextApi.setContactBlockUpdating(props.detail);
     setContactBlocked(false);
+
     let changingViewOfConnectedContact = Math.random();
     contextApi.updatedContactNameVal(
       "unlocked" + changingViewOfConnectedContact
@@ -216,12 +232,12 @@ const ContectDetail = (props) => {
                 </>
               ) : (
                 <>
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faMessage}
                     className={ContectDetailCss["icons"]}
                     onClick={OpenSelectedUserChat}
                     title="Open contact chat"
-                  />
+                  /> */}
                   <FontAwesomeIcon
                     icon={faEdit}
                     className={ContectDetailCss["icons"]}

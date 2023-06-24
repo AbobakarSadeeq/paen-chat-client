@@ -132,6 +132,17 @@ const Sidebar = (props) => {
     // }
 
 
+    // live blocking updating array
+    if(contextContactApi.contactBlockUpdating !== null) {
+
+      setConnectedContactList((prevsContacts)=>{
+        let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contextContactApi.contactBlockUpdating.contactId);
+        prevsContacts[findingContactIndex].blockContact = !prevsContacts[findingContactIndex].blockContact;
+        return [...prevsContacts];
+      });
+      contextContactApi.setContactBlockUpdating(null);
+    }
+
     // this will only execute below code one time
     if (connectedContactList.length == 0 && addContactSectionContactList.length == 0) {
       axios
@@ -144,7 +155,7 @@ const Sidebar = (props) => {
           let customArr = [];
           setAddContactSectionContactList(responseData.data);
           for (var singleUserAllContacts of responseData.data) {
-            console.log(singleUserAllContacts);
+
             if (
               singleUserAllContacts.connectedInMessages ||
               singleUserAllContacts.verifiedContactUser
@@ -241,8 +252,7 @@ const Sidebar = (props) => {
     //     return [...addContactSectionArr];
     //   });
     // }
-  }, [props.EditContactName, props.messageSendedFromContactNotify]);
-  console.log(connectedContactList);
+  }, [props.EditContactName, props.messageSendedFromContactNotify, contextContactApi.contactBlockUpdating]);
 
     useEffect(() => {
 
@@ -329,6 +339,10 @@ const Sidebar = (props) => {
     setAddContactSectionContactList((prevs) => {
       return [...prevs, newContact];
     });
+
+    setConnectedContactList((prevs)=>{
+      return [...prevs, newContact];
+    })
   }
 
   const changeSelectedContactEffectMemoized = useCallback(

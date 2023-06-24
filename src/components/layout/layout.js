@@ -179,6 +179,7 @@ const Layout = (props) => {
           <ContectDetail
             detail={showContectRightSidePane}
             isShowContactDetail={props.closeContactDetailForMobileResponsive}
+            
           />
         ) : null}
 

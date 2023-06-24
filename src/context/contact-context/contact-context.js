@@ -11,9 +11,16 @@ const ContactContextProvider = ({ children }) => {
     return false;
   })
 
+  const [contactBlockUpdating, setContactBlockUpdating] = useState(()=>{
+    return null;
+  })
+
   return (
     <>
-      <ContactContext.Provider value={{ addNewContact, setAddNewContact, contactAvailability, setContactAvailability }}>
+      <ContactContext.Provider value={{ addNewContact, setAddNewContact,
+       contactAvailability, setContactAvailability,
+       contactBlockUpdating, setContactBlockUpdating
+        }}>
         {children}
       </ContactContext.Provider>
     </>
