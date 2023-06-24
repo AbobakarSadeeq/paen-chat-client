@@ -71,6 +71,10 @@ const ChatSection = (props) => {
     return false;
   })
 
+  const [selectedContactInfo, setSelectedContactInfo] = useState(()=>{
+    return {...props.singleUserChatAllInfo};
+  })
+
   // **********************************************************
 
   // refs varibles
@@ -83,6 +87,27 @@ const ChatSection = (props) => {
 
 
   useEffect(()=>{
+
+
+    if(contextContactApi.contactBlockUpdatingChatSection === true) {
+      setSelectedContactInfo((prevs)=>{
+        prevs.blockContactByConnectedUser = !prevs.blockContactByConnectedUser;
+
+        if(prevs.blockContactByConnectedUser === false)
+           contextContactApi.setContactAvailability(true);
+           else
+           contextContactApi.setContactAvailability(false);
+
+
+
+        return {...prevs};
+      })
+      contextContactApi.setContactBlockUpdatingChatSection(false);
+
+      return;
+    }
+
+
     const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
     const fetchingMessagesByFilteringInitialPoint = {
       currentScrollingPosition: 1,
@@ -102,10 +127,16 @@ const ChatSection = (props) => {
         setChatMessage(()=>{
           return [];
         });
+
+
       }
 
       setSelectedContactGroupId(()=>{
         return props?.singleUserChatAllInfo?.groupId;
+      })
+
+      setSelectedContactInfo(()=>{
+        return props.singleUserChatAllInfo;
       })
 
       selectedGroupId.current = props?.singleUserChatAllInfo?.groupId;
@@ -329,7 +360,7 @@ const ChatSection = (props) => {
 
 
     scrollToBottom();
-  }, [props.singleUserChatAllInfo])
+  }, [props.singleUserChatAllInfo, contextContactApi.contactBlockUpdatingChatSection])
 
 
 
@@ -463,9 +494,11 @@ const ChatSection = (props) => {
         })
     }
 
+    // if user blocked you then if you are sending message then dont store it inside the redis then.
+    if(selectedContactInfo.blockContactByConnectedUser === true) {
+      return;
 
-
-
+    }
 
     // send sender message to the server and storing it in redis and then from server calling this component function from there to store the sender data in message
     signalRConnectionSingletonObj
@@ -655,7 +688,7 @@ const ChatSection = (props) => {
         }`}
           >
         {/* profile section */}
-        <MessageSenderProfile profile={props.singleUserChatAllInfo} />
+        <MessageSenderProfile profile={selectedContactInfo} />
 
         {/* chat read section */}
         <div className={ChatCss["chat-read-section"]}   >

@@ -47,11 +47,11 @@ const AddContact = (props) => {
 
   useEffect(() => {
 
-        // live blocking updating array
+        // live blocking updating array and who block it will execute this below code here
         if(contactContextApi.contactBlockUpdating !== null) {
+          debugger;
 
           setContactList((prevsContacts)=>{
-            debugger;
             let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contactContextApi.contactBlockUpdating.contactId);
             prevsContacts[findingContactIndex].blockContact = !prevsContacts[findingContactIndex].blockContact;
             return [...prevsContacts];
@@ -103,6 +103,7 @@ const AddContact = (props) => {
     //   return fetchArrData;
     // });
   }
+
 
   return (
     <div>

@@ -57,6 +57,7 @@ const Sidebar = (props) => {
       return [];
     });
 
+    console.log(connectedContactList);
 
   useEffect(() => {
         // NOTE!
@@ -300,15 +301,41 @@ const Sidebar = (props) => {
 
 
 
+        signalRConnectionSingletonObj.on("BlockingOrUnlockingContactLive", (groupId, userWhoBlockedYouId) => {
+
+          if(userWhoBlockedYouId !== +(loggedInUserId)) {
+
+            setConnectedContactList((prevs)=>{
+              debugger;
+              const findingIndexOfGroup = prevs.findIndex(a=>a.groupId === groupId);
+              prevs[findingIndexOfGroup].blockContactByConnectedUser = !prevs[findingIndexOfGroup].blockContactByConnectedUser;
+              return [...prevs];
+
+            });
+
+            setAddContactSectionContactList((prevs)=>{
+              const findingIndexOfGroup = prevs.findIndex(a=>a.groupId === groupId);
+              prevs[findingIndexOfGroup].blockContactByConnectedUser = !prevs[findingIndexOfGroup].blockContactByConnectedUser;
+              return [...prevs];
+
+            });
+
+          contextContactApi.setContactBlockUpdatingChatSection(true);
+
+
+
+
+
+          }
+
+        });
 
 
 
 
 
 
-
-
-      },2000)
+      },2500)
 
 
 

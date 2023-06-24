@@ -8,7 +8,7 @@ import { useLocation } from "react-router";
 import ContactContext from "../../../context/contact-context/contact-context";
 const MessageSenderProfile = (props) => {
 
-
+  console.log(props);
   const contextApi = useContext(LoggedInContext);
   const contextContactApi = useContext(ContactContext);
   const path = useLocation();
@@ -37,7 +37,8 @@ const MessageSenderProfile = (props) => {
         />
         <div className={MessageSenderCss["profile-img"]}>
           <img
-            src={props.profile?.userImage ? props.profile.userImage : NoUserImg}
+            src={props.profile?.userImage && props.profile.blockContactByConnectedUser === false ?
+             props.profile.userImage : NoUserImg}
             alt=""
           />{" "}
           &nbsp;&nbsp;

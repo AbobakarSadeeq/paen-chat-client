@@ -21,6 +21,7 @@ import EditContectModel from "./edit-contect-detail/edit-contect-detail";
 import BlockContact from "./block-contact/block-contect";
 import UnlockContact from "./unlock-contact/unlock-contact";
 import ContactContext from "../../../../context/contact-context/contact-context";
+import { signalRConnectionSingletonObj } from "../../../Auth/auth";
 
 const ContectDetail = (props) => {
   const path = useLocation();
@@ -116,6 +117,15 @@ const ContectDetail = (props) => {
 
   function blockContactViewChangeHandler() {
     // send here the
+    const loggedInUserId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
+
+
+
+    signalRConnectionSingletonObj
+      .invoke("ContactBlockingAndUnlocking", props.detail.groupId, loggedInUserId)
+      .then(()=>{
+
+      });
 
     contactContextApi.setContactBlockUpdating(props.detail);
 
@@ -131,6 +141,15 @@ const ContectDetail = (props) => {
   }
 
   function unlockingBlockContacViewChangeHandler() {
+
+    const loggedInUserId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
+
+    signalRConnectionSingletonObj
+      .invoke("ContactBlockingAndUnlocking", props.detail.groupId, loggedInUserId)
+      .then(()=>{
+
+      });
+
     contactContextApi.setContactBlockUpdating(props.detail);
     setContactBlocked(false);
 
@@ -158,7 +177,8 @@ const ContectDetail = (props) => {
         <div className={ContectDetailCss["ContectImage"]}>
           <img
             src={
-              props.detail.userImage != null && props.detail.userImage != ""
+              props.detail.userImage != null && props.detail.userImage != "" &&
+                props.detail.blockContactByConnectedUser === false
                 ? props.detail.userImage
                 : NoUserImg
             }

@@ -11,10 +11,12 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import LoggedInContext from "../../context/loggedIn/loggedIn";
 import ChatSection from "../chat-section/chat-section";
+import ContactContext from "../../context/contact-context/contact-context";
 
 const Layout = (props) => {
   console.log(props.viewChangeToChatSectionFromUserDetailViewUserInfo);
   const location = useLocation();
+  const contextContactApi = useContext(ContactContext);
   const contextApi = useContext(LoggedInContext);
 
   const [openContactModel, setContactModel] = useState(() => {
@@ -121,6 +123,7 @@ const Layout = (props) => {
   useEffect(() => {
 
 
+
       // this is here profile data is store in this prop => props.viewChangeToChatSectionFromUserDetail
     if (
       props.viewChangeToChatSectionFromUserDetail != null &&
@@ -135,6 +138,7 @@ const Layout = (props) => {
       setShowContactDetail(false); //  here contact-detail section is closed and opend the chat-section from add-contact section THIS IS TRUE AND VALID FORM.
     }
   }, [props.chatSectionOpenedFromContactDetail]);
+
 
 
   return (
@@ -179,7 +183,7 @@ const Layout = (props) => {
           <ContectDetail
             detail={showContectRightSidePane}
             isShowContactDetail={props.closeContactDetailForMobileResponsive}
-            
+
           />
         ) : null}
 

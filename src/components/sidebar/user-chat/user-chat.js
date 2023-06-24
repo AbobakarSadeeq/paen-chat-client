@@ -48,7 +48,7 @@ const UserChat = (props) => {
 
 
 
-    if(props.AddContactData.userAvailabilityStatus === true) {
+    if(props.AddContactData.userAvailabilityStatus === true && props.AddContactData.blockContactByConnectedUser === false) {
       contextContactApi.setContactAvailability(true);
 
     }else {
@@ -134,7 +134,7 @@ const UserChat = (props) => {
             <img
               src={
                 props.AddContactData.userImage
-                  ? props.AddContactData.userImage
+                 && props.AddContactData.blockContactByConnectedUser === false ? props.AddContactData.userImage
                   : NoUserImg
               }
               alt=""
@@ -192,7 +192,7 @@ const UserChat = (props) => {
 
   {/* data connection */}
   <div>
-    {props.AddContactData.userAvailabilityStatus ? (
+    {props.AddContactData.userAvailabilityStatus && props.AddContactData.blockContactByConnectedUser === false ? (
       <div className={UserChatCss["online-indicator"]}></div>
     ) : (
       <div className={UserChatCss["offline-indicator"]}></div>
@@ -219,7 +219,9 @@ const UserChat = (props) => {
           <div className={UserChatCss["contact-img"]}>
             <img
               src={
-                props.AddContactData.userImage
+                props.AddContactData.userImage &&
+                props.AddContactData.blockContactByConnectedUser === false
+
                   ? props.AddContactData.userImage
                   : NoUserImg
               }
