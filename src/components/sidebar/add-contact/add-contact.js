@@ -49,7 +49,6 @@ const AddContact = (props) => {
 
         // live blocking updating array and who block it will execute this below code here
         if(contactContextApi.contactBlockUpdating !== null) {
-          debugger;
 
           setContactList((prevsContacts)=>{
             let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contactContextApi.contactBlockUpdating.contactId);

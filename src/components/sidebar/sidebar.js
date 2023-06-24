@@ -304,11 +304,11 @@ const Sidebar = (props) => {
         signalRConnectionSingletonObj.on("BlockingOrUnlockingContactLive", (groupId, userWhoBlockedYouId) => {
 
           if(userWhoBlockedYouId !== +(loggedInUserId)) {
-
+             let updatedContactState = false;
             setConnectedContactList((prevs)=>{
-              debugger;
               const findingIndexOfGroup = prevs.findIndex(a=>a.groupId === groupId);
               prevs[findingIndexOfGroup].blockContactByConnectedUser = !prevs[findingIndexOfGroup].blockContactByConnectedUser;
+              updatedContactState = prevs[findingIndexOfGroup].blockContactByConnectedUser;
               return [...prevs];
 
             });
@@ -320,8 +320,10 @@ const Sidebar = (props) => {
 
             });
 
-          contextContactApi.setContactBlockUpdatingChatSection(true);
+             props.updatingBlockingContactInRealTime(groupId, updatedContactState);
 
+
+        //  contextContactApi.setContactBlockUpdatingChatSection(true);
 
 
 

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import Sidebar from "../sidebar/sidebar";
 import layoutCss from "./layout.module.css";
 import AddContactModel from "../../Models/add-contact-model/add-contact-model";
@@ -55,7 +55,8 @@ const Layout = (props) => {
 
   const [messageNotficationSendedFromOtherContactId ,setMessageNotficationSendedFromOtherContactId] = useState(()=>{
     return 0;
-  })
+  });
+
 
 
 
@@ -120,6 +121,13 @@ const Layout = (props) => {
     setConnectedInMessageGroupId(groupId);
   }
 
+
+
+
+    // update the specific
+
+
+
   useEffect(() => {
 
 
@@ -139,7 +147,18 @@ const Layout = (props) => {
     }
   }, [props.chatSectionOpenedFromContactDetail]);
 
+  const updatingContactBlockingInRealTimeMemoize = useCallback( (groupId, contactState) => {
 
+    setUperProfileData((prevs)=>{
+      debugger;
+      const updateData = prevs;
+        if(groupId === updateData.groupId) {
+        updateData.blockContactByConnectedUser = contactState;
+      }
+        return {...updateData};
+      })
+
+  }, [])
 
   return (
     <>
@@ -174,6 +193,7 @@ const Layout = (props) => {
           connectUserInMessageSectionThroughGroupId={connectedInMessageGroupId}
           showChat={showChat}
           messageSendedFromContactNotify={messageNotficationSendedFromOtherContactId}
+          updatingBlockingContactInRealTime={updatingContactBlockingInRealTimeMemoize}
         />
 
         {/* {props.addContetPanelShow ? <ContectDetail /> : null} */}

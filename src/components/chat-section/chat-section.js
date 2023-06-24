@@ -64,7 +64,7 @@ const ChatSection = (props) => {
   })
 
   const [selectedContactGroupId, setSelectedContactGroupId] = useState(()=>{
-    return props?.singleUserChatAllInfo?.groupId;
+    return "";
   })
 
   const [isRecievedCodeExecutedOneTime, setIsRecievedCodeExecutedOneTime] = useState(()=>{
@@ -89,25 +89,24 @@ const ChatSection = (props) => {
   useEffect(()=>{
 
 
-    if(contextContactApi.contactBlockUpdatingChatSection === true) {
-      setSelectedContactInfo((prevs)=>{
-        prevs.blockContactByConnectedUser = !prevs.blockContactByConnectedUser;
+    // if(contextContactApi.contactBlockUpdatingChatSection === true) {
+    //   setSelectedContactInfo((prevs)=>{
+    //     prevs.blockContactByConnectedUser = !prevs.blockContactByConnectedUser;
 
-        if(prevs.blockContactByConnectedUser === false)
-           contextContactApi.setContactAvailability(true);
-           else
-           contextContactApi.setContactAvailability(false);
-
-
-
-        return {...prevs};
-      })
-      contextContactApi.setContactBlockUpdatingChatSection(false);
-
-      return;
-    }
+    //     if(prevs.blockContactByConnectedUser === false)
+    //        contextContactApi.setContactAvailability(true);
+    //        else
+    //        contextContactApi.setContactAvailability(false);
 
 
+
+    //     return {...prevs};
+    //   })
+    //   contextContactApi.setContactBlockUpdatingChatSection(false);
+
+    // }
+
+    debugger;
     const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
     const fetchingMessagesByFilteringInitialPoint = {
       currentScrollingPosition: 1,
@@ -121,9 +120,8 @@ const ChatSection = (props) => {
 
     // when chat is changed then empty or make the chat empty first
     if(props.singleUserChatAllInfo) {
-    console.log(props.singleUserChatAllInfo);
 
-      if(chatMessage.length > 0) {
+      if(chatMessage.length > 0 && props?.singleUserChatAllInfo?.groupId !== selectedContactGroupId) {
         setChatMessage(()=>{
           return [];
         });
@@ -135,13 +133,12 @@ const ChatSection = (props) => {
         return props?.singleUserChatAllInfo?.groupId;
       })
 
-      setSelectedContactInfo(()=>{
-        return props.singleUserChatAllInfo;
-      })
+     
 
       selectedGroupId.current = props?.singleUserChatAllInfo?.groupId;
-
       // this below code will execute each time when contact is changed
+
+      if(props?.singleUserChatAllInfo?.groupId !== selectedContactGroupId) {
 
       singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
         responseData.data.fetchedMessagesList.reverse();
@@ -195,7 +192,8 @@ const ChatSection = (props) => {
         });
       });
 
-      console.log(props);
+    }
+
 
       if(props.singleUserChatAllInfo?.countUnSeenMessages > 0) {
         const getDataFromSelectorId = document.getElementById(fetchingMessagesByFilteringInitialPoint.groupId + "highlight-listMessage");
@@ -360,7 +358,7 @@ const ChatSection = (props) => {
 
 
     scrollToBottom();
-  }, [props.singleUserChatAllInfo, contextContactApi.contactBlockUpdatingChatSection])
+  }, [props.singleUserChatAllInfo])
 
 
 
@@ -495,7 +493,7 @@ const ChatSection = (props) => {
     }
 
     // if user blocked you then if you are sending message then dont store it inside the redis then.
-    if(selectedContactInfo.blockContactByConnectedUser === true) {
+    if(props.singleUserChatAllInfo.blockContactByConnectedUser === true) {
       return;
 
     }
@@ -688,7 +686,7 @@ const ChatSection = (props) => {
         }`}
           >
         {/* profile section */}
-        <MessageSenderProfile profile={selectedContactInfo} />
+        <MessageSenderProfile profile={props.singleUserChatAllInfo} />
 
         {/* chat read section */}
         <div className={ChatCss["chat-read-section"]}   >

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import MessageSenderCss from "./message-sender-profile.module.css";
 import NoUserImg from "../../../assest/No Image.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +26,12 @@ const MessageSenderProfile = (props) => {
 
     }
   }
+
+  useEffect(()=>{
+    if(props.profile.blockContactByConnectedUser === true && contextContactApi.contactAvailability === true) {
+      contextContactApi.setContactAvailability(false);
+    }
+  }, [props.profile])
 
   return (
     <>
@@ -55,7 +61,7 @@ const MessageSenderProfile = (props) => {
 
             </strong>
           </span>
-         {contextContactApi.contactAvailability == true ? <p className={MessageSenderCss["isUserOnline"]}>Online</p>: null}
+         {contextContactApi.contactAvailability == true  ? <p className={MessageSenderCss["isUserOnline"]}>Online</p>: null}
         </div>
 
         <div className={MessageSenderCss["edit-btn"]}>
