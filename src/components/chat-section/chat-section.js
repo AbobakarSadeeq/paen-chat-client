@@ -144,6 +144,7 @@ const ChatSection = (props) => {
       if(props?.singleUserChatAllInfo?.groupId !== selectedContactGroupId) {
 
       singleGroupMessagesAsync(fetchingMessagesByFilteringInitialPoint).then((responseData)=>{
+        debugger;
         responseData.data.fetchedMessagesList.reverse();
         let chatMessagess = [];
         let findingLastMessageDate = "";
@@ -185,7 +186,7 @@ const ChatSection = (props) => {
           groupId: fetchingMessagesByFilteringInitialPoint.groupId,
           user1: fetchingMessagesByFilteringInitialPoint.user1,
           user2: loggedInId,
-          lastMessagesCount: responseData.data.lastMessagesCount
+          lastMessagesCount: fetchingMessagesByFilteringInitialPoint.fetchingMessagesStorageNo !== responseData.data.fetchingMessagesStorageNo ? 0 : responseData.data.lastMessagesCount
           }
 
 
