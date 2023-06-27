@@ -32,6 +32,9 @@ const Auth = () => {
             // user become online and availability is saved inside the redis
 
           });
+
+         
+
         },2000)
 
 

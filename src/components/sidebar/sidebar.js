@@ -57,7 +57,7 @@ const Sidebar = (props) => {
       return [];
     });
 
-    
+
 
   useEffect(() => {
         // NOTE!
@@ -159,14 +159,23 @@ const Sidebar = (props) => {
     }
 
 
-    // live blocking updating array
+    // blocking updating array only who first do the blocking
     if(contextContactApi.contactBlockUpdating !== null) {
 
       setConnectedContactList((prevsContacts)=>{
+
         let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contextContactApi.contactBlockUpdating.contactId);
         prevsContacts[findingContactIndex].blockContact = !prevsContacts[findingContactIndex].blockContact;
         return [...prevsContacts];
       });
+
+      setAddContactSectionContactList((prevsContacts)=>{
+        let findingContactIndex = prevsContacts.findIndex(a=>a.contactId === contextContactApi.contactBlockUpdating.contactId);
+        prevsContacts[findingContactIndex].blockContact = !prevsContacts[findingContactIndex].blockContact;
+        return [...prevsContacts];
+      });
+
+
       contextContactApi.setContactBlockUpdating(null);
     }
 
@@ -329,10 +338,10 @@ const Sidebar = (props) => {
 
 
         signalRConnectionSingletonObj.on("BlockingOrUnlockingContactLive", (groupId, userWhoBlockedYouId) => {
-
           if(userWhoBlockedYouId !== +(loggedInUserId)) {
              let updatedContactState = false;
             setConnectedContactList((prevs)=>{
+              debugger;
               const findingIndexOfGroup = prevs.findIndex(a=>a.groupId === groupId);
               prevs[findingIndexOfGroup].blockContactByConnectedUser = !prevs[findingIndexOfGroup].blockContactByConnectedUser;
               updatedContactState = prevs[findingIndexOfGroup].blockContactByConnectedUser;
@@ -360,11 +369,28 @@ const Sidebar = (props) => {
         });
 
 
+        signalRConnectionSingletonObj.on("AddedByOtherUserContactRefreshing", (newContact) => {
+          newContact.verifiedContactUser = true;
+          newContact["selectedContectStyle"] = false;
+          setConnectedContactList((prevs)=>{
+            prevs.push(newContact);
+            return [...prevs];
+
+          });
+
+          setAddContactSectionContactList((prevs)=>{
+            prevs.push(newContact);
+            return [...prevs];
+
+          });
+
+        });
 
 
 
 
-      },2500)
+
+      },3000)
 
 
 
@@ -393,11 +419,13 @@ const Sidebar = (props) => {
 
   function updateContactListForAddingNewContactHandler(newContact) {
     setAddContactSectionContactList((prevs) => {
-      return [...prevs, newContact];
+           prevs.push(newContact);
+           return [...prevs];
     });
 
     setConnectedContactList((prevs)=>{
-      return [...prevs, newContact];
+      prevs.push(newContact);
+      return [...prevs];
     })
   }
 

@@ -72,9 +72,9 @@ const ContectDetail = (props) => {
       contextApi.showContactDetailHandler("chat");
     }
   }
+  console.log(props.detail);
 
   useEffect(() => {
-    console.log(props.detail);
     setEditedContactName("");
 
     if (props.detail.blockContact === true) {
@@ -122,7 +122,7 @@ const ContectDetail = (props) => {
 
 
     signalRConnectionSingletonObj
-      .invoke("ContactBlockingAndUnlocking", props.detail.groupId, loggedInUserId)
+      .invoke("ContactBlockingAndUnlocking", props.detail.groupId, +(loggedInUserId))
       .then(()=>{
 
       });

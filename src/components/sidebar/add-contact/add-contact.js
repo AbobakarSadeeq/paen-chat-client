@@ -13,6 +13,7 @@ import axios from "axios";
 import { useContext } from "react";
 import LoggedInContext from "../../../context/loggedIn/loggedIn";
 import ContactContext from "../../../context/contact-context/contact-context";
+import { signalRConnectionSingletonObj } from "../../Auth/auth";
 
 const AddContact = (props) => {
   const contactContextApi = useContext(ContactContext);
@@ -63,14 +64,37 @@ const AddContact = (props) => {
 
     if (Object.keys(contactContextApi.addNewContact).length != 0) {
       let contactArr = [...contactList];
-      contactArr.push(contactContextApi.addNewContact);
+      contactArr.push(contactContextApi.addNewContact.userAddedContactDetail);
 
       setContactList((prevs) => {
         return contactArr;
       });
 
-      props.updateContactListForAddNewContact(contactContextApi.addNewContact);
+      let updateContacts = {
+        ...contactContextApi.addNewContact.userAddedContactDetail
+
+      }
+
+
+      props.updateContactListForAddNewContact(updateContacts);
+
+
+
+      // calling server for to call other user notify that new user added.
+      const storingLiveContactInOtherUserId = contactContextApi.addNewContact.userAddedContactDetail.userId;
+      let receiverUserContact = {
+        ...contactContextApi.addNewContact.userWantsToConnectItselfDetail,
+        };
+      signalRConnectionSingletonObj
+      .invoke("NewContactAddedLive", storingLiveContactInOtherUserId, receiverUserContact )
+      .then(()=>{
+
+      });
+
       contactContextApi.setAddNewContact({});
+
+
+
     }
 
     // axios

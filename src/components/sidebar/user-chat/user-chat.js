@@ -113,7 +113,7 @@ const UserChat = (props) => {
     //   );
   }
 
-  console.log(props);
+  console.log(props.AddContactData);
 
   if (
     location.pathname == "/Chats" &&
@@ -153,26 +153,7 @@ const UserChat = (props) => {
               {/* whose sender and reciver both id is equal to array and connectedAddContactData are same */}
 
 
-
-              {/* {location.pathname == "/Chats"
-                ? props?.messageSendFromUser?.userMessage?.length > 28
-                  ? // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well and also here if string chars is greater then 28 then it will be shown only in dots else it wont in else state
-                    props?.messageSendFromUser?.senderId ==
-                      props?.AddContactData?.usersConnectedId ||
-                    props?.AddContactData?.usersConnectedId ==
-                      props?.messageSendFromUser?.reciverId
-                    ? props?.messageSendFromUser?.userMessage?.substring(
-                        0,
-                        25
-                      ) + "...." // sended message to user will be show below their profile and also reciver can also see that message at bottom of the profile as well
-                    : "last messsage will shown here"
-                  : props?.messageSendFromUser?.senderId ==
-                      props?.AddContactData?.usersConnectedId ||
-                    props?.AddContactData?.usersConnectedId ==
-                      props?.messageSendFromUser?.reciverId
-                  ? props?.messageSendFromUser?.userMessage
-                  : "" // last messsage will shown here and also apply the condition as well because it show one last message on all connectedContact
-                : // contact page data */}
+ 
 
               {location.pathname == "/Chats"
                 ? ""

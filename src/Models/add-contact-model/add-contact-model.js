@@ -46,7 +46,13 @@ const AddContactModel = (props) => {
         })
         .then(
           (response) => {
-            contactContextApi.setAddNewContact(response.data);
+            contactContextApi.setAddNewContact(
+              {
+                userWantsToConnectItselfDetail: response.data.userWantsToConnectItselfDetail,
+                userAddedContactDetail: response.data.userAddedContactDetail
+              }
+
+              );
           },
           (error) => {
             console.log(error);
