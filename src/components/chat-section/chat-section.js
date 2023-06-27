@@ -125,6 +125,10 @@ const ChatSection = (props) => {
           return [];
         });
 
+        setUserConversationSpecificDateIndex(()=>{
+          return [];
+        })
+
 
       }
 
