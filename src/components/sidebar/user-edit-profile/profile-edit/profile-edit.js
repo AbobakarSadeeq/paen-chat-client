@@ -69,7 +69,7 @@ const ProfileEdit = ({ hideDialog, userFormDataObj, fetchUpdatedUserProfileHandl
         )
         .then((responseData) => {
           hideDialog(false);
-
+          debugger;
           fetchUpdatedUserProfileHandler({
             userName: value.userName,
             aboutStatus: value.aboutStatus,

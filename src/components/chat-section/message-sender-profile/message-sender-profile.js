@@ -8,7 +8,7 @@ import { useLocation } from "react-router";
 import ContactContext from "../../../context/contact-context/contact-context";
 const MessageSenderProfile = (props) => {
 
-  console.log(props);
+   
   const contextApi = useContext(LoggedInContext);
   const contextContactApi = useContext(ContactContext);
   const path = useLocation();

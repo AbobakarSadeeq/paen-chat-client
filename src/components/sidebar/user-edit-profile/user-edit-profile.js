@@ -8,14 +8,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import UserEditProfileCss from "./user-edit-profile.module.css";
 import ByDefaultUserImage from "../../../assest/No Image.jpg";
 import ProfileEdit from "./profile-edit/profile-edit";
+import ContactContext from "../../../context/contact-context/contact-context";
 
 const UserEditProfile = ({ showProfileDetail }) => {
+
+  const contactContext = useContext(ContactContext);
+
   const [userDetail, setUserDetail] = useState(() => {
     return null;
   });
@@ -40,7 +44,11 @@ const UserEditProfile = ({ showProfileDetail }) => {
   }, [openEditProfileDialog]);
 
   function shareUpdatedUserProfileDataHandler(val) {
+
+
     setUserDetail((prevs) => {
+
+
       return {
         userName: val.userName,
         aboutStatus: val.aboutStatus,
@@ -49,7 +57,9 @@ const UserEditProfile = ({ showProfileDetail }) => {
         contact: prevs.contact,
       };
     });
-    console.log(val);
+
+
+
   }
 
   return (

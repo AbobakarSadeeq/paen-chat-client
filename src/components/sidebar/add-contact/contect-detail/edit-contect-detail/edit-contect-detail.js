@@ -9,9 +9,11 @@ import EditContectDetailCss from "./edit-contect-detail.module.css";
 import { Dialog } from "primereact/dialog";
 import { useContext } from "react";
 import LoggedInContext from "../../../../../context/loggedIn/loggedIn";
+import ContactContext from "../../../../../context/contact-context/contact-context";
 
 const EditContectModel = (props) => {
   const contextApi = useContext(LoggedInContext);
+  const contactContext = useContext(ContactContext);
   const formik = useFormik({
     initialValues: {
       firstName: props.SelectedContactData.firstName,
@@ -37,7 +39,14 @@ const EditContectModel = (props) => {
         })
         .then(
           (response) => {
-            console.log("CONTECT Updated");
+
+            const updatingContactName = {
+              firstName: value.firstName,
+              lastName: value.lastName,
+              contactId: props.SelectedContactData.contactId
+            }
+
+      contactContext.setUpdatingUserContactProfile(updatingContactName);
 
             props.editContactName(value.firstName + " " + value.lastName);
             contextApi.updatedContactNameVal(

@@ -17,6 +17,10 @@ const ContactContextProvider = ({ children }) => {
 
   const [contactBlockUpdatingChatSection, setContactBlockUpdatingChatSection] = useState(()=>{
     return false;
+  });
+
+  const [updatingUserContactProfile, setUpdatingUserContactProfile] = useState(()=>{
+    return null;
   })
 
   return (
@@ -24,7 +28,8 @@ const ContactContextProvider = ({ children }) => {
       <ContactContext.Provider value={{ addNewContact, setAddNewContact,
        contactAvailability, setContactAvailability,
        contactBlockUpdating, setContactBlockUpdating,
-       contactBlockUpdatingChatSection, setContactBlockUpdatingChatSection
+       contactBlockUpdatingChatSection, setContactBlockUpdatingChatSection,
+       updatingUserContactProfile, setUpdatingUserContactProfile
         }}>
         {children}
       </ContactContext.Provider>

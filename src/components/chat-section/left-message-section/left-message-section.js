@@ -7,7 +7,7 @@ import { date } from "yup";
 import leftMessageCss from "./left-message-section.module.css";
 
 const LeftMessageSection = (props) => {
-  console.log(props);
+ 
   const [messageSendTime, setMessageSendTime] = useState(() => {
     return "";
   });

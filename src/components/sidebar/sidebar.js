@@ -57,7 +57,7 @@ const Sidebar = (props) => {
       return [];
     });
 
-    console.log(connectedContactList);
+    
 
   useEffect(() => {
         // NOTE!
@@ -131,6 +131,32 @@ const Sidebar = (props) => {
     //   fetchingMessagesContext.setSingleConversationInitialMessage(connectedContactsInitialMessages[findingInitialMessagesByGroupIdFromInitialMessageListIndex]);
 
     // }
+
+    // updating editing single contact firstName and lastName
+    if(contextContactApi.updatingUserContactProfile !== null)  {
+
+      const updatedValue = contextContactApi.updatingUserContactProfile;
+
+      setConnectedContactList((prevs)=>{
+        const findingIndexOfGroup = prevs.findIndex(a=>a.contactId === updatedValue.contactId);
+        prevs[findingIndexOfGroup].contactName = updatedValue.firstName  + " " + updatedValue.lastName;
+        return [...prevs];
+      });
+
+      setAddContactSectionContactList((prevs)=>{
+        const findingIndexOfGroup = prevs.findIndex(a=>a.contactId === updatedValue.contactId);
+        prevs[findingIndexOfGroup].contactName = updatedValue.firstName  + " " + updatedValue.lastName;
+        return [...prevs];
+      });
+
+
+      contextContactApi.setUpdatingUserContactProfile(null);
+
+
+
+
+
+    }
 
 
     // live blocking updating array
@@ -253,7 +279,8 @@ const Sidebar = (props) => {
     //     return [...addContactSectionArr];
     //   });
     // }
-  }, [props.EditContactName, props.messageSendedFromContactNotify, contextContactApi.contactBlockUpdating]);
+  }, [props.EditContactName, props.messageSendedFromContactNotify,
+     contextContactApi.contactBlockUpdating, contextContactApi.updatingUserContactProfile]);
 
     useEffect(() => {
 

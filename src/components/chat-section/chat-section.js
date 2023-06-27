@@ -106,7 +106,6 @@ const ChatSection = (props) => {
 
     // }
 
-    debugger;
     const loggedInId = +(JSON.parse(window.atob(localStorage.getItem("Token")?.split(".")[1])).UserId);
     const fetchingMessagesByFilteringInitialPoint = {
       currentScrollingPosition: 1,
@@ -133,7 +132,7 @@ const ChatSection = (props) => {
         return props?.singleUserChatAllInfo?.groupId;
       })
 
-     
+
 
       selectedGroupId.current = props?.singleUserChatAllInfo?.groupId;
       // this below code will execute each time when contact is changed
@@ -274,12 +273,15 @@ const ChatSection = (props) => {
 
             // storing the data inside the redis if user become online
             signalRConnectionSingletonObj.invoke("StoreMessageOnRedis", messageSendObj).then(()=>{
-
+              scrollToBottom();
             });
 
           if(selectedGroupId.current === receivingSenderData.groupId) {
 
               let findingLastMessageDate = "";
+              if(findingLastMessageDate === "") {
+                findingLastMessageDate = receivingSenderData.clientMessageRedis.messageDateStamp;
+              }
 
               setChatMessage((prevChatMessage) => {
                   const updatedChatMessage = [...prevChatMessage, messageSendObj];
@@ -474,6 +476,9 @@ const ChatSection = (props) => {
 
     let findingIndex = chatMessage.length - 1 == -1 ? 0: chatMessage.length - 1;
     const findingLastMessageDate = chatMessage[findingIndex]?.clientMessageRedis?.messageDateStamp;
+
+    // 1 => means valid new date
+    // -1 => means same date
     if(findingLastMessageDate == currentDate) {
       setUserConversationSpecificDateIndex((prevs)=>{
         return [...prevs, -1];
@@ -488,7 +493,7 @@ const ChatSection = (props) => {
 
 
         setUserConversationSpecificDateIndex((prevs)=>{
-          return [...prevs, (findingIndex + 1)];
+          return [...prevs, 1];
         })
     }
 
@@ -551,6 +556,7 @@ const ChatSection = (props) => {
     }
 
     singleGroupMessagesAsync(sendInfoForToFetchMoreMessages).then((response)=>{
+    debugger;
       if(response.data.fetchedMessagesList.length === 30) {
         sendInfoForToFetchMoreMessages.currentScrollingPosition = sendInfoForToFetchMoreMessages.currentScrollingPosition + 1;
         sendInfoForToFetchMoreMessages.lastMessagesCount = 0;

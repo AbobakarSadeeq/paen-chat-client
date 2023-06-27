@@ -28,7 +28,7 @@ const RightMessageSection = (props) => {
         hour12: true,
       })
     );
-    console.log(props);
+ 
   }, []);
 
   return (
@@ -68,7 +68,7 @@ const RightMessageSection = (props) => {
               <FontAwesomeIcon icon={faCheck} style={{ color: "#53bdeb" }} />
             </>
           ) : null}
-          
+
         </div>
       </div>
       {/* <div ref={messagesEndRef}></div> */}
